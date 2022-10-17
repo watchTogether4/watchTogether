@@ -5,7 +5,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 class ServerApplicationTests {
-    //test 주석입니다
+    //test 주석입니다2
     @Test
     void contextLoads() {
     }
