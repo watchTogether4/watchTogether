@@ -9,8 +9,9 @@
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
-  "plugins": ["react"],
+  "plugins": ["react", "prettier"],
   "rules": {
+    "linebreak-style": 0,
     "react/no-unescaped-entities": "off",
     "@typescript-eslint/no-var-requires": "off",
     "import/no-unresolved": "off",
