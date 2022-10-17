@@ -1,5 +1,6 @@
 import Flex from './Flex';
-import Button from './Button';
+import { Button, BtnLink } from './Button';
 import Input from './Input';
+import Hidden from './Hidden';
 
-export { Button, Flex, Input };
+export { Button, BtnLink, Flex, Input, Hidden };

@@ -1,5 +1,5 @@
 * {
-  font-family: 'Noto Sans KR';
+  font-family: 'Inter';
 }
 
 html,
@@ -138,7 +138,7 @@ table {
   box-sizing: border-box;
 }
 body {
-  font-family: 'Noto Sans KR';
+  font-family: 'Inter';
   font-size: 16px;
   font-weight: 400;
   color: #000;

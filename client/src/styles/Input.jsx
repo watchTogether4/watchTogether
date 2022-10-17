@@ -10,4 +10,6 @@ const Input = styled.input`
   border-radius: 12px;
 `;
 
-export default { Input };
+export default {
+  Input,
+};
