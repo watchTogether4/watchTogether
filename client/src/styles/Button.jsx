@@ -12,11 +12,5 @@ const Button = styled.button`
   background-color: ${(props) => props.theme.color.highlight_500};
   border-radius: 12px;
 `;
-const BtnLink = styled((props) => <Button {...props} />)`
-  ${Flex}
-  font-weight: 600;
-  color: ${(props) => props.theme.color.white};
-  border-radius: 40px;
-`;
 
-export { Button, BtnLink };
+export default Button;

@@ -1,16 +1,15 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-// component
-import Header from './components/Header/Header';
-import MainPage from './pages/MainPage';
 // route
+import MainPage from './pages/MainPage';
+import LoginPage from './pages/LoginPage';
 
 function App() {
   return (
     <BrowserRouter>
-      <Header />
       <Routes>
         <Route path="/" element={<MainPage />} />
+        <Route path="/login" element={<LoginPage />} />
       </Routes>
     </BrowserRouter>
   );

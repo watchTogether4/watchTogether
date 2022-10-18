@@ -12,6 +12,7 @@
   },
   "plugins": ["react", "prettier"],
   "rules": {
+    "no-console": "off",
     "object-curly-newline": "off", // { 다음 줄 바꿈을 강제로 사용하지 않는다.
     "react/jsx-props-no-spreading": 0,
     "react/react-in-jsx-scope": "off",
