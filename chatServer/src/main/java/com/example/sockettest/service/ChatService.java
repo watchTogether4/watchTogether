@@ -1,7 +1,10 @@
 package com.example.sockettest.service;
 
+import com.example.sockettest.domain.ChatMessage;
 import com.example.sockettest.domain.ChatRoom;
-import com.example.sockettest.domain.Dialog;
+import com.example.sockettest.domain.DialogDto;
+import com.example.sockettest.persist.DialogRespository;
+import com.example.sockettest.persist.entity.Dialog;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +22,8 @@ import java.util.*;
 public class ChatService {
     private final ObjectMapper objectMapper;
     private Map<String, ChatRoom> chatRooms;
+
+    private final DialogRespository dialogRespository;
 
     @PostConstruct
     private void init() {
@@ -42,20 +47,25 @@ public class ChatService {
     }
 
     public <T> void sendMessage(WebSocketSession session, T message) {
-        try{
+        try {
             session.sendMessage(new TextMessage(objectMapper.writeValueAsString(message)));
+
         } catch (IOException e) {
             log.error(e.getMessage(), e);
         }
     }
 
-    public List<Dialog> getDialog(String roomId) {
-        return (List<Dialog>) new Dialog(); // todo: date순으로 정렬해서 가져오기 구현
+    public List<DialogDto> getDialog(String roomId) {
+        return (List<DialogDto>) new DialogDto(); // todo: date순으로 정렬해서 가져오기 구현
     }
 
     public void deleteRoom(String roomId) {
         if (chatRooms.containsKey(roomId)) {
             chatRooms.remove(roomId);
         }
+    }
+
+    public void saveMsessage(ChatMessage chatMessage) {
+        dialogRespository.save(new Dialog(chatMessage));
     }
 }
