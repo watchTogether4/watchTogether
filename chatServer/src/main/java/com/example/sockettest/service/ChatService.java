@@ -53,4 +53,9 @@ public class ChatService {
         return (List<Dialog>) new Dialog(); // todo: date순으로 정렬해서 가져오기 구현
     }
 
+    public void deleteRoom(String roomId) {
+        if (chatRooms.containsKey(roomId)) {
+            chatRooms.remove(roomId);
+        }
+    }
 }

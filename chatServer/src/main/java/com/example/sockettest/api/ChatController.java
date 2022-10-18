@@ -26,6 +26,11 @@ public class ChatController {
         return chatService.getDialog(roomId);
     }
 
+    @DeleteMapping
+    public void deleteRoom(@RequestBody CreateRoomRequest request) {
+        chatService.deleteRoom(request.getRoomId());
+    }
+
 //    @GetMapping
 //    public List<ChatRoom> findAllRoom() {
 //        return chatService.findAllRoom();
