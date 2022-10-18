@@ -1,6 +1,6 @@
 import Slider from 'react-slick';
-
 import styled from 'styled-components';
+import { Button } from '../../styles/Common';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -35,4 +35,8 @@ const Icon = styled.div`
   border-radius: 50%;
 `;
 
-export { Wrapper, Inner, Title, Desc, Carousel, Icon };
+const StartBtn = styled(Button)`
+  border-radius: 40px;
+`;
+
+export { Wrapper, Inner, Title, Desc, Carousel, Icon, StartBtn };

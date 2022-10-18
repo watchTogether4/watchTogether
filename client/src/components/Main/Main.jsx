@@ -1,12 +1,12 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
-import { Link } from 'react-router-dom';
-
+import { useNavigate } from 'react-router-dom';
 import icons from '../../mocks/icons';
-import { Wrapper, Inner, Title, Desc, Carousel, Icon } from './Main.style';
-import { BtnLink } from '../../styles/Common';
+import { Wrapper, Inner, Title, Desc, Carousel, Icon, StartBtn } from './Main.style';
 
 function Main() {
+  const navigate = useNavigate();
+
   const initialSettings = {
     dots: false,
     infinite: true,
@@ -57,9 +57,7 @@ function Main() {
             </div>
           ))}
         </Carousel>
-        <BtnLink to="/login" props={Link}>
-          Get Start
-        </BtnLink>
+        <StartBtn onClick={() => navigate('/login')}>Get Start</StartBtn>
       </Inner>
     </Wrapper>
   );
