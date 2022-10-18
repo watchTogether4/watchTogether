@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-const Wrapper = styled.div`
+const Wrapper = styled.header`
   width: 100%;
   height: 4rem;
   padding: 0 1rem;
