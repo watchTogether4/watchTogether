@@ -2,7 +2,7 @@ package com.example.sockettest.api;
 
 
 import com.example.sockettest.domain.ChatRoom;
-import com.example.sockettest.domain.Dialog;
+import com.example.sockettest.domain.DialogDto;
 import com.example.sockettest.domain.CreateRoomRequest;
 import com.example.sockettest.service.ChatService;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ public class ChatController {
     }
 
     @GetMapping
-    public List<Dialog> getDialog(@RequestBody String roomId) {
+    public List<DialogDto> getDialog(@RequestBody String roomId) {
         return chatService.getDialog(roomId);
     }
 

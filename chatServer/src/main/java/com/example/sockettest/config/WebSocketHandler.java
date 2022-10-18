@@ -2,6 +2,7 @@ package com.example.sockettest.config;
 
 import com.example.sockettest.domain.ChatMessage;
 import com.example.sockettest.domain.ChatRoom;
+import com.example.sockettest.persist.entity.Dialog;
 import com.example.sockettest.service.ChatService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,8 @@ public class WebSocketHandler extends TextWebSocketHandler {
 
         ChatRoom chatRoom = chatService.findRoomById(chatMessage.getRoomId());
         chatRoom.handlerActions(session, chatMessage, chatService);
+
+        chatService.saveMsessage(chatMessage);
     }
 
 }

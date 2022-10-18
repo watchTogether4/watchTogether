@@ -5,8 +5,11 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class Dialog {
+public class DialogDto {
     private LocalDateTime date;
     private String sender;
     private String message;
+
+
+
 }
