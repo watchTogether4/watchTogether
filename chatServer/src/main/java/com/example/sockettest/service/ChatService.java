@@ -33,12 +33,11 @@ public class ChatService {
         return chatRooms.get(roomId);
     }
 
-    public ChatRoom createRoom() {
-        String randomId = UUID.randomUUID().toString();
+    public ChatRoom createRoom(String roomId) {
         ChatRoom chatRoom = ChatRoom.builder()
-                .roomId(randomId)
+                .roomId(roomId)
                 .build();
-        chatRooms.put(randomId, chatRoom);
+        chatRooms.put(roomId, chatRoom);
         return chatRoom;
     }
 
@@ -54,4 +53,9 @@ public class ChatService {
         return (List<Dialog>) new Dialog(); // todo: date순으로 정렬해서 가져오기 구현
     }
 
+    public void deleteRoom(String roomId) {
+        if (chatRooms.containsKey(roomId)) {
+            chatRooms.remove(roomId);
+        }
+    }
 }
