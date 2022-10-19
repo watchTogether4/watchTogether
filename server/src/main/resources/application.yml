@@ -14,6 +14,12 @@ spring:
     show-sql: 'true'
     hibernate:
       ddl-auto: create-drop
+  spring:
+    profiles:
+      active: local
+      group:
+        local: security
+
 server:
   port: 8080
 springdoc:
@@ -30,5 +36,3 @@ springdoc:
     path: /api-docs
   cache:
     disabled: 'true'
-
-
