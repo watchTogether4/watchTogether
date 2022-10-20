@@ -8,7 +8,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public enum UserSuccess {
-    SUCCESS_SIGNUP("회원가입에 성공하였습니다.");
+    SUCCESS_SIGNUP("회원가입에 성공하였습니다. 인증 메일을 확인해주세요."),
+    SUCCESS_VERIFY_EMAIL("이메일 인증에 성공하였습니다.");
 
     private String message;
 }

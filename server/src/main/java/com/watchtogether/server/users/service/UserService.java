@@ -15,4 +15,12 @@ public interface UserService {
      * @return
      */
     UserDto singUpUser(String email, String nickname, String password, Date birth);
+
+    /**
+     * 인증 메일
+     *
+     * @param email
+     * @param code
+     */
+    void verifyUser(String email, String code);
 }
