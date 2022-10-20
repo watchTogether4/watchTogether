@@ -35,7 +35,6 @@ public class MailConfig {
 
     @Bean
     public JavaMailSender mailSender() {
-        System.out.println(port);
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         Properties mailProperties = new Properties();
         mailProperties.put("mail.transport.protocol", protocol);
