@@ -2,7 +2,11 @@ package com.watchtogether.server.users.service.impl;
 
 import static com.watchtogether.server.exception.type.ErrorCode.ALREADY_SIGNUP_EMAIL;
 import static com.watchtogether.server.exception.type.ErrorCode.ALREADY_SIGNUP_NICKNAME;
+import static com.watchtogether.server.exception.type.ErrorCode.ALREADY_VERIFY_EMAIL;
+import static com.watchtogether.server.exception.type.ErrorCode.EXPIRED_VERIFY_EMAIL_CODE;
 import static com.watchtogether.server.exception.type.ErrorCode.FAILURE_SEND_AUTH_EMAIL;
+import static com.watchtogether.server.exception.type.ErrorCode.NOT_FOUND_USER;
+import static com.watchtogether.server.exception.type.ErrorCode.WRONG_VERIFY_EMAIL_CODE;
 
 import com.watchtogether.server.components.MailComponents;
 import com.watchtogether.server.exception.UserException;
@@ -61,6 +65,23 @@ public class UserServiceImpl implements UserService {
         }
 
         return UserDto.fromEntity(user);
+    }
+
+    @Override
+    @Transactional
+    public void verifyUser(String email, String code) {
+        User user = userRepository.findById(email)
+            .orElseThrow(() -> new UserException(NOT_FOUND_USER));
+
+        if (user.isEmailVerify()) {
+            throw new UserException(ALREADY_VERIFY_EMAIL);
+        } else if (!user.getEmailVerifyCode().equals(code)) {
+            throw new UserException(WRONG_VERIFY_EMAIL_CODE);
+        } else if (user.getEmailVerifyExpiredDt().isBefore(LocalDateTime.now())) {
+            throw new UserException(EXPIRED_VERIFY_EMAIL_CODE);
+        }
+
+        user.setEmailVerify(true);
     }
 
     /**
