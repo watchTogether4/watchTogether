@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Flex } from '../../styles/Common';
+import { Flex, Input, Button } from '../../styles/Common';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -17,10 +17,18 @@ const Desc = styled.div`
 `;
 
 const LoginForm = styled.form`
-  width: 100%;
   ${Flex};
+  width: 100%;
 `;
 
+const LoginInput = styled(Input)`
+  margin-bottom: 0;
+  margin-top: 0.5rem;
+`;
+
+const LoginButton = styled(Button)`
+  margin-top: 0.5rem;
+`;
 const SignUpLink = styled.div`
   ${Flex}
   width: 100%;
@@ -34,4 +42,12 @@ const SignUpLink = styled.div`
   }
 `;
 
-export { Wrapper, Desc, LoginForm, SignUpLink };
+const ErrorMessage = styled.p`
+  width: 100%;
+  padding-left: 1rem;
+  margin-top: 0.2rem;
+  font-size: 0.8rem;
+  color: red;
+`;
+
+export { Wrapper, LoginInput, LoginButton, Desc, LoginForm, ErrorMessage, SignUpLink };
