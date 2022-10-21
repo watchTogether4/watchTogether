@@ -23,4 +23,13 @@ public interface UserService {
      * @param code
      */
     void verifyUser(String email, String code);
+
+    /**
+     * 사용자 로그인
+     *
+     * @param email
+     * @param password
+     * @return
+     */
+    UserDto signInUser(String email, String password);
 }

@@ -1,10 +1,12 @@
 package com.watchtogether.server.users.controller;
 
 
+import static com.watchtogether.server.users.domain.type.UserSuccess.SUCCESS_SIGNIN;
 import static com.watchtogether.server.users.domain.type.UserSuccess.SUCCESS_SIGNUP;
 import static com.watchtogether.server.users.domain.type.UserSuccess.SUCCESS_VERIFY_EMAIL;
 
 import com.watchtogether.server.users.domain.dto.UserDto;
+import com.watchtogether.server.users.domain.model.SignInUser;
 import com.watchtogether.server.users.domain.model.SignUpUser;
 import com.watchtogether.server.users.domain.model.VerifyEmail;
 import com.watchtogether.server.users.service.UserService;
@@ -53,4 +55,17 @@ public class UserController {
         return ResponseEntity.ok(
             new VerifyEmail.Response(SUCCESS_VERIFY_EMAIL.getMessage()));
     }
+
+    @PostMapping("/signIn")
+    @Operation(summary = "사용자 로그인", description = "아이디와, 비밀번호를 입력받고 인증된 사용자인지 확인 후 로그인 처리")
+    public ResponseEntity<SignInUser.Response> signIn(@RequestBody SignInUser.Request request) {
+
+        UserDto userDto = userService.signInUser(request.getEmail(), request.getPassword());
+
+        // token 발행
+
+        return ResponseEntity.ok(
+            new SignInUser.Response(userDto.getEmail(), SUCCESS_SIGNIN.getMessage()));
+    }
+
 }
