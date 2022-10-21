@@ -41,9 +41,13 @@ public class SignUpUser {
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
+    @Schema(name = "SignUpResponse", description = "사용자 회원가입 응답")
     public static class Response {
 
+        @Schema(description = "아이디", example = "abc@ikdmd.kg.lr")
         private String email;
+
+        @Schema(description = "성공 응답 메시지")
         private String message;
 
     }
