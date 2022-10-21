@@ -1,14 +1,12 @@
 package com.watchtogether.server.party.controller;
 
+import com.watchtogether.server.party.domain.model.AcceptPartyForm;
 import com.watchtogether.server.party.domain.model.CreatePartyForm;
 import com.watchtogether.server.party.domain.model.InvitePartyForm;
 import com.watchtogether.server.party.service.partyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,5 +19,12 @@ public class PartyController {
     public ResponseEntity<?> createParty(@RequestBody CreatePartyForm form){
         return ResponseEntity.ok(partyService.createParty(form));
     }
+
+    @PutMapping("/accept")
+    public ResponseEntity<?> acceptParty(@RequestBody AcceptPartyForm form){
+        return ResponseEntity.ok(partyService.addMember(form));
+    }
+
+
 
 }
