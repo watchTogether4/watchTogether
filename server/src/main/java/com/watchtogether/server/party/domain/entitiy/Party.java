@@ -5,6 +5,8 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Setter
@@ -12,7 +14,7 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateParty {
+public class Party {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "party_id")
@@ -35,8 +37,11 @@ public class CreateParty {
 
     private boolean leaderVerify;
 
-    public static CreateParty from(CreatePartyForm form){
-        return CreateParty.builder()
+    @OneToMany(mappedBy = "party")
+    private List<PartyMember> members = new ArrayList<>();
+
+    public static Party from(CreatePartyForm form){
+        return Party.builder()
                 .ottId(form.getOttId())
                 .title(form.getTitle())
                 .body(form.getBody())

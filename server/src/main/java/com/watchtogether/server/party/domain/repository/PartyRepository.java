@@ -1,9 +1,9 @@
 package com.watchtogether.server.party.domain.repository;
 
-import com.watchtogether.server.party.domain.entitiy.CreateParty;
+import com.watchtogether.server.party.domain.entitiy.Party;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface CreatePartyRepository extends JpaRepository<CreateParty, Long> {
+public interface PartyRepository extends JpaRepository<Party, Long> {
 }

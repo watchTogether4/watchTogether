@@ -22,17 +22,16 @@ public class InviteParty {
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "party_id")
-    private CreateParty createParty;
+    private Party party;
 
     private String receiverNickName;
     private String receiverUUID;
     private LocalDateTime limitDt;
-    private LocalDateTime acceptDt;
     private LocalDateTime createDt;
     private LocalDateTime updateDt;
 
-    public void setCreatePartyId(CreateParty createParty){
-        this.createParty = createParty;
+    public void setCreatePartyId(Party party){
+        this.party = party;
     }
 
 
@@ -42,7 +41,7 @@ public class InviteParty {
                 .receiverUUID(UUID.randomUUID().toString())
                 .limitDt(LocalDateTime.now().plusDays(1))
                 .createDt(LocalDateTime.now())
-                .createParty(form.getCreateParty())
+                .party(form.getParty())
                 .build();
     }
 }
