@@ -1,6 +1,6 @@
 package com.watchtogether.server.exception;
 
-import com.watchtogether.server.exception.type.ErrorCode;
+import com.watchtogether.server.exception.type.UserErrorCode;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,7 +15,7 @@ import lombok.Setter;
 @Builder
 public class ExceptionResponse {
 
-    private ErrorCode errorCode;
+    private UserErrorCode userErrorCode;
     private String errorMessage;
 
 }

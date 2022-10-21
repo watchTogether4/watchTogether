@@ -1,6 +1,5 @@
 package com.watchtogether.server.exception;
 
-import com.watchtogether.server.exception.type.ErrorCode;
 import com.watchtogether.server.exception.type.PartyErrorCode;
 import lombok.Getter;
 
