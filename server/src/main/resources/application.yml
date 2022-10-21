@@ -6,7 +6,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
     url: jdbc:mysql://localhost:3306/user?useSSL=FALSE&useUnicode=ture&allowPublicKeyRetrieval=true
-    password: root
+    password: '1'
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
@@ -21,7 +21,7 @@ spring:
         local: security
 
 server:
-  port: 8080
+  port: 8081
 springdoc:
   api-docs:
     path: /api-docs/json
