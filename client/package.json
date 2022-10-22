@@ -7,6 +7,7 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.1.3",
+    "formik": "^2.2.9",
     "http-proxy-middleware": "^2.0.6",
     "react": "^18.2.0",
     "react-cookie": "^4.1.1",
@@ -20,7 +21,8 @@
     "slick-carousel": "^1.8.1",
     "styled-components": "^5.3.6",
     "web-vitals": "^2.1.4",
-    "webpack": "^5.74.0"
+    "webpack": "^5.74.0",
+    "yup": "^0.32.11"
   },
   "scripts": {
     "start": "react-scripts start",
