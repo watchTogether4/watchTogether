@@ -10,7 +10,7 @@ import static com.watchtogether.server.exception.type.UserErrorCode.NOT_FOUND_US
 import static com.watchtogether.server.exception.type.UserErrorCode.WRONG_PASSWORD_USER;
 import static com.watchtogether.server.exception.type.UserErrorCode.WRONG_VERIFY_EMAIL_CODE;
 
-import com.watchtogether.server.components.MailComponents;
+import com.watchtogether.server.components.mail.MailComponents;
 import com.watchtogether.server.exception.UserException;
 import com.watchtogether.server.users.domain.dto.UserDto;
 import com.watchtogether.server.users.domain.entitiy.User;

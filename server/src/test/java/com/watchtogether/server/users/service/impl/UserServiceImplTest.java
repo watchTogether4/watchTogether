@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import com.watchtogether.server.components.MailComponents;
+import com.watchtogether.server.components.mail.MailComponents;
 import com.watchtogether.server.users.domain.dto.UserDto;
 import com.watchtogether.server.users.domain.entitiy.User;
 import com.watchtogether.server.users.domain.model.SignInUser;
