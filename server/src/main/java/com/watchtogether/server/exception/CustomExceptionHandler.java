@@ -14,7 +14,7 @@ public class CustomExceptionHandler {
         log.error("UserException is occurred. ", e);
 
         return ResponseEntity.badRequest()
-            .body(new ExceptionResponse(e.getErrorCode(), e.getMessage()));
+            .body(new ExceptionResponse(e.getUserErrorCode(), e.getMessage()));
     }
 
 }

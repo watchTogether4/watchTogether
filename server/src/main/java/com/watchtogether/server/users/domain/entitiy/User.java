@@ -22,7 +22,7 @@ import org.hibernate.envers.AuditOverride;
 @NoArgsConstructor
 @AllArgsConstructor
 @AuditOverride(forClass = BaseEntity.class)
-@Entity(name = "user")
+@Entity(name = "users")
 public class User extends BaseEntity {
 
     @Id
@@ -53,6 +53,9 @@ public class User extends BaseEntity {
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private UserStatus status;
+
+    @Column(name = "last_login_dt")
+    private LocalDateTime lastLoginDt;
 
 
 }

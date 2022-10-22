@@ -1,12 +1,14 @@
 package com.watchtogether.server.users.service.impl;
 
-import static com.watchtogether.server.exception.type.ErrorCode.ALREADY_SIGNUP_EMAIL;
-import static com.watchtogether.server.exception.type.ErrorCode.ALREADY_SIGNUP_NICKNAME;
-import static com.watchtogether.server.exception.type.ErrorCode.ALREADY_VERIFY_EMAIL;
-import static com.watchtogether.server.exception.type.ErrorCode.EXPIRED_VERIFY_EMAIL_CODE;
-import static com.watchtogether.server.exception.type.ErrorCode.FAILURE_SEND_AUTH_EMAIL;
-import static com.watchtogether.server.exception.type.ErrorCode.NOT_FOUND_USER;
-import static com.watchtogether.server.exception.type.ErrorCode.WRONG_VERIFY_EMAIL_CODE;
+import static com.watchtogether.server.exception.type.UserErrorCode.ALREADY_SIGNUP_EMAIL;
+import static com.watchtogether.server.exception.type.UserErrorCode.ALREADY_SIGNUP_NICKNAME;
+import static com.watchtogether.server.exception.type.UserErrorCode.ALREADY_VERIFY_EMAIL;
+import static com.watchtogether.server.exception.type.UserErrorCode.EXPIRED_VERIFY_EMAIL_CODE;
+import static com.watchtogether.server.exception.type.UserErrorCode.LEAVE_USER;
+import static com.watchtogether.server.exception.type.UserErrorCode.NEED_VERIFY_EMAIL;
+import static com.watchtogether.server.exception.type.UserErrorCode.NOT_FOUND_USER;
+import static com.watchtogether.server.exception.type.UserErrorCode.WRONG_PASSWORD_USER;
+import static com.watchtogether.server.exception.type.UserErrorCode.WRONG_VERIFY_EMAIL_CODE;
 
 import com.watchtogether.server.components.MailComponents;
 import com.watchtogether.server.exception.UserException;
@@ -60,9 +62,7 @@ public class UserServiceImpl implements UserService {
             .status(UserStatus.REQ)
             .build());
 
-        if (!sendAuthEmail(user.getEmail(), code)) {
-            throw new UserException(FAILURE_SEND_AUTH_EMAIL);
-        }
+        sendAuthEmail(email, code);
 
         return UserDto.fromEntity(user);
     }
@@ -81,7 +81,31 @@ public class UserServiceImpl implements UserService {
             throw new UserException(EXPIRED_VERIFY_EMAIL_CODE);
         }
 
+        // 이메일 인증
         user.setEmailVerify(true);
+        // 사용자 상태
+        user.setStatus(UserStatus.ING);
+    }
+
+    @Override
+    @Transactional
+    public UserDto signInUser(String email, String password) {
+
+        User user = userRepository.findById(email)
+            .orElseThrow(() -> new UserException(NOT_FOUND_USER));
+
+        if (user.getStatus().equals(UserStatus.LEAVE)) {
+            throw new UserException(LEAVE_USER);
+        } else if (!user.getPassword().equals(password)) {
+            throw new UserException(WRONG_PASSWORD_USER);
+        } else if (!user.isEmailVerify()) {
+            throw new UserException(NEED_VERIFY_EMAIL);
+        }
+
+        // 마지막 로그인 날짜 저장
+        user.setLastLoginDt(LocalDateTime.now());
+
+        return UserDto.fromEntity(user);
     }
 
     /**
@@ -97,7 +121,7 @@ public class UserServiceImpl implements UserService {
         String subject = "watchTogether 사이트 가입을 축하드립니다!";
         String text = builder.append("안녕하세요.")
             .append("이메일 인증을 완료하기위해 링크를 클릭해주세요!.\n\n")
-            .append("http://localhost:8080/api/users/signUp/verify/?email=")
+            .append("http://localhost:8081/api/users/signUp/verify/?email=")
             .append(email)
             .append("&code=")
             .append(code)
