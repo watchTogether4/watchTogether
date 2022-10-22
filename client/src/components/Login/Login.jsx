@@ -18,11 +18,33 @@ function Login() {
   const [formValues, setFormValues] = useState(intialValues);
   const [formErrors, setFormErrors] = useState('');
   const [isVaildate, setIsValidate] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const submitForm = () => {
-    // 서버로 formValues 보내서 기존 유저가 맞는지 확인 > 토큰 생성
-    // 성공하면 navigate('/select') , 틀리면 formErrors =  아이디 , 비밀번호를 확인해주세요.
+    // 백으로 유저 정보 전달
+    console.log(formValues);
+    axios({
+      url: '/api/users/signIn',
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: JSON.stringify(formValues)
+    })
+      .then((response) => {
+        // 토큰 값 함수 생성
+        console.log(response.data);
+      })
+      .catch((error) => {
+        if (error.response) {
+          // 요청이 이루어졌으며 서버가 2xx의 범위를 벗어나는 상태 코드로 응답함
+          setFormErrors(error.response.data.errorMessage);
+        } else if (error.request) {
+          // 요청이 이루어 졌으나 응답을 받지 못함
+          console.log(error.request);
+        } else {
+          // 오류를 발생시킨 요청을 설정하는 중에 문제 발생
+          console.log('Error', error.message);
+        }
+        console.log(error.config);
+      });
   };
 
   const validate = (values) => {
@@ -55,9 +77,13 @@ function Login() {
   const handleSubmit = (e) => {
     e.preventDefault();
     setFormErrors(validate(formValues));
+
+    if (validate(formValues) === undefined) {
+      setIsValidate(true);
+      submitForm();
+    }
+
     setIsValidate(true);
-    // 서버로 데이터로 보내서 기존 유저가 맞는지 확인 > 토큰 값 함수 생성
-    // 일치하면 sumbit(true) >
   };
 
   const handleChange = (e) => {
@@ -104,7 +130,6 @@ function Login() {
         />
 
         {formErrors && <ErrorMessage className="error">{formErrors}</ErrorMessage>}
-
         <LoginButton type="submit">로그인</LoginButton>
         <SignUpLink>
           <p>가치와치 계정이 없으신가요? </p>
