@@ -1,9 +1,7 @@
 package com.example.sockettest.api;
 
 
-import com.example.sockettest.domain.ChatRoom;
-import com.example.sockettest.domain.DialogDto;
-import com.example.sockettest.domain.CreateRoomRequest;
+import com.example.sockettest.domain.*;
 import com.example.sockettest.service.ChatService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -22,12 +20,12 @@ public class ChatController {
     }
 
     @GetMapping
-    public List<DialogDto> getDialog(@RequestBody String roomId) {
-        return chatService.getDialog(roomId);
+    public List<DialogDto> getDialog(@RequestBody GetDialogRequest request) {
+        return chatService.getDialog(request.getRoomId());
     }
 
     @DeleteMapping
-    public void deleteRoom(@RequestBody CreateRoomRequest request) {
+    public void deleteRoom(@RequestBody DeleteRoomRequest request) {
         chatService.deleteRoom(request.getRoomId());
     }
 
