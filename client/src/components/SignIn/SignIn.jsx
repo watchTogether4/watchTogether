@@ -12,7 +12,7 @@ import {
   LoginForm,
   ErrorMessage,
   SignUpLink,
-} from './Login.styles';
+} from './SignIn.styles';
 
 function Login() {
   const navigate = useNavigate();

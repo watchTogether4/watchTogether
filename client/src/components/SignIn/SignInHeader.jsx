@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 // styles
 import { IoIosArrowBack } from 'react-icons/io';
-import { Wrapper, Title, BackBtn } from './LoginHeader.styles';
+import { Wrapper, Title, BackBtn } from './SignInHeader.styles';
 
 function LoginHeader() {
   const navigate = useNavigate();
