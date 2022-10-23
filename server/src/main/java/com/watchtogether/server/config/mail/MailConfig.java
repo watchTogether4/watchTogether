@@ -1,4 +1,4 @@
-package com.watchtogether.server.config;
+package com.watchtogether.server.config.mail;
 
 import com.watchtogether.server.util.YamlPropertySourceFactory;
 import java.util.Properties;

@@ -1,4 +1,4 @@
-package com.watchtogether.server.components;
+package com.watchtogether.server.components.mail;
 
 import javax.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;

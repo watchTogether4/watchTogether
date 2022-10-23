@@ -2,6 +2,7 @@ package com.watchtogether.server.components;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.watchtogether.server.components.mail.MailComponents;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
