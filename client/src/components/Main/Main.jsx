@@ -57,7 +57,7 @@ function Main() {
             </div>
           ))}
         </Carousel>
-        <StartBtn onClick={() => navigate('/login')}>Get Start</StartBtn>
+        <StartBtn onClick={() => navigate('/signIn')}>Get Start</StartBtn>
       </Inner>
     </Wrapper>
   );

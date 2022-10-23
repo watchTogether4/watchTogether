@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import store from './redux/store';
 // route
 import MainPage from './pages/MainPage';
-import LoginPage from './pages/LoginPage';
+import SignIn from './pages/SignInPage';
 import MyPage from './pages/MyPage';
 import SignUp from './pages/SignUpPage';
 
@@ -14,7 +14,7 @@ function App() {
       <Provider store={store}>
         <Routes>
           <Route path="/" element={<MainPage />} />
-          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signIn" element={<SignIn />} />
           <Route path="/mypage" element={<MyPage />} />
           <Route path="/signUp" element={<SignUp />} />
         </Routes>
