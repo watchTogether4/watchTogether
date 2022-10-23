@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
+import { login } from '../../redux/user';
+
 import {
   Wrapper,
   LoginInput,
@@ -13,15 +16,15 @@ import {
 
 function Login() {
   const navigate = useNavigate();
-
   const intialValues = { email: '', password: '' };
   const [formValues, setFormValues] = useState(intialValues);
   const [formErrors, setFormErrors] = useState('');
   const [isVaildate, setIsValidate] = useState(false);
 
+  const dispatch = useDispatch();
+
   const submitForm = () => {
     // 백으로 유저 정보 전달
-    console.log(formValues);
     axios({
       url: '/api/users/signIn',
       method: 'POST',
@@ -29,8 +32,10 @@ function Login() {
       data: JSON.stringify(formValues)
     })
       .then((response) => {
-        // 토큰 값 함수 생성
+      // 토큰 값 함수 생성
         console.log(response.data);
+        dispatch(login({ email: formValues.email }));
+        navigate('/mypage');
       })
       .catch((error) => {
         if (error.response) {
@@ -78,7 +83,8 @@ function Login() {
     e.preventDefault();
     setFormErrors(validate(formValues));
 
-    if (validate(formValues) === undefined) {
+    console.log(validate(formValues));
+    if (validate(formValues) === '') {
       setIsValidate(true);
       submitForm();
     }
