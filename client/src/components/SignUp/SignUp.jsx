@@ -99,7 +99,7 @@ function SignUp() {
           placeholder="생일"
           onBlur={handleBlur}
         />
-        <Button type="button" onClick={onSubmit}>
+        <Button type="submit" onClick={onSubmit}>
           회원가입하기
         </Button>
         <LoginLink>
