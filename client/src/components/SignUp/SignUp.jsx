@@ -1,55 +1,105 @@
-/* eslint-disable react/jsx-props-no-spreading */
-import React, { useState } from 'react';
-import Axios from 'axios';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
 import { Link } from 'react-router-dom';
-import { Input, Button } from '../../styles/Common';
-import { SignUpForm, LoginLink, Wrapper } from './SignUp.style';
+import { SignUpForm, Wrapper, ErrorMsg, Input, LoginLink, Button } from './SignUp.style';
 
 function SignUp() {
-  const [email, setEmail] = useState('');
-  const [nickname, setNickname] = useState('');
-  const [password, setPassword] = useState('');
-  const [passwordConfirm, setPasswordConfirm] = useState('');
-  const [birthday, setBirthday] = useState('');
+  const validationSchema = Yup.object().shape({
+    email: Yup.string()
+      .email('올바른 이메일 형식이 아닙니다!')
+      .required('이메일을 입력하세요!'),
+    nickname: Yup.string()
+      .min(2, '닉네임은 최소 2글자 이상입니다!')
+      .max(10, '닉네임은 최대 10글자입니다!')
+      .required('닉네임을 입력하세요!'),
+    password: Yup.string()
+      .min(4, '비밀번호는 최소 4자리 이상입니다!')
+      .max(16, '비밀번호는 최대 16자리입니다!')
+      .required('비밀번호를 입력하세요!'),
+    passwordConfirm: Yup.string()
+      .oneOf([Yup.ref('password'), null], '비밀번호가 일치하지 않습니다!')
+      .required('비밀번호 확인을 입력하세요!'),
+    birthday: Yup.string()
+      .required('생일을 선택해주세요!')
+  });
 
-  const onEmailHandler = (event) => {
-    setEmail(event.currentTarget.value);
-  };
-  const onNicknameHandler = (event) => {
-    setNickname(event.currentTarget.value);
-  };
-  const onPasswordHandler = (event) => {
-    setPassword(event.currentTarget.value);
-  };
-  const onPasswordConfirmHandler = (event) => {
-    setPasswordConfirm(event.currentTarget.value);
-  };
-  const onBirthdayHandler = (event) => {
-    setBirthday(event.currentTarget.value);
+  const onSubmit = () => {
+    console.log('제출되었습니다.');
   };
 
-  const onSubmitHandler = (event) => {
-    event.preventDefault();
+  const { values, errors, handleBlur, handleChange, handleSubmit, } = useFormik({
+    initialValues: {
+      email: '',
+      nickname: '',
+      password: '',
+      passwordConfirm: '',
+      birthday: '',
+    },
+    validationSchema,
+    onSubmit,
+  });
 
-    const body = {
-      email,
-      password,
-      nickname,
-      birthday
-    };
-    Axios.post('/api/users/signUp', body);
-  };
+  console.log(errors);
 
   return (
-    <Wrapper direction="column" justifyContent="space-evenly">
-      <SignUpForm direction="column" justifyContent="space-evenly">
-        <Input type="email" value={email} name="Email" onChange={onEmailHandler} />
-        <Input type="text" value={nickname} name="Nickname" onChange={onNicknameHandler} />
-        <Input type="password" value={password} name="Password" onChange={onPasswordHandler} />
-        <Input type="password" value={passwordConfirm} name="PasswordConfirm" onChange={onPasswordConfirmHandler} />
-        <Input type="date" value={birthday} name="Birthday" onChange={onBirthdayHandler} />
-
-        <Button type="button" onClick={onSubmitHandler}>
+    <Wrapper>
+      <SignUpForm autoComplete="off" direction="column" justifyContent="space-evenly" onSubmit={handleSubmit}>
+        <ErrorMsg>
+          {errors.email}
+        </ErrorMsg>
+        <Input
+          value={values.email}
+          onChange={handleChange}
+          id="email"
+          type="email"
+          placeholder="이메일"
+          onBlur={handleBlur}
+        />
+        <ErrorMsg>
+          {errors.nickname}
+        </ErrorMsg>
+        <Input
+          value={values.nickname}
+          onChange={handleChange}
+          id="nickname"
+          type="text"
+          placeholder="닉네임"
+          onBlur={handleBlur}
+        />
+        <ErrorMsg>
+          {errors.password}
+        </ErrorMsg>
+        <Input
+          value={values.password}
+          onChange={handleChange}
+          id="password"
+          type="password"
+          placeholder="비밀번호"
+          onBlur={handleBlur}
+        />
+        <ErrorMsg>
+          {errors.passwordConfirm}
+        </ErrorMsg>
+        <Input
+          value={values.passwordConfirm}
+          onChange={handleChange}
+          id="passwordConfirm"
+          type="password"
+          placeholder="비밀번호 확인"
+          onBlur={handleBlur}
+        />
+        <ErrorMsg>
+          {errors.birthday}
+        </ErrorMsg>
+        <Input
+          value={values.birthday}
+          onChange={handleChange}
+          id="birthday"
+          type="date"
+          placeholder="생일"
+          onBlur={handleBlur}
+        />
+        <Button type="button" onClick={onSubmit}>
           회원가입하기
         </Button>
         <LoginLink>
