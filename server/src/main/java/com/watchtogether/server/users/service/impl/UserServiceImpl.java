@@ -23,6 +23,7 @@ import java.util.Locale;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -30,8 +31,8 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-
     private final MailComponents mailComponents;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional
@@ -47,13 +48,16 @@ public class UserServiceImpl implements UserService {
             throw new UserException(ALREADY_SIGNUP_NICKNAME);
         }
 
+        // 패스워드 암호화
+        String encodePassword = passwordEncoder.encode(password);
+
         // 인증 메일 고유식별번호
         String code = getRandomCode();
 
         User user = userRepository.save(User.builder()
             .email(email.toLowerCase(Locale.ROOT))
             .nickname(nickname)
-            .password(password)
+            .password(encodePassword)
             .cash(0L)
             .birth(birth)
             .emailVerify(false)
@@ -96,7 +100,7 @@ public class UserServiceImpl implements UserService {
 
         if (user.getStatus().equals(UserStatus.LEAVE)) {
             throw new UserException(LEAVE_USER);
-        } else if (!user.getPassword().equals(password)) {
+        } else if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new UserException(WRONG_PASSWORD_USER);
         } else if (!user.isEmailVerify()) {
             throw new UserException(NEED_VERIFY_EMAIL);
