@@ -35,7 +35,7 @@ function Login() {
       // 토큰 값 함수 생성
         console.log(response.data);
         dispatch(login({ email: formValues.email }));
-        navigate('/mypage');
+        navigate('/addParty');
       })
       .catch((error) => {
         if (error.response) {
