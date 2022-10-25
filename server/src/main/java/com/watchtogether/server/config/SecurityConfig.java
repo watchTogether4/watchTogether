@@ -89,7 +89,7 @@ public class SecurityConfig {
             .authorizeRequests()    //요청에 대한 권한 체크
             .requestMatchers(CorsUtils::isPreFlightRequest).permitAll() //  Preflight 요청은 허용
             .antMatchers("/api/**").permitAll()
-            .anyRequest().authenticated()
+            //.anyRequest().authenticated()
 
             .and().build();
     }

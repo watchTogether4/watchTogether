@@ -26,6 +26,7 @@ public class InviteParty {
 
     private String receiverNickName;
     private String receiverUUID;
+    private boolean accept;
     private LocalDateTime limitDt;
     private LocalDateTime createDt;
     private LocalDateTime updateDt;
@@ -39,6 +40,17 @@ public class InviteParty {
         return InviteParty.builder()
                 .receiverNickName(form.getReceiverNickName())
                 .receiverUUID(UUID.randomUUID().toString())
+                .accept(false)
+                .limitDt(LocalDateTime.now().plusDays(1))
+                .createDt(LocalDateTime.now())
+                .party(form.getParty())
+                .build();
+    }
+    public static InviteParty leaderFrom(InvitePartyForm form){
+        return InviteParty.builder()
+                .receiverNickName(form.getReceiverNickName())
+                .receiverUUID(UUID.randomUUID().toString())
+                .accept(true)
                 .limitDt(LocalDateTime.now().plusDays(1))
                 .createDt(LocalDateTime.now())
                 .party(form.getParty())
