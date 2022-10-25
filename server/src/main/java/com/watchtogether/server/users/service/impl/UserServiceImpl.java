@@ -9,12 +9,14 @@ import static com.watchtogether.server.exception.type.UserErrorCode.NEED_VERIFY_
 import static com.watchtogether.server.exception.type.UserErrorCode.NOT_FOUND_USER;
 import static com.watchtogether.server.exception.type.UserErrorCode.WRONG_PASSWORD_USER;
 import static com.watchtogether.server.exception.type.UserErrorCode.WRONG_VERIFY_EMAIL_CODE;
+import static com.watchtogether.server.users.domain.type.Authority.USER;
 
 import com.watchtogether.server.components.mail.MailComponents;
 import com.watchtogether.server.exception.UserException;
 import com.watchtogether.server.users.domain.dto.UserDto;
 import com.watchtogether.server.users.domain.entitiy.User;
 import com.watchtogether.server.users.domain.repository.UserRepository;
+import com.watchtogether.server.users.domain.type.Authority;
 import com.watchtogether.server.users.domain.type.UserStatus;
 import com.watchtogether.server.users.service.UserService;
 import java.time.LocalDateTime;
@@ -23,6 +25,8 @@ import java.util.Locale;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -64,6 +68,7 @@ public class UserServiceImpl implements UserService {
             .emailVerifyCode(code)
             .emailVerifyExpiredDt(LocalDateTime.now().plusDays(1))
             .status(UserStatus.REQ)
+            .roles(USER.getRoles())
             .build());
 
         sendAuthEmail(email, code);
@@ -125,7 +130,7 @@ public class UserServiceImpl implements UserService {
         String subject = "watchTogether 사이트 가입을 축하드립니다!";
         String text = builder.append("<p>안녕하세요.</p>")
             .append("<p>이메일 인증을 완료하기위해 아래 링크를 클릭해주세요!.</p>")
-            .append("<div><a href='http://localhost:8081/api/users/signUp/verify/?email=")
+            .append("<div><a href='http://localhost:8081/api/users/sign-up/verify/?email=")
             .append(email)
             .append("&code=")
             .append(code)
@@ -142,5 +147,12 @@ public class UserServiceImpl implements UserService {
      */
     private String getRandomCode() {
         return RandomStringUtils.random(15, true, true);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new UserException(NOT_FOUND_USER));
+        return user;
     }
 }
