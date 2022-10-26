@@ -1,4 +1,4 @@
-package com.watchtogether.server.exception;
+package com.watchtogether.server.exception.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

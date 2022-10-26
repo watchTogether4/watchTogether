@@ -130,7 +130,7 @@ public class UserServiceImpl implements UserService {
         String subject = "watchTogether 사이트 가입을 축하드립니다!";
         String text = builder.append("<p>안녕하세요.</p>")
             .append("<p>이메일 인증을 완료하기위해 아래 링크를 클릭해주세요!.</p>")
-            .append("<div><a href='http://localhost:8081/api/users/sign-up/verify/?email=")
+            .append("<div><a href='http://localhost:8081/api/v1/users/sign-up/verify/?email=")
             .append(email)
             .append("&code=")
             .append(code)

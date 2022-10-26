@@ -1,10 +1,11 @@
-package com.watchtogether.server.exception;
+package com.watchtogether.server.exception.handler;
 
 import static com.watchtogether.server.exception.type.AuthErrorCode.EXPIRED_TOKEN;
 import static com.watchtogether.server.exception.type.AuthErrorCode.INVALID_TOKEN;
 import static com.watchtogether.server.exception.type.AuthErrorCode.IS_EMPTY_TOKEN;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.watchtogether.server.exception.response.AuthExceptionResponse;
 import com.watchtogether.server.exception.type.AuthErrorCode;
 import java.io.IOException;
 import java.io.PrintWriter;
