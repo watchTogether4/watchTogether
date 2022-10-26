@@ -1,19 +1,27 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-// styles
+
 import './styles/reset.css';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import { ThemeProvider } from 'styled-components';
-import theme from './styles/theme/theme';
 
+import { ThemeProvider } from 'styled-components';
+import { Provider } from 'react-redux';
+import { CookiesProvider } from 'react-cookie';
+
+import theme from './styles/theme/theme';
 import App from './App';
+import store from './store';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
-    <ThemeProvider theme={theme}>
-      <App />
-    </ThemeProvider>
-  </React.StrictMode>,
+  <CookiesProvider>
+    <React.StrictMode>
+      <Provider store={store}>
+        <ThemeProvider theme={theme}>
+          <App />
+        </ThemeProvider>
+      </Provider>
+    </React.StrictMode>
+  </CookiesProvider>,
 );
