@@ -1,7 +1,7 @@
 package com.watchtogether.server.config;
 
 import com.watchtogether.server.components.jwt.JwtAuthenticationFilter;
-import com.watchtogether.server.exception.AuthenticationEntryPointHandler;
+import com.watchtogether.server.exception.handler.AuthenticationEntryPointHandler;
 import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -86,7 +86,7 @@ public class SecurityConfig {
             .and()
             .authorizeRequests()    //요청에 대한 권한 체크
             .requestMatchers(CorsUtils::isPreFlightRequest).permitAll() //  Preflight 요청은 허용
-            .antMatchers("/api/users/sign-in", "/api/users/sign-up/**").permitAll()
+            .antMatchers("/api/v1/users/sign-in", "/api/v1/users/sign-up/**").permitAll()
             .anyRequest().authenticated()
 
             .and()
