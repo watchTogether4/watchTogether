@@ -1,10 +1,10 @@
 package com.watchtogether.server.users.domain.entitiy;
 
 import com.watchtogether.server.users.domain.type.UserStatus;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
-import java.time.LocalDateTime;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -45,7 +45,7 @@ public class User extends BaseEntity implements UserDetails {
     private Long cash;
 
     @Column(name = "birth")
-    private Date birth;
+    private LocalDate birth;
 
     @Column(name = "email_verify", nullable = false, columnDefinition = "BIT DEFAULT 0")
     private boolean emailVerify;

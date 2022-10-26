@@ -25,8 +25,9 @@ import com.watchtogether.server.users.domain.model.SignInUser;
 import com.watchtogether.server.users.domain.model.SignUpUser;
 import com.watchtogether.server.users.domain.type.UserStatus;
 import com.watchtogether.server.users.service.UserService;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -52,7 +53,7 @@ class UserControllerTest {
 
 
     private static final String RANDOM_CODE = getRandomCode();
-    private static final SimpleDateFormat testDate = new SimpleDateFormat("yyyy-MM-dd");
+    private static final DateTimeFormatter testDate = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
 
     @DisplayName("성공 케이스_사용자 회원가입 신청")
@@ -64,7 +65,7 @@ class UserControllerTest {
                 .email("test@gmail.com")
                 .nickname("apple")
                 .password("password")
-                .birth(testDate.parse("2222-02-22"))
+                .birth(LocalDate.parse("2222-02-22", testDate))
                 .cash(0L)
                 .emailVerify(false)
                 .emailVerifyCode(getRandomCode())
@@ -83,7 +84,7 @@ class UserControllerTest {
                         "test@gmail.com"
                         , "apple"
                         , "password"
-                        , testDate.parse("2222-02-22"))
+                        , LocalDate.parse("2222-02-22", testDate))
                 )))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.email").value("test@gmail.com"))
@@ -108,7 +109,7 @@ class UserControllerTest {
                         "test@gmail.com"
                         , "apple"
                         , "password"
-                        , testDate.parse("2222-02-22"))
+                        , LocalDate.parse("2222-02-22", testDate))
                 )))
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.userErrorCode").value("ALREADY_SIGNUP_EMAIL"))
@@ -134,7 +135,7 @@ class UserControllerTest {
                         "test@gmail.com"
                         , "apple"
                         , "password"
-                        , testDate.parse("2222-02-22"))
+                        , LocalDate.parse("2222-02-22", testDate))
                 )))
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.userErrorCode").value("ALREADY_SIGNUP_NICKNAME"))
@@ -151,7 +152,7 @@ class UserControllerTest {
                 .email("test@gmail.com")
                 .nickname("apple")
                 .password("password")
-                .birth(testDate.parse("2222-02-22"))
+                .birth(LocalDate.parse("2222-02-22", testDate))
                 .cash(0L)
                 .emailVerify(false)
                 .emailVerifyCode(RANDOM_CODE)
@@ -179,7 +180,7 @@ class UserControllerTest {
                 .email("test@gmail.com")
                 .nickname("apple")
                 .password("password")
-                .birth(testDate.parse("2222-02-22"))
+                .birth(LocalDate.parse("2222-02-22", testDate))
                 .cash(0L)
                 .emailVerify(false)
                 .emailVerifyCode(RANDOM_CODE)
@@ -192,11 +193,11 @@ class UserControllerTest {
         //when
         //then
         mockMvc.perform(post("/api/users/signIn")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(
-                new SignInUser.Request(
-                    "test@gmail.com"
-                    , "password")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(
+                    new SignInUser.Request(
+                        "test@gmail.com"
+                        , "password")
                 )))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.email").value("test@gmail.com"))
@@ -245,6 +246,7 @@ class UserControllerTest {
             .andExpect(jsonPath("$.errorMessage").value(WRONG_PASSWORD_USER.getDetail()))
             .andDo(print());
     }
+
     @Test
     @DisplayName("실패 케이스_탈퇴한 사용자_사용자 로그인")
     void failureLeaveUserSignIn() throws Exception {
@@ -265,6 +267,7 @@ class UserControllerTest {
             .andExpect(jsonPath("$.errorMessage").value(LEAVE_USER.getDetail()))
             .andDo(print());
     }
+
     @Test
     @DisplayName("실패 케이스_이메일 인증 필요_사용자 로그인")
     void failureNeedVerifyEmailSignIn() throws Exception {

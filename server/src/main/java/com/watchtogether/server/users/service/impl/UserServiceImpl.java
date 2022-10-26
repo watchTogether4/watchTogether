@@ -16,11 +16,10 @@ import com.watchtogether.server.exception.UserException;
 import com.watchtogether.server.users.domain.dto.UserDto;
 import com.watchtogether.server.users.domain.entitiy.User;
 import com.watchtogether.server.users.domain.repository.UserRepository;
-import com.watchtogether.server.users.domain.type.Authority;
 import com.watchtogether.server.users.domain.type.UserStatus;
 import com.watchtogether.server.users.service.UserService;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.Locale;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -38,9 +37,10 @@ public class UserServiceImpl implements UserService {
     private final MailComponents mailComponents;
     private final PasswordEncoder passwordEncoder;
 
+
     @Override
     @Transactional
-    public UserDto singUpUser(String email, String nickname, String password, Date birth) {
+    public UserDto singUpUser(String email, String nickname, String password, LocalDate birth) {
 
         boolean existEmail = userRepository.existsById(email.toLowerCase(Locale.ROOT));
         if (existEmail) {
@@ -113,6 +113,15 @@ public class UserServiceImpl implements UserService {
 
         // 마지막 로그인 날짜 저장
         user.setLastLoginDt(LocalDateTime.now());
+
+        return UserDto.fromEntity(user);
+    }
+
+    @Override
+    public UserDto myPageUser(String email) {
+
+        User user = userRepository.findById(email)
+            .orElseThrow(() -> new UserException(NOT_FOUND_USER));
 
         return UserDto.fromEntity(user);
     }

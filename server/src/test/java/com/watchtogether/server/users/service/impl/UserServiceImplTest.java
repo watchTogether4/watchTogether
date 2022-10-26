@@ -1,9 +1,8 @@
 package com.watchtogether.server.users.service.impl;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -14,8 +13,9 @@ import com.watchtogether.server.users.domain.model.SignInUser;
 import com.watchtogether.server.users.domain.model.SignUpUser;
 import com.watchtogether.server.users.domain.repository.UserRepository;
 import com.watchtogether.server.users.domain.type.UserStatus;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.DisplayName;
@@ -37,7 +37,7 @@ public class UserServiceImplTest {
     @Mock
     private MailComponents mailComponents;
     private static final String RANDOM_CODE = getRandomCode();
-    private static final SimpleDateFormat testDate = new SimpleDateFormat("yyyy-MM-dd");
+    private static final DateTimeFormatter testDate = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private static final LocalDateTime expireDate = LocalDateTime.now().plusDays(1);
 
     @DisplayName("성공 케이스_사용자 회원가입 신청")
@@ -49,7 +49,6 @@ public class UserServiceImplTest {
             .email("test@gmail.com")
             .nickname("apple")
             .password("password")
-            .birth(testDate.parse("2222-02-22"))
             .build();
 
         given(userRepository.save(any()))
@@ -66,7 +65,7 @@ public class UserServiceImplTest {
         //when
 
         UserDto userDto = userService.singUpUser("test@gmail.com", "apple", "password",
-            testDate.parse("2222-02-22"));
+            LocalDate.parse("2222-02-22", testDate));
 
         //then
         verify(userRepository, times(1)).save(captor.capture());
@@ -134,7 +133,7 @@ public class UserServiceImplTest {
                 "test@gmail.com"
                 , "test"
                 , "password",
-                testDate.parse("2022-02-11"));
+                LocalDate.parse("2022-02-11", testDate));
         return request;
     }
 

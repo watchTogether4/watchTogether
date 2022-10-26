@@ -1,6 +1,7 @@
 package com.watchtogether.server.users.service;
 
 import com.watchtogether.server.users.domain.dto.UserDto;
+import java.time.LocalDate;
 import java.util.Date;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
@@ -15,7 +16,7 @@ public interface UserService extends UserDetailsService {
      * @param birth
      * @return
      */
-    UserDto singUpUser(String email, String nickname, String password, Date birth);
+    UserDto singUpUser(String email, String nickname, String password, LocalDate birth);
 
     /**
      * 인증 메일
@@ -33,4 +34,12 @@ public interface UserService extends UserDetailsService {
      * @return
      */
     UserDto signInUser(String email, String password);
+
+    /**
+     * 사용자 마이페이지
+     *
+     * @param email
+     * @return
+     */
+    UserDto myPageUser(String email);
 }
