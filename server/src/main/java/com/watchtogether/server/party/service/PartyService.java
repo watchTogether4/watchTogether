@@ -31,6 +31,7 @@ public class PartyService {
     private final InvitePartyRepository invitePartyRepository;
     private final PartyMemberRepository partyMemberRepository;
     private final EntityManagerFactory emf;
+    private final EntityManager em;
 
     // 파티장이 파티 생성 클릭
     public Party createParty(CreatePartyForm form) {
@@ -68,11 +69,9 @@ public class PartyService {
         Optional<Party> optionalParty = partyRepository.findById(inviteParty.getParty().getId());
         if (optionalParty.isPresent()) {
             inviteParty.setAccept(true);
-            inviteParty.setUpdateDt(LocalDateTime.now());
             Party party = optionalParty.get();
 
             party.setPeople(party.getPeople() + 1);
-            party.setUpdatedDt(LocalDateTime.now());
             return partyRepository.save(party);
         }
         throw new PartyException(PartyErrorCode.NOT_FOUND_PARTY);
@@ -86,15 +85,16 @@ public class PartyService {
         if (optionalParty.isPresent()) {
             Party party = optionalParty.get();
             if (party.getPeople() == 4) {
-                return addPartyMember(party.getId());
-            }else {
+
+                return savePartyMember(party.getId());
+            } else {
                 return null;
             }
         }
         throw new PartyException(PartyErrorCode.NOT_FOUND_PARTY);
     }
 
-    public ResponseEntity<Object> addPartyMember(Long partyId) {
+    public ResponseEntity<Object> savePartyMember(Long partyId) {
         List<Object[]> list = findAddPartyMember(partyId);
         for (Object[] object : list) {
             InvitePartyForm invitePartyForm = InvitePartyForm.builder()
@@ -116,6 +116,23 @@ public class PartyService {
         query.setParameter("partyId", partyId);
         return query.getResultList();
     }
+//    public ResponseEntity<Object> putPartyMember(AcceptPartyForm form) {
+//        InviteParty inviteParty = findUser(form);
+//        Long partyId =inviteParty.getParty().getId();
+//        List<PartyMember> partyMemberList = partyMemberRepository.findByParty_Id(partyId);
+//        System.out.println(partyMemberList);
+//        Optional<Party> optionalParty = partyRepository.findById(partyId);
+//        if (optionalParty.isPresent()){
+//            optionalParty.get().setMembers(partyMemberList);
+//        }
+//
+//        Party party = em.find(Party.class, partyId);
+//        List<PartyMember> members= party.getMembers();
+//        System.out.println(members);
+//        party.getMembers().get(0).getNickName();
+//
+//        return ResponseEntity.ok().build();
+//    }
 
     public InviteParty findUser(AcceptPartyForm form) {
         InviteParty inviteParty = invitePartyRepository.findByReceiverNickNameAndReceiverUUID(form.getNick(), form.getUuid())
