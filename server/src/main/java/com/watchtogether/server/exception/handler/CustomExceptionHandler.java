@@ -1,5 +1,7 @@
-package com.watchtogether.server.exception;
+package com.watchtogether.server.exception.handler;
 
+import com.watchtogether.server.exception.response.UserExceptionResponse;
+import com.watchtogether.server.exception.UserException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -10,11 +12,11 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class CustomExceptionHandler {
 
     @ExceptionHandler({UserException.class})
-    public ResponseEntity<ExceptionResponse> UserException(final UserException e) {
+    public ResponseEntity<UserExceptionResponse> UserException(final UserException e) {
         log.error("UserException is occurred. ", e);
 
         return ResponseEntity.badRequest()
-            .body(new ExceptionResponse(e.getUserErrorCode(), e.getMessage()));
+            .body(new UserExceptionResponse(e.getErrorStatus(),e.getUserErrorCode(), e.getMessage()));
     }
 
 }

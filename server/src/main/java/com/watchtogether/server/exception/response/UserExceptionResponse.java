@@ -1,4 +1,4 @@
-package com.watchtogether.server.exception;
+package com.watchtogether.server.exception.response;
 
 import com.watchtogether.server.exception.type.UserErrorCode;
 import lombok.AllArgsConstructor;
@@ -13,9 +13,10 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ExceptionResponse {
+public class UserExceptionResponse {
 
-    private UserErrorCode userErrorCode;
-    private String errorMessage;
+    private int status;
+    private UserErrorCode errorCode;
+    private String Message;
 
 }
