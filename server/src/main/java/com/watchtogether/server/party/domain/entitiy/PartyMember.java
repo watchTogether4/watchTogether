@@ -3,7 +3,9 @@ package com.watchtogether.server.party.domain.entitiy;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.watchtogether.server.party.domain.model.InvitePartyForm;
+import com.watchtogether.server.users.domain.entitiy.BaseEntity;
 import lombok.*;
+import org.hibernate.envers.AuditOverride;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -13,9 +15,10 @@ import java.util.UUID;
 @Setter
 @Getter
 @Builder
+@AuditOverride(forClass = BaseEntity.class)
 @AllArgsConstructor
 @NoArgsConstructor
-public class PartyMember {
+public class PartyMember extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
