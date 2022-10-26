@@ -3,6 +3,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import icons from '../../mocks/icons';
 import { Wrapper, Inner, Title, Desc, Carousel, Icon, StartBtn } from './Main.style';
+import { getCookieToken } from '../../utils/Cookie';
 
 function Main() {
   const navigate = useNavigate();
@@ -28,6 +29,15 @@ function Main() {
     ],
   };
 
+  const isValidateToken = (e) => {
+    e.preventDefault();
+    const token = getCookieToken();
+    if (token !== undefined) {
+      navigate('/mypage');
+    } else {
+      navigate('/signIn');
+    }
+  };
   return (
     <Wrapper>
       <Inner>
@@ -57,7 +67,7 @@ function Main() {
             </div>
           ))}
         </Carousel>
-        <StartBtn onClick={() => navigate('/signIn')}>Get Start</StartBtn>
+        <StartBtn onClick={isValidateToken}>Get Start</StartBtn>
       </Inner>
     </Wrapper>
   );
