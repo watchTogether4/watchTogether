@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @Tag(name = "파티(PartyController)", description = "Party API")
-@RequestMapping("/api/parties")
+@RequestMapping("/api/v1/parties")
 public class PartyController {
     private final PartyService partyService;
 
