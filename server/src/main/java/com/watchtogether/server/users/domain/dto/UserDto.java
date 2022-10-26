@@ -24,6 +24,7 @@ public class UserDto {
     private String emailVerifyCode;
     private LocalDateTime emailVerifyExpiredDt;
     private UserStatus status;
+    private String roles;
     private LocalDateTime lastLoginDt;
 
     private LocalDateTime createdDt;
@@ -41,6 +42,7 @@ public class UserDto {
             .emailVerifyExpiredDt(user.getEmailVerifyExpiredDt())
             .status(user.getStatus())
             .lastLoginDt(user.getLastLoginDt())
+            .roles(user.getRoles())
             .createdDt(user.getCreatedDt())
             .updatedDt(user.getUpdatedDt())
             .build();

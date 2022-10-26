@@ -2,8 +2,9 @@ package com.watchtogether.server.users.service;
 
 import com.watchtogether.server.users.domain.dto.UserDto;
 import java.util.Date;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
-public interface UserService {
+public interface UserService extends UserDetailsService {
 
     /**
      * 사용자 회원가입 신청
