@@ -1,20 +1,24 @@
 package com.watchtogether.server.users.controller;
 
 
+import static com.watchtogether.server.users.domain.type.UserSuccess.SUCCESS_MY_PAGE;
 import static com.watchtogether.server.users.domain.type.UserSuccess.SUCCESS_SIGNIN;
 import static com.watchtogether.server.users.domain.type.UserSuccess.SUCCESS_SIGNUP;
 import static com.watchtogether.server.users.domain.type.UserSuccess.SUCCESS_VERIFY_EMAIL;
 
 import com.watchtogether.server.components.jwt.TokenProvider;
 import com.watchtogether.server.users.domain.dto.UserDto;
+import com.watchtogether.server.users.domain.entitiy.User;
 import com.watchtogether.server.users.domain.model.SignInUser;
 import com.watchtogether.server.users.domain.model.SignUpUser;
 import com.watchtogether.server.users.domain.model.VerifyEmail;
+import com.watchtogether.server.users.domain.model.myPageUser;
 import com.watchtogether.server.users.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -44,7 +48,9 @@ public class UserController {
             , request.getBirth());
 
         return ResponseEntity.ok(
-            new SignUpUser.Response(userDto.getEmail(), SUCCESS_SIGNUP.getMessage()));
+            new SignUpUser.Response(
+                userDto.getEmail(),
+                SUCCESS_SIGNUP.getMessage()));
     }
 
     @GetMapping("/sign-up/verify")
@@ -55,7 +61,8 @@ public class UserController {
         userService.verifyUser(email, code);
 
         return ResponseEntity.ok(
-            new VerifyEmail.Response(SUCCESS_VERIFY_EMAIL.getMessage()));
+            new VerifyEmail.Response(
+                SUCCESS_VERIFY_EMAIL.getMessage()));
     }
 
     @PostMapping("/sign-in")
@@ -67,9 +74,26 @@ public class UserController {
         // token 발행
         String token = tokenProvider.generateToken(userDto.getEmail(), userDto.getRoles());
 
+        return ResponseEntity.ok(
+            new SignInUser.Response(
+                userDto.getEmail(),
+                token,
+                SUCCESS_SIGNIN.getMessage()));
+    }
+
+    @GetMapping("/my-page")
+    public ResponseEntity<myPageUser.Response> myPage(@AuthenticationPrincipal User user) {
+
+        UserDto userDto = userService.myPageUser(user.getEmail());
 
         return ResponseEntity.ok(
-            new SignInUser.Response(userDto.getEmail(), token, SUCCESS_SIGNIN.getMessage()));
+            new myPageUser.Response(
+                userDto.getEmail(),
+                userDto.getNickname(),
+                userDto.getCash(),
+                userDto.getBirth(),
+                SUCCESS_MY_PAGE.getMessage()));
+
     }
 
 }
