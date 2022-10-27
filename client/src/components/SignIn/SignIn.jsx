@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
+import { loginUser } from '../../api/Users';
+import { setRefreshToken } from '../../utils/Cookie';
+import { SET_TOKEN } from '../../store/Auth';
+
 import {
   Wrapper,
   LoginInput,
@@ -9,51 +13,34 @@ import {
   LoginForm,
   ErrorMessage,
   SignUpLink,
-} from './Login.styles';
+} from './SignIn.styles';
 
 function Login() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const intialValues = { email: '', password: '' };
   const [formValues, setFormValues] = useState(intialValues);
   const [formErrors, setFormErrors] = useState('');
   const [isVaildate, setIsValidate] = useState(false);
 
-  const submitForm = () => {
-    // 백으로 유저 정보 전달
-    console.log(formValues);
-    axios({
-      url: '/api/users/signIn',
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      data: JSON.stringify(formValues)
-    })
+  const submitForm = async () => {
+    await loginUser(formValues)
       .then((response) => {
-        // 토큰 값 함수 생성
-        console.log(response.data);
-      })
-      .catch((error) => {
-        if (error.response) {
-          // 요청이 이루어졌으며 서버가 2xx의 범위를 벗어나는 상태 코드로 응답함
-          setFormErrors(error.response.data.errorMessage);
-        } else if (error.request) {
-          // 요청이 이루어 졌으나 응답을 받지 못함
-          console.log(error.request);
-        } else {
-          // 오류를 발생시킨 요청을 설정하는 중에 문제 발생
-          console.log('Error', error.message);
+        if (response.status === 200) {
+          setRefreshToken(response.data.token);
+          dispatch(SET_TOKEN(response.data.token));
         }
-        console.log(error.config);
-      });
+        return navigate('/mypage');
+      })
+      .catch((error) => setFormErrors(error.response.data.errorMessage));
   };
 
   const validate = (values) => {
     let emailErrors = '';
     let passwordErrors = '';
-    // 정규식 표현
-    // eslint-disable-next-line operator-linebreak
-    const regex =
-      /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
+
+    const regex = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
 
     // 이메일 값이 없을시
     if (!values.email) {
@@ -76,9 +63,11 @@ function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    // 유효성 함수 호출 후 에러 저장
     setFormErrors(validate(formValues));
 
-    if (validate(formValues) === undefined) {
+    // 에러 없이 바로 유효성 검사 통과할 경우
+    if (validate(formValues) === '') {
       setIsValidate(true);
       submitForm();
     }
@@ -91,8 +80,9 @@ function Login() {
     setFormValues({ ...formValues, [name]: value });
   };
 
+  // 에러 발생시 처리
   useEffect(() => {
-    if (Object.keys(formErrors).length === 0 && isVaildate) {
+    if (formValues === '' && isVaildate) {
       submitForm();
     }
   }, [formErrors]);

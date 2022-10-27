@@ -23,6 +23,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-security'
+    // jwt
+    implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
     // gmail smtp
     implementation 'org.springframework.boot:spring-boot-starter-mail:2.7.4'
     // envers : hibernate 에서 만든 데이터 변경 이력을 로깅하기

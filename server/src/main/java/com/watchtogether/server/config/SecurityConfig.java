@@ -1,6 +1,7 @@
 package com.watchtogether.server.config;
 
-import com.watchtogether.server.exception.AuthenticationEntryPointHandler;
+import com.watchtogether.server.components.jwt.JwtAuthenticationFilter;
+import com.watchtogether.server.exception.handler.AuthenticationEntryPointHandler;
 import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +15,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.CorsUtils;
@@ -26,6 +28,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
+    private final JwtAuthenticationFilter authenticationFilter;
+
     @Bean
     public AuthenticationManager authenticationManager(
         AuthenticationConfiguration authenticationConfiguration)
@@ -33,12 +37,14 @@ public class SecurityConfig {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
+    // cors 설정
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
 
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOrigins(Arrays.asList("*"));    // 허용할 도메인 정보
+        configuration.setAllowedOriginPatterns(
+            Arrays.asList("http://localhost:3000"));    // 허용할 도메인 정보
         configuration.setAllowedMethods(Arrays.asList("*"));    // 허용할 http 메소드
         configuration.setAllowedHeaders(Arrays.asList("*"));    // 허용할 헤더 정보
         configuration.setAllowCredentials(true);    // cross origin 으로부터 인증을 위한 쿠키 정보를 받을지 여부
@@ -80,9 +86,13 @@ public class SecurityConfig {
             .and()
             .authorizeRequests()    //요청에 대한 권한 체크
             .requestMatchers(CorsUtils::isPreFlightRequest).permitAll() //  Preflight 요청은 허용
-            .antMatchers("/api/**").permitAll()
+            .antMatchers("/api/v1/users/sign-in", "/api/v1/users/sign-up/**").permitAll()
             .anyRequest().authenticated()
 
-            .and().build();
+            .and()
+            .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
+
+            .build();
+
     }
 }

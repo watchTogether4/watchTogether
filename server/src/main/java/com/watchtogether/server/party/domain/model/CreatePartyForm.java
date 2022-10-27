@@ -19,6 +19,8 @@ public class CreatePartyForm {
 
     private String partyOttPassword;
 
+    private String leaderNickName;
+
     private String receiversNickName;
 
 

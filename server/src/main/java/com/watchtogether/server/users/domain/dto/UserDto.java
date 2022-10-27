@@ -2,8 +2,8 @@ package com.watchtogether.server.users.domain.dto;
 
 import com.watchtogether.server.users.domain.entitiy.User;
 import com.watchtogether.server.users.domain.type.UserStatus;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,11 +19,12 @@ public class UserDto {
     private String nickname;
     private String password;
     private Long cash;
-    private Date birth;
+    private LocalDate birth;
     private boolean emailVerify;
     private String emailVerifyCode;
     private LocalDateTime emailVerifyExpiredDt;
     private UserStatus status;
+    private String roles;
     private LocalDateTime lastLoginDt;
 
     private LocalDateTime createdDt;
@@ -41,6 +42,7 @@ public class UserDto {
             .emailVerifyExpiredDt(user.getEmailVerifyExpiredDt())
             .status(user.getStatus())
             .lastLoginDt(user.getLastLoginDt())
+            .roles(user.getRoles())
             .createdDt(user.getCreatedDt())
             .updatedDt(user.getUpdatedDt())
             .build();

@@ -1,7 +1,7 @@
 package com.watchtogether.server.users.domain.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.util.Date;
+import java.time.LocalDate;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -34,7 +34,7 @@ public class SignUpUser {
         @NotNull(message = "생년월일을 입력해 주세요.")
         @DateTimeFormat(pattern = "yyyy-MM-dd")
         @Schema(description = "생년월일", example = "yyyy-MM-dd")
-        private Date birth;
+        private LocalDate birth;
 
     }
 

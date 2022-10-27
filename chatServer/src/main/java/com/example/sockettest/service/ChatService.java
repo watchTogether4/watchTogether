@@ -15,6 +15,7 @@ import org.springframework.web.socket.WebSocketSession;
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -56,7 +57,9 @@ public class ChatService {
     }
 
     public List<DialogDto> getDialog(String roomId) {
-        return (List<DialogDto>) new DialogDto(); // todo: date순으로 정렬해서 가져오기 구현
+        return dialogRespository.findAllByPartyIdOrderByDtAsc(roomId).stream()
+                .map(m -> new DialogDto(m))
+                .collect(Collectors.toList());
     }
 
     public void deleteRoom(String roomId) {

@@ -8,9 +8,11 @@ import lombok.Getter;
 public class UserException extends RuntimeException {
 
     private final UserErrorCode userErrorCode;
+    private final int errorStatus;
 
     public UserException(UserErrorCode userErrorCode) {
         super(userErrorCode.getDetail());
+        this.errorStatus = userErrorCode.getErrorStatus();
         this.userErrorCode = userErrorCode;
     }
 }

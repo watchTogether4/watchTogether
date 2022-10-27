@@ -2,7 +2,10 @@ package com.watchtogether.server.party.domain.entitiy;
 
 
 import com.watchtogether.server.party.domain.model.InvitePartyForm;
+import com.watchtogether.server.users.domain.entitiy.BaseEntity;
 import lombok.*;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.hibernate.envers.AuditOverride;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -12,9 +15,10 @@ import java.util.UUID;
 @Setter
 @Getter
 @Builder
+@AuditOverride(forClass = BaseEntity.class)
 @AllArgsConstructor
 @NoArgsConstructor
-public class InviteParty {
+public class InviteParty extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "invite_id")
@@ -26,9 +30,9 @@ public class InviteParty {
 
     private String receiverNickName;
     private String receiverUUID;
+    private boolean accept;
     private LocalDateTime limitDt;
-    private LocalDateTime createDt;
-    private LocalDateTime updateDt;
+
 
     public void setCreatePartyId(Party party){
         this.party = party;
@@ -36,11 +40,24 @@ public class InviteParty {
 
 
     public static InviteParty from(InvitePartyForm form){
+        String uuid = UUID.randomUUID().toString()
+                .replaceAll("-", "").substring(0, 15);
         return InviteParty.builder()
                 .receiverNickName(form.getReceiverNickName())
-                .receiverUUID(UUID.randomUUID().toString())
+                .receiverUUID(uuid)
+                .accept(false)
                 .limitDt(LocalDateTime.now().plusDays(1))
-                .createDt(LocalDateTime.now())
+                .party(form.getParty())
+                .build();
+    }
+    public static InviteParty leaderFrom(InvitePartyForm form){
+        String uuid = UUID.randomUUID().toString()
+                .replaceAll("-", "").substring(0, 15);
+        return InviteParty.builder()
+                .receiverNickName(form.getReceiverNickName())
+                .receiverUUID(uuid)
+                .accept(true)
+                .limitDt(LocalDateTime.now().plusDays(1))
                 .party(form.getParty())
                 .build();
     }
