@@ -1,9 +1,13 @@
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { SignUpForm, Wrapper, ErrorMsg, Input, LoginLink, Button } from './SignUp.style';
+import {toast, ToastContainer} from "react-toastify";
+import axios from 'axios';
 
 function SignUp() {
+  const navigate = useNavigate();
+
   const validationSchema = Yup.object().shape({
     email: Yup.string()
       .email('올바른 이메일 형식이 아닙니다!')
@@ -23,8 +27,28 @@ function SignUp() {
       .required('생일을 선택해주세요!')
   });
 
-  const onSubmit = () => {
+  const onSubmit = async (values) => {
     console.log('제출되었습니다.');
+    const {email, nickname, password, birthday} = values;
+    try {
+      await axios.post('/api/users/signUp', {
+        email,
+        nickname,
+        password,
+        birthday,
+      });
+      toast.success(<h1>회원가입이 완료되었습니다.</h1>, {
+        position: 'top-center',
+        autoClose: 2000
+      });
+      setTimeout(()=> {
+        navigate('/signIn');
+      }, 2000);
+    } catch (e) {
+      toast.error(e.response.data.message, {
+        position: 'top-center',
+      });
+    }
   };
 
   const { values, errors, handleBlur, handleChange, handleSubmit, } = useFormik({
@@ -104,7 +128,7 @@ function SignUp() {
         </Button>
         <LoginLink>
           <p>가치와치 회원이십니까?</p>
-          <Link to="/login">로그인하기</Link>
+          <Link to="/signIn">로그인하기</Link>
         </LoginLink>
       </SignUpForm>
     </Wrapper>
