@@ -21,3 +21,13 @@ export const logoutUser = () => axios({
   method: 'GET',
   headers: { 'Content-Type': 'application/json' },
 });
+
+
+/**
+ * 토큰 값 만료 확인 여부 
+ */
+export const isValidateToken = () => axios({
+  url: '/api/v1/users/my-page',
+  method: 'GET',
+  headers: { 'Content-Type': 'application/json' },
+});
