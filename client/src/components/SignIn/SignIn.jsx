@@ -33,7 +33,7 @@ function Login() {
         }
         return navigate('/mypage');
       })
-      .catch((error) => setFormErrors(error.response.data.errorMessage));
+      .catch((error) => setFormErrors(error.response.data.message));
   };
 
   const validate = (values) => {
