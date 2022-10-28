@@ -3,6 +3,7 @@ import * as Yup from 'yup';
 import { Link, useNavigate } from 'react-router-dom';
 import { SignUpForm, Wrapper, ErrorMsg, Input, LoginLink, Button } from './SignUp.style';
 import {toast, ToastContainer} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 
 function SignUp() {
@@ -68,6 +69,7 @@ function SignUp() {
 
   return (
     <Wrapper>
+      <ToastContainer/>
       <SignUpForm autoComplete="off" direction="column" justifyContent="space-evenly" onSubmit={handleSubmit}>
         <ErrorMsg>
           {errors.email}
