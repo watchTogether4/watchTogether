@@ -1,0 +1,20 @@
+spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: simjy0406@gmail.com
+    password: jfjdnifrizuhgwah
+    default-encoding: UTF-8
+    properties:
+      mail:
+        transport:
+          protocol: smtp
+        smtp:
+          auth: true
+          debug: true
+          starttls:
+            enable: true
+
+  jwt:
+    secret: J3dhdGh0b2dldGhlci1zcHJpbmctYm9vdC1wcm9qZWN0LWp3dC1zZWNyZXRrZXknIA0K
+

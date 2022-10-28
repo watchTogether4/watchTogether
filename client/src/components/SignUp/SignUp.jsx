@@ -23,19 +23,20 @@ function SignUp() {
     passwordConfirm: Yup.string()
       .oneOf([Yup.ref('password'), null], '비밀번호가 일치하지 않습니다!')
       .required('비밀번호 확인을 입력하세요!'),
-    birthday: Yup.string()
+    birth: Yup.string()
       .required('생일을 선택해주세요!')
   });
 
   const onSubmit = async (values) => {
     console.log('제출되었습니다.');
-    const {email, nickname, password, birthday} = values;
+    let {email, nickname, password, birth} = values;
+    birth = new Date(birth);
     try {
-      await axios.post('/api/users/signUp', {
+      await axios.post('/api/v1/users/sign-up', {
         email,
         nickname,
         password,
-        birthday,
+        birth,
       });
       toast.success(<h1>회원가입이 완료되었습니다.</h1>, {
         position: 'top-center',
@@ -57,7 +58,7 @@ function SignUp() {
       nickname: '',
       password: '',
       passwordConfirm: '',
-      birthday: '',
+      birth: '',
     },
     validationSchema,
     onSubmit,
@@ -113,17 +114,17 @@ function SignUp() {
           onBlur={handleBlur}
         />
         <ErrorMsg>
-          {errors.birthday}
+          {errors.birth}
         </ErrorMsg>
         <Input
-          value={values.birthday}
+          value={values.birth}
           onChange={handleChange}
-          id="birthday"
+          id="birth"
           type="date"
           placeholder="생일"
           onBlur={handleBlur}
         />
-        <Button type="button" onClick={onSubmit}>
+        <Button type="submit">
           회원가입하기
         </Button>
         <LoginLink>
