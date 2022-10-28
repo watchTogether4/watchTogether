@@ -4,10 +4,12 @@ import com.watchtogether.server.party.domain.entitiy.InviteParty;
 import com.watchtogether.server.party.domain.entitiy.Party;
 import com.watchtogether.server.party.domain.model.AcceptPartyForm;
 import com.watchtogether.server.party.domain.model.CreatePartyForm;
+import com.watchtogether.server.party.domain.model.FindMyPartiesForm;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface PartyService extends UserDetailsService {
     /**
@@ -59,4 +61,6 @@ public interface PartyService extends UserDetailsService {
      * @return
      */
     InviteParty findUser(AcceptPartyForm form);
+    List<String> myPartyMembers(List<Optional<Party>> list);
+    List<Optional<Party>> findMyParties(FindMyPartiesForm form);
 }

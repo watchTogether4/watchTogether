@@ -8,6 +8,7 @@ import com.watchtogether.server.party.domain.entitiy.Party;
 import com.watchtogether.server.party.domain.entitiy.PartyMember;
 import com.watchtogether.server.party.domain.model.AcceptPartyForm;
 import com.watchtogether.server.party.domain.model.CreatePartyForm;
+import com.watchtogether.server.party.domain.model.FindMyPartiesForm;
 import com.watchtogether.server.party.domain.model.InvitePartyForm;
 import com.watchtogether.server.party.domain.repository.InvitePartyRepository;
 import com.watchtogether.server.party.domain.repository.PartyMemberRepository;
@@ -26,8 +27,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
 
 import static com.watchtogether.server.exception.type.UserErrorCode.NOT_FOUND_USER;
 
@@ -43,6 +46,7 @@ public class PartyServiceImpl implements PartyService {
     private final EntityManager em;
 
     // 파티장이 파티 생성 클릭
+    @Override
     public Party createParty(CreatePartyForm form) {
         Party party = Party.from(form);
         if (form.getReceiversNickName() != null) {
@@ -71,6 +75,7 @@ public class PartyServiceImpl implements PartyService {
         return ResponseEntity.ok().build();
     }
 
+    @Override
     @Transactional
     public Party addMember(AcceptPartyForm form) {
 
@@ -87,6 +92,7 @@ public class PartyServiceImpl implements PartyService {
 
     }
 
+    @Override
     public ResponseEntity<Object> addPartyMember(AcceptPartyForm form) {
         InviteParty inviteParty = findUser(form);
         Optional<Party> optionalParty = partyRepository.findById(inviteParty.getParty().getId());
@@ -94,7 +100,6 @@ public class PartyServiceImpl implements PartyService {
         if (optionalParty.isPresent()) {
             Party party = optionalParty.get();
             if (party.getPeople() == 4) {
-
                 return savePartyMember(party.getId());
             } else {
                 return null;
@@ -103,46 +108,33 @@ public class PartyServiceImpl implements PartyService {
         throw new PartyException(PartyErrorCode.NOT_FOUND_PARTY);
     }
 
+    @Override
     public ResponseEntity<Object> savePartyMember(Long partyId) {
         List<Object[]> list = findAddPartyMember(partyId);
         for (Object[] object : list) {
             InvitePartyForm invitePartyForm = InvitePartyForm.builder()
                     .receiverNickName((String) object[0])
-                    .party((Party) object[1])
+                    .isLeader((Boolean) object[1])
+                    .party((Party) object[2])
                     .build();
             partyMemberRepository.save(PartyMember.from(invitePartyForm));
         }
         return ResponseEntity.ok().build();
     }
 
+    @Override
     public List<Object[]> findAddPartyMember(Long partyId) {
         EntityManager entityManager = emf.createEntityManager();
 
         Query query = entityManager
-                .createQuery(" select i.receiverNickName, i.party " +
+                .createQuery(" select i.receiverNickName,i.isLeader ,i.party " +
                         " from InviteParty i " +
                         " where i.accept = true and i.party.id=:partyId ");
         query.setParameter("partyId", partyId);
         return query.getResultList();
     }
-//    public ResponseEntity<Object> putPartyMember(AcceptPartyForm form) {
-//        InviteParty inviteParty = findUser(form);
-//        Long partyId =inviteParty.getParty().getId();
-//        List<PartyMember> partyMemberList = partyMemberRepository.findByParty_Id(partyId);
-//        System.out.println(partyMemberList);
-//        Optional<Party> optionalParty = partyRepository.findById(partyId);
-//        if (optionalParty.isPresent()){
-//            optionalParty.get().setMembers(partyMemberList);
-//        }
-//
-//        Party party = em.find(Party.class, partyId);
-//        List<PartyMember> members= party.getMembers();
-//        System.out.println(members);
-//        party.getMembers().get(0).getNickName();
-//
-//        return ResponseEntity.ok().build();
-//    }
 
+    @Override
     public InviteParty findUser(AcceptPartyForm form) {
         InviteParty inviteParty = invitePartyRepository.findByReceiverNickNameAndReceiverUUID(form.getNick(), form.getUuid())
                 .orElseThrow(() -> new PartyException(PartyErrorCode.NOT_FOUND_USER));
@@ -152,6 +144,31 @@ public class PartyServiceImpl implements PartyService {
             throw new PartyException(PartyErrorCode.WRONG_VERIFICATION);
         }
         return inviteParty;
+    }
+
+    @Override
+    public List<String> myPartyMembers(List<Optional<Party>> list) {
+        List<String> membersList = new ArrayList<>();
+        if (!list.isEmpty()) {
+            for (int i = 0; i < list.size(); i++) {
+                list.get(i).get().getMembers().get(i).getNickName();
+            }
+        }
+        throw new PartyException(PartyErrorCode.NOT_FOUND_PARTY);
+    }
+
+    @Override
+    public List<Optional<Party>> findMyParties(FindMyPartiesForm form) {
+        List<Optional<Party>> myPartyList = new ArrayList<>();
+        List<PartyMember> myPartyListId = partyMemberRepository.findByNickName(form.getNickName());
+        if (!myPartyListId.isEmpty()) {
+            for (PartyMember partyMember : myPartyListId) {
+                Optional<Party> party = partyRepository.findById(partyMember.getParty().getId());
+                myPartyList.add(party);
+            }
+            return myPartyList;
+        }
+        throw new PartyException(PartyErrorCode.NOT_FOUND_PARTY);
     }
 
 
