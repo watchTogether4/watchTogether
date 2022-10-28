@@ -15,6 +15,7 @@ import {
 } from './AddParty.styles';
 import SearchModal from './SearchModal';
 import AlertModal from './AlertModal';
+import { createParty } from '../../api/Parties';
 
 const AddParty = () => {
   const intialValues = {
@@ -35,22 +36,16 @@ const AddParty = () => {
 
   const submitForm = () => {
     const invite = inviteMember.join();
-    const body = { ...formValues, receiversNickName: invite };
-
-    axios({
-      url: '/api/parties/create',
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      data: JSON.stringify(body),
-    }).then((res) => {
-      console.log(res.data);
+    const body = { ...formValues, receiversNickName: invite, leaderNickName: '' };
+    createParty(body)
+    .then((res) => {
       setAlertMsg({
         title: '파티 등록 완료',
         message: '파티 모집 글이 정상적으로 \n등록되었습니다.',
       });
       setIsAlert(true);
+    }).catch((error) => {
+      console.log(error.response.data.message);
     });
   };
 
