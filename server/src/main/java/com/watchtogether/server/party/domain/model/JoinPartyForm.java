@@ -10,12 +10,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class InvitePartyForm {
-    private String nickname;
+public class JoinPartyForm {
+    private String nickName;
 
-    private Boolean isLeader;
-
-    private Party party;
+    private Long partyId;
 
 
 }
