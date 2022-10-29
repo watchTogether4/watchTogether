@@ -2,6 +2,7 @@ package com.watchtogether.server.users.controller;
 
 
 import static com.watchtogether.server.users.domain.type.UserSuccess.SUCCESS_MY_PAGE;
+import static com.watchtogether.server.users.domain.type.UserSuccess.SUCCESS_SEARCH_NICKNAME;
 import static com.watchtogether.server.users.domain.type.UserSuccess.SUCCESS_SIGNIN;
 import static com.watchtogether.server.users.domain.type.UserSuccess.SUCCESS_SIGNUP;
 import static com.watchtogether.server.users.domain.type.UserSuccess.SUCCESS_VERIFY_EMAIL;
@@ -9,10 +10,11 @@ import static com.watchtogether.server.users.domain.type.UserSuccess.SUCCESS_VER
 import com.watchtogether.server.components.jwt.TokenProvider;
 import com.watchtogether.server.users.domain.dto.UserDto;
 import com.watchtogether.server.users.domain.entitiy.User;
+import com.watchtogether.server.users.domain.model.MyPageUser;
+import com.watchtogether.server.users.domain.model.SearchUser;
 import com.watchtogether.server.users.domain.model.SignInUser;
 import com.watchtogether.server.users.domain.model.SignUpUser;
 import com.watchtogether.server.users.domain.model.VerifyEmail;
-import com.watchtogether.server.users.domain.model.myPageUser;
 import com.watchtogether.server.users.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -67,7 +69,8 @@ public class UserController {
 
     @PostMapping("/sign-in")
     @Operation(summary = "사용자 로그인", description = "아이디와, 비밀번호를 입력받고 인증된 사용자인지 확인 후 로그인 처리")
-    public ResponseEntity<SignInUser.Response> signIn(@RequestBody SignInUser.Request request) {
+    public ResponseEntity<SignInUser.Response> signIn(
+        @Validated @RequestBody SignInUser.Request request) {
 
         UserDto userDto = userService.signInUser(request.getEmail(), request.getPassword());
 
@@ -82,12 +85,12 @@ public class UserController {
     }
 
     @GetMapping("/my-page")
-    public ResponseEntity<myPageUser.Response> myPage(@AuthenticationPrincipal User user) {
+    public ResponseEntity<MyPageUser.Response> myPage(@AuthenticationPrincipal User user) {
 
         UserDto userDto = userService.myPageUser(user.getEmail());
 
         return ResponseEntity.ok(
-            new myPageUser.Response(
+            new MyPageUser.Response(
                 userDto.getEmail(),
                 userDto.getNickname(),
                 userDto.getCash(),
@@ -96,4 +99,14 @@ public class UserController {
 
     }
 
+    @GetMapping("/search-user")
+    public ResponseEntity<SearchUser.Response> searchUser(@RequestParam String nickname) {
+
+        userService.searchNickname(nickname);
+
+        return ResponseEntity.ok(
+            new SearchUser.Response(
+                nickname,
+                SUCCESS_SEARCH_NICKNAME.getMessage()));
+    }
 }

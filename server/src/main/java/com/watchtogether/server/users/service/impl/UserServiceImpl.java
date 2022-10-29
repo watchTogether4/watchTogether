@@ -6,6 +6,7 @@ import static com.watchtogether.server.exception.type.UserErrorCode.ALREADY_VERI
 import static com.watchtogether.server.exception.type.UserErrorCode.EXPIRED_VERIFY_EMAIL_CODE;
 import static com.watchtogether.server.exception.type.UserErrorCode.LEAVE_USER;
 import static com.watchtogether.server.exception.type.UserErrorCode.NEED_VERIFY_EMAIL;
+import static com.watchtogether.server.exception.type.UserErrorCode.NOT_FOUND_NICKNAME;
 import static com.watchtogether.server.exception.type.UserErrorCode.NOT_FOUND_USER;
 import static com.watchtogether.server.exception.type.UserErrorCode.WRONG_PASSWORD_USER;
 import static com.watchtogether.server.exception.type.UserErrorCode.WRONG_VERIFY_EMAIL_CODE;
@@ -37,6 +38,12 @@ public class UserServiceImpl implements UserService {
     private final MailComponents mailComponents;
     private final PasswordEncoder passwordEncoder;
 
+    @Override
+    public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new UserException(NOT_FOUND_USER));
+        return user;
+    }
 
     @Override
     @Transactional
@@ -126,6 +133,17 @@ public class UserServiceImpl implements UserService {
         return UserDto.fromEntity(user);
     }
 
+    @Override
+    public String searchNickname(String nickname) {
+
+        boolean existNickname =  userRepository.existsByNickname(nickname);
+        if(!existNickname){
+            throw new UserException(NOT_FOUND_NICKNAME);
+        }
+
+        return nickname;
+    }
+
     /**
      * 인증 메일 전송
      *
@@ -156,12 +174,5 @@ public class UserServiceImpl implements UserService {
      */
     private String getRandomCode() {
         return RandomStringUtils.random(15, true, true);
-    }
-
-    @Override
-    public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
-        User user = userRepository.findById(userId)
-            .orElseThrow(() -> new UserException(NOT_FOUND_USER));
-        return user;
     }
 }
