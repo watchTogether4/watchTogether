@@ -4,9 +4,6 @@ import lombok.Data;
 
 @Data
 public class OttAuthRequest {
-    public enum OttType{
-        NETFLEX, DISNEY
-    }
 
     private String id;
     private String password;
