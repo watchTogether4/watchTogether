@@ -37,6 +37,7 @@ const AddParty = () => {
   const submitForm = () => {
     const invite = inviteMember.join();
     const body = { ...formValues, receiversNickName: invite, leaderNickName: '' };
+    console.log(body)
     createParty(body)
     .then((res) => {
       setAlertMsg({
@@ -45,6 +46,7 @@ const AddParty = () => {
       });
       setIsAlert(true);
     }).catch((error) => {
+      console.log(error)
       console.log(error.response.data.message);
     });
   };
@@ -77,9 +79,10 @@ const AddParty = () => {
 
   useEffect(() => {
     console.log(formErrors);
-    if (Object.keys(formErrors).length === 0 && isVaildate) {
+    if (formErrors === undefined && isVaildate) {
       submitForm();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formErrors]);
 
   const handleChange = (e) => {
@@ -110,7 +113,7 @@ const AddParty = () => {
       <GatherForm onSubmit={handleSubmit}>
         {formErrors && <ErrorMessage className="error">{formErrors}</ErrorMessage>}
         <Label htmlFor="title">모집 제목</Label>
-        <CustomInput type="text" name="title" value={formValues.title} onChange={handleChange} />
+        <CustomInput type="text" name="title" defalutValue={formValues.title} onChange={handleChange} />
 
         <Label htmlFor="searchMember">파티원 초대하기</Label>
         <CustomInput
@@ -127,7 +130,7 @@ const AddParty = () => {
           type="text"
           name="partyOttId"
           placeholder="ID"
-          value={formValues.partyOttId}
+          defalutValue={formValues.partyOttId}
           onChange={handleChange}
         />
         <CustomInput
@@ -142,7 +145,7 @@ const AddParty = () => {
         <Text
           name="body"
           placeholder="여기에 입력하세요"
-          value={formValues.body}
+          defalutValue={formValues.body}
           onChange={handleChange}
         />
 
