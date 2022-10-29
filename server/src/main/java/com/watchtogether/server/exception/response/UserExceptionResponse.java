@@ -17,6 +17,6 @@ public class UserExceptionResponse {
 
     private int status;
     private UserErrorCode errorCode;
-    private String Message;
+    private String message;
 
 }

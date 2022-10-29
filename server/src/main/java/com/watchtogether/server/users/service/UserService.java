@@ -42,4 +42,12 @@ public interface UserService extends UserDetailsService {
      * @return
      */
     UserDto myPageUser(String email);
+
+    /**
+     * 사용자 닉네임 검색
+     *
+     * @param nickname 닉네임
+     * @return
+     */
+    String searchNickname(String nickname);
 }
