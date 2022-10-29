@@ -5,6 +5,7 @@ import com.watchtogether.server.party.domain.entitiy.Party;
 import com.watchtogether.server.party.domain.model.AcceptPartyForm;
 import com.watchtogether.server.party.domain.model.CreatePartyForm;
 import com.watchtogether.server.party.domain.model.FindMyPartiesForm;
+import com.watchtogether.server.party.domain.model.JoinPartyForm;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
@@ -63,4 +64,13 @@ public interface PartyService extends UserDetailsService {
     InviteParty findUser(AcceptPartyForm form);
     List<String> myPartyMembers(List<Optional<Party>> list);
     List<Optional<Party>> findMyParties(FindMyPartiesForm form);
+
+    /**
+     * 사용자 회원가입 신청
+     *
+     * @param form
+     * @return
+     */
+    ResponseEntity<Object> joinParty(JoinPartyForm form);
+
 }
