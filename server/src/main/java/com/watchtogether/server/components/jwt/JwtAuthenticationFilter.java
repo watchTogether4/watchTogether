@@ -1,11 +1,5 @@
 package com.watchtogether.server.components.jwt;
 
-import static com.watchtogether.server.exception.type.AuthErrorCode.INVALID_TOKEN;
-import static com.watchtogether.server.exception.type.AuthErrorCode.INVALID_TOKEN_PREFIX;
-import static com.watchtogether.server.exception.type.AuthErrorCode.IS_EMPTY_TOKEN;
-
-import com.watchtogether.server.exception.type.AuthErrorCode;
-import io.jsonwebtoken.JwtException;
 import java.io.IOException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -40,7 +34,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String token = resolveTokenFromRequest(request);
 
         // token 유효성 검증
-        if (StringUtils.hasText(token) && tokenProvider.validToken(token,request)) {
+        if (StringUtils.hasText(token) && tokenProvider.validToken(token, request)) {
             Authentication auth = tokenProvider.getAuthentication(token, request);
             SecurityContextHolder.getContext().setAuthentication(auth);
 
