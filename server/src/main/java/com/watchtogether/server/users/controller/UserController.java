@@ -1,6 +1,7 @@
 package com.watchtogether.server.users.controller;
 
 
+import static com.watchtogether.server.users.domain.type.UserSuccess.SUCCESS_CHECK_PASSWORD;
 import static com.watchtogether.server.users.domain.type.UserSuccess.SUCCESS_MY_PAGE;
 import static com.watchtogether.server.users.domain.type.UserSuccess.SUCCESS_SEARCH_NICKNAME;
 import static com.watchtogether.server.users.domain.type.UserSuccess.SUCCESS_SIGNIN;
@@ -10,6 +11,7 @@ import static com.watchtogether.server.users.domain.type.UserSuccess.SUCCESS_VER
 import com.watchtogether.server.components.jwt.TokenProvider;
 import com.watchtogether.server.users.domain.dto.UserDto;
 import com.watchtogether.server.users.domain.entitiy.User;
+import com.watchtogether.server.users.domain.model.CheckPassword;
 import com.watchtogether.server.users.domain.model.MyPageUser;
 import com.watchtogether.server.users.domain.model.SearchUser;
 import com.watchtogether.server.users.domain.model.SignInUser;
@@ -24,6 +26,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -57,7 +60,8 @@ public class UserController {
 
     @GetMapping("/sign-up/verify")
     @Operation(summary = "인증 메일 검증", description = "회원가입시 보낸 인증 메일 코드를 검사 후 승인 처리")
-    public ResponseEntity<VerifyEmail.Response> verify(@RequestParam(value = "email") String email
+    public ResponseEntity<VerifyEmail.Response> verify(
+        @RequestParam(value = "email") String email
         , @RequestParam(value = "code") String code) {
 
         userService.verifyUser(email, code);
@@ -85,7 +89,9 @@ public class UserController {
     }
 
     @GetMapping("/my-page")
-    public ResponseEntity<MyPageUser.Response> myPage(@AuthenticationPrincipal User user) {
+    @Operation(summary = "사용자 마이페이지", description = "로그인한 사용자 정보를 조회한다.")
+    public ResponseEntity<MyPageUser.Response> myPage(
+        @AuthenticationPrincipal User user) {
 
         UserDto userDto = userService.myPageUser(user.getEmail());
 
@@ -100,7 +106,9 @@ public class UserController {
     }
 
     @GetMapping("/search-user")
-    public ResponseEntity<SearchUser.Response> searchUser(@RequestParam String nickname) {
+    @Operation(summary = "초대할 사용자 닉네임 검색", description = "파티 모집 글 작성시, 초대할 사용자 닉네임을 검색한다.")
+    public ResponseEntity<SearchUser.Response> searchUser(
+        @RequestParam String nickname) {
 
         userService.searchNickname(nickname);
 
@@ -109,4 +117,18 @@ public class UserController {
                 nickname,
                 SUCCESS_SEARCH_NICKNAME.getMessage()));
     }
+
+    @PostMapping("password")
+    @Operation(summary = "사용자 새로운 비밀번호로 변경 전 현재 비밀번호 체크", description = "사용자의 비밀번호를 새로운 비밀번호로 변경하기 전 현재 비밀번호를 체크한다.")
+    public ResponseEntity<CheckPassword.Response> checkPassword(
+        @Validated @RequestBody CheckPassword.Request request
+        , @AuthenticationPrincipal User user) {
+
+        userService.checkPassword(user.getEmail(), request.getPassword());
+
+        return ResponseEntity.ok(
+            new CheckPassword.Response(
+                SUCCESS_CHECK_PASSWORD.getMessage()));
+    }
+
 }
