@@ -4,17 +4,23 @@ package com.watchtogether.server.users.controller;
 import static com.watchtogether.server.users.domain.type.UserSuccess.SUCCESS_CHANGE_PASSWORD;
 import static com.watchtogether.server.users.domain.type.UserSuccess.SUCCESS_CHECK_PASSWORD;
 import static com.watchtogether.server.users.domain.type.UserSuccess.SUCCESS_MY_PAGE;
+import static com.watchtogether.server.users.domain.type.UserSuccess.SUCCESS_RESET_PASSWORD;
 import static com.watchtogether.server.users.domain.type.UserSuccess.SUCCESS_SEARCH_NICKNAME;
+import static com.watchtogether.server.users.domain.type.UserSuccess.SUCCESS_SEND_RESET_PASSWORD;
 import static com.watchtogether.server.users.domain.type.UserSuccess.SUCCESS_SIGNIN;
 import static com.watchtogether.server.users.domain.type.UserSuccess.SUCCESS_SIGNUP;
 import static com.watchtogether.server.users.domain.type.UserSuccess.SUCCESS_VERIFY_EMAIL;
+import static com.watchtogether.server.users.domain.type.UserSuccess.SUCCESS_VERIFY_RESET_PASSWORD;
 
 import com.watchtogether.server.components.jwt.TokenProvider;
 import com.watchtogether.server.users.domain.dto.UserDto;
 import com.watchtogether.server.users.domain.entitiy.User;
+import com.watchtogether.server.users.domain.model.AuthResetPassword;
 import com.watchtogether.server.users.domain.model.ChangePassword;
 import com.watchtogether.server.users.domain.model.CheckPassword;
 import com.watchtogether.server.users.domain.model.MyPageUser;
+import com.watchtogether.server.users.domain.model.ResetNewPassword;
+import com.watchtogether.server.users.domain.model.ResetPassword;
 import com.watchtogether.server.users.domain.model.SearchUser;
 import com.watchtogether.server.users.domain.model.SignInUser;
 import com.watchtogether.server.users.domain.model.SignUpUser;
@@ -118,6 +124,42 @@ public class UserController {
             new SearchUser.Response(
                 nickname,
                 SUCCESS_SEARCH_NICKNAME.getMessage()));
+    }
+
+    @PostMapping("/reset-password")
+    @Operation(summary = "사용자 비밀번호 초기화 메일 전송", description = "사용자 비밀번호 초기화 메일 전송을 한다.")
+    public ResponseEntity<ResetPassword.Response> sendResetPassword(
+        @Validated @RequestBody ResetPassword.Request request) {
+
+        userService.resetPassword(request.getEmail(), request.getNickname());
+
+        return ResponseEntity.ok(
+            new ResetPassword.Response(
+                SUCCESS_SEND_RESET_PASSWORD.getMessage()));
+    }
+
+    @GetMapping("/reset-password")
+    @Operation(summary = "사용자 비밀번호 초기화 메일 인증", description = "사용자 비밀번호 초기화 메일 인증을 한다.")
+    public ResponseEntity<AuthResetPassword.Response> authResetPassword(
+        @RequestParam(value = "code") String code) {
+
+        userService.authResetPassword(code);
+
+        return ResponseEntity.ok(
+            new AuthResetPassword.Response(
+                SUCCESS_VERIFY_RESET_PASSWORD.getMessage()));
+    }
+
+    @PutMapping("/reset-password")
+    @Operation(summary = "사용자 새로운 비밀번호 재설정", description = "사용자 새로운 비밀번호로 재설정한다.")
+    public ResponseEntity<ResetNewPassword.Response> ResetNewPassword(
+        @Validated @RequestBody ResetNewPassword.Request request) {
+
+        userService.updateNewPassword(request.getCode(), request.getPassword());
+
+        return ResponseEntity.ok(
+            new ResetNewPassword.Response(
+                SUCCESS_RESET_PASSWORD.getMessage()));
     }
 
     @PostMapping("password")
