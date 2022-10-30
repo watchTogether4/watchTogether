@@ -1,11 +1,11 @@
 import React from 'react';
 import SignIn from '../components/SignIn/SignIn';
-import Header from '../components/SignIn/SignInHeader';
+import Header from '../components/Header/Header';
 
 function LoginPage() {
   return (
     <>
-      <Header />
+      <Header title="로그인" path="/"></Header>
       <SignIn />
     </>
   );

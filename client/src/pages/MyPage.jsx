@@ -1,11 +1,11 @@
 import React from 'react';
 import User from '../components/Mypage/User';
-import MypageHeader from '../components/Mypage/MypageHeader';
+import Header from '../components/Header/Header';
 
 function MyPage() {
   return (
     <>
-      <MypageHeader />
+      <Header title="마이 페이지" path="/"></Header>
       <User />
     </>
   );
