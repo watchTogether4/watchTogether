@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { getCookieToken } from '../utils/Cookie'
 
+const BASE_URL = `/api/v1/parties`
 /**
  *
  * @param {{
@@ -15,7 +16,7 @@ import { getCookieToken } from '../utils/Cookie'
  */
 export const createParty = (body) => (
   axios({
-    url: '/api/parties/create',
+    url: `${BASE_URL}/create`,
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -27,7 +28,7 @@ export const createParty = (body) => (
 
 export const acceptParty = (body) => (
   axios({
-    url: '/api/parties/accept',
+    url: `${BASE_URL}/accept`,
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -35,3 +36,4 @@ export const acceptParty = (body) => (
     data: JSON.stringify(body),
   })
 );
+
