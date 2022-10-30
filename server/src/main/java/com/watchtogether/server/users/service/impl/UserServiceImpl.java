@@ -50,6 +50,7 @@ public class UserServiceImpl implements UserService {
     public UserDto singUpUser(String email, String nickname, String password, LocalDate birth) {
 
         boolean existEmail = userRepository.existsById(email.toLowerCase(Locale.ROOT));
+
         if (existEmail) {
             throw new UserException(ALREADY_SIGNUP_EMAIL);
         }
@@ -86,6 +87,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void verifyUser(String email, String code) {
+
         User user = userRepository.findById(email)
             .orElseThrow(() -> new UserException(NOT_FOUND_USER));
 
@@ -137,11 +139,63 @@ public class UserServiceImpl implements UserService {
     public String searchNickname(String nickname) {
 
         boolean existNickname = userRepository.existsByNickname(nickname);
+
         if (!existNickname) {
             throw new UserException(NOT_FOUND_NICKNAME);
         }
 
         return nickname;
+    }
+
+    @Override
+    @Transactional
+    public void resetPassword(String email, String nickname) {
+
+        User user = userRepository.findByEmailAndNickname(email, nickname)
+            .orElseThrow(() -> new UserException(NOT_FOUND_USER));
+
+        // 랜덤 코드 생성
+        String code = getRandomCode();
+
+        user.setResetPasswordKey(code);
+        user.setResetPasswordLimitDt(LocalDateTime.now().plusDays(1));
+
+        mailComponents.sendResetPasswordEmail(email, code);
+
+    }
+
+    @Override
+    @Transactional
+    public void authResetPassword(String code) {
+
+        User user = userRepository.findByResetPasswordKey(code)
+            .orElseThrow(() -> new UserException(NOT_FOUND_USER));
+
+        if (user.getResetPasswordLimitDt().isBefore(LocalDateTime.now()) ||
+            user.getResetPasswordLimitDt() == null) {
+            throw new UserException(EXPIRED_VERIFY_EMAIL_CODE);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void updateNewPassword(String code, String password) {
+
+        User user = userRepository.findByResetPasswordKey(code)
+            .orElseThrow(() -> new UserException(NOT_FOUND_USER));
+
+        if (user.getResetPasswordLimitDt().isBefore(LocalDateTime.now()) ||
+             user.getResetPasswordLimitDt() == null) {
+            throw new UserException(EXPIRED_VERIFY_EMAIL_CODE);
+        }
+
+        //패스워드 암호화
+        String encodePassword = passwordEncoder.encode(password);
+
+        user.setPassword(encodePassword);
+        user.setResetPasswordKey("");
+        user.setResetPasswordLimitDt(null);
+
     }
 
     @Override
@@ -166,6 +220,7 @@ public class UserServiceImpl implements UserService {
         user.setPassword(encodePassword);
 
     }
+
 
     /**
      * 인증 메일 전송
