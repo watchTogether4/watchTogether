@@ -154,6 +154,19 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Override
+    @Transactional
+    public void updateUserPassword(String email, String password) {
+        User user = userRepository.findById(email)
+            .orElseThrow(() -> new UserException(NOT_FOUND_USER));
+
+        // 패스워드 암호화
+        String encodePassword = passwordEncoder.encode(password);
+
+        user.setPassword(encodePassword);
+
+    }
+
     /**
      * 인증 메일 전송
      *

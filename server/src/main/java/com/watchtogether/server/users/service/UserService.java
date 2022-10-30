@@ -57,4 +57,12 @@ public interface UserService extends UserDetailsService {
      * @param password 현재 패스워드
      */
     void checkPassword(String email, String password);
+
+
+    /**
+     * 새로운 패스워드로 변경
+     *
+     * @param password 새로운 패스워드
+     */
+    void updateUserPassword(String email, String password);
 }

@@ -1,6 +1,7 @@
 package com.watchtogether.server.users.controller;
 
 
+import static com.watchtogether.server.users.domain.type.UserSuccess.SUCCESS_CHANGE_PASSWORD;
 import static com.watchtogether.server.users.domain.type.UserSuccess.SUCCESS_CHECK_PASSWORD;
 import static com.watchtogether.server.users.domain.type.UserSuccess.SUCCESS_MY_PAGE;
 import static com.watchtogether.server.users.domain.type.UserSuccess.SUCCESS_SEARCH_NICKNAME;
@@ -11,6 +12,7 @@ import static com.watchtogether.server.users.domain.type.UserSuccess.SUCCESS_VER
 import com.watchtogether.server.components.jwt.TokenProvider;
 import com.watchtogether.server.users.domain.dto.UserDto;
 import com.watchtogether.server.users.domain.entitiy.User;
+import com.watchtogether.server.users.domain.model.ChangePassword;
 import com.watchtogether.server.users.domain.model.CheckPassword;
 import com.watchtogether.server.users.domain.model.MyPageUser;
 import com.watchtogether.server.users.domain.model.SearchUser;
@@ -129,6 +131,19 @@ public class UserController {
         return ResponseEntity.ok(
             new CheckPassword.Response(
                 SUCCESS_CHECK_PASSWORD.getMessage()));
+    }
+
+    @PutMapping("password")
+    @Operation(summary = "사용자 새로운 비밀번호로 변경", description = "사용자의 비밀번호를 새로운 비밀번호로 변경한다.")
+    public ResponseEntity<ChangePassword.Response> changeNewPassword(
+        @Validated @RequestBody ChangePassword.Request request
+        , @AuthenticationPrincipal User user) {
+
+        userService.updateUserPassword(user.getEmail(), request.getPassword());
+
+        return ResponseEntity.ok(
+            new ChangePassword.Response(
+                SUCCESS_CHANGE_PASSWORD.getMessage()));
     }
 
 }
