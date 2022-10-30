@@ -136,12 +136,35 @@ public class UserServiceImpl implements UserService {
     @Override
     public String searchNickname(String nickname) {
 
-        boolean existNickname =  userRepository.existsByNickname(nickname);
-        if(!existNickname){
+        boolean existNickname = userRepository.existsByNickname(nickname);
+        if (!existNickname) {
             throw new UserException(NOT_FOUND_NICKNAME);
         }
 
         return nickname;
+    }
+
+    @Override
+    public void checkPassword(String email, String password) {
+        User user = userRepository.findById(email)
+            .orElseThrow(() -> new UserException(NOT_FOUND_USER));
+
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new UserException(WRONG_PASSWORD_USER);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void updateUserPassword(String email, String password) {
+        User user = userRepository.findById(email)
+            .orElseThrow(() -> new UserException(NOT_FOUND_USER));
+
+        // 패스워드 암호화
+        String encodePassword = passwordEncoder.encode(password);
+
+        user.setPassword(encodePassword);
+
     }
 
     /**

@@ -2,7 +2,6 @@ package com.watchtogether.server.users.service;
 
 import com.watchtogether.server.users.domain.dto.UserDto;
 import java.time.LocalDate;
-import java.util.Date;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 public interface UserService extends UserDetailsService {
@@ -50,4 +49,20 @@ public interface UserService extends UserDetailsService {
      * @return
      */
     String searchNickname(String nickname);
+
+    /**
+     * 현재 패스워드 검사
+     *
+     * @param email    이메일(아이디)
+     * @param password 현재 패스워드
+     */
+    void checkPassword(String email, String password);
+
+
+    /**
+     * 새로운 패스워드로 변경
+     *
+     * @param password 새로운 패스워드
+     */
+    void updateUserPassword(String email, String password);
 }
