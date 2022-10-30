@@ -66,6 +66,14 @@ public class User extends BaseEntity implements UserDetails {
     @Column(name = "last_login_dt")
     private LocalDateTime lastLoginDt;
 
+    @Column(name = "reset_password_key")
+    private String resetPasswordKey;
+
+    @Column(name = "reset_password_limit_dt")
+    private LocalDateTime resetPasswordLimitDt;
+
+
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
