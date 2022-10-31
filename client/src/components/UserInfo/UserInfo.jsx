@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useQuery } from 'react-query';
-
 import { Wrapper, Profile, InfoList, Button, Withdrawal } from './UserInfo.style';
 import { getInfo } from './../../api/Users';
 import ChangePassword from './ChangeModal';
@@ -29,9 +28,13 @@ const UserInfo = () => {
         {data && (
           <div>
             <Profile>
-              <Avvvatars value={data.email} style='shape' size={100}/>
+              <Avvvatars value={data.email} style="shape" size={100} />
             </Profile>
             <InfoList>
+              <li>
+                <span>닉네임</span>
+                <span>{data.nickname}</span>
+              </li>
               <li>
                 <span>이메일</span>
                 <span>{data.email}</span>
@@ -41,10 +44,6 @@ const UserInfo = () => {
                 <Button type="button" onClick={handleClick} data-name="changePassword">
                   변경하기
                 </Button>
-              </li>
-              <li>
-                <span>닉네임</span>
-                <span>{data.nickname}</span>
               </li>
               <li>
                 <span>생년월일</span>
@@ -57,7 +56,7 @@ const UserInfo = () => {
             </InfoList>
           </div>
         )}
-        <Withdrawal type="button" onClick={handleClick} data-name="withdrawal">
+        <Withdrawal type="button" onClick={handleClick} data={data} data-name="withdrawal">
           탈퇴하기
         </Withdrawal>
       </Wrapper>

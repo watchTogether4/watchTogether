@@ -3,7 +3,7 @@ import styled from 'styled-components';
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 2rem;
+  padding: 1rem 2rem;
 `;
 
 const Profile = styled.div`
