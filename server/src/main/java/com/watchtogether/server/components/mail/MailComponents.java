@@ -52,8 +52,12 @@ public class MailComponents {
         String subject = "[watchTogether] 비밀번호 초기화 메일 입니다.";
         String text = builder.append("<p>안녕하세요.</p>")
             .append("<p>watchTogether 비밀번호 초기화 메일 입니다.</p>")
-            .append("<p>아래 코드를 복사해서 입력해주세요.</p>")
+            .append("<p>아래 링크를 클릭해주세요.</p>")
+            .append("<div><a href='http://localhost:3000/code=")
             .append(code)
+            .append("'>")
+            .append(code)
+            .append("</a><div>")
             .toString();
 
         return sendMail(email, subject, text);
