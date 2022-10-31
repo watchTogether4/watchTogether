@@ -2,7 +2,7 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { Link, useNavigate } from 'react-router-dom';
 import { SignUpForm, Wrapper, ErrorMsg, Input, LoginLink, Button } from './SignUp.style';
-import {toast, ToastContainer} from "react-toastify";
+import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 
@@ -10,9 +10,7 @@ function SignUp() {
   const navigate = useNavigate();
 
   const validationSchema = Yup.object().shape({
-    email: Yup.string()
-      .email('올바른 이메일 형식이 아닙니다!')
-      .required('이메일을 입력하세요!'),
+    email: Yup.string().email('올바른 이메일 형식이 아닙니다!').required('이메일을 입력하세요!'),
     nickname: Yup.string()
       .min(2, '닉네임은 최소 2글자 이상입니다!')
       .max(10, '닉네임은 최대 10글자입니다!')
@@ -24,13 +22,12 @@ function SignUp() {
     passwordConfirm: Yup.string()
       .oneOf([Yup.ref('password'), null], '비밀번호가 일치하지 않습니다!')
       .required('비밀번호 확인을 입력하세요!'),
-    birth: Yup.string()
-      .required('생일을 선택해주세요!')
+    birth: Yup.string().required('생일을 선택해주세요!'),
   });
 
   const onSubmit = async (values) => {
     console.log('제출되었습니다.');
-    let {email, nickname, password, birth} = values;
+    let { email, nickname, password, birth } = values;
     birth = new Date(birth);
     try {
       await axios.post('/api/v1/users/sign-up', {
@@ -41,9 +38,9 @@ function SignUp() {
       });
       toast.success(<h1>회원가입이 완료되었습니다.</h1>, {
         position: 'top-center',
-        autoClose: 2000
+        autoClose: 2000,
       });
-      setTimeout(()=> {
+      setTimeout(() => {
         navigate('/signIn');
       }, 2000);
     } catch (e) {
@@ -53,7 +50,7 @@ function SignUp() {
     }
   };
 
-  const { values, errors, handleBlur, handleChange, handleSubmit, } = useFormik({
+  const { values, errors, handleBlur, handleChange, handleSubmit } = useFormik({
     initialValues: {
       email: '',
       nickname: '',
@@ -69,11 +66,14 @@ function SignUp() {
 
   return (
     <Wrapper>
-      <ToastContainer/>
-      <SignUpForm autoComplete="off" direction="column" justifyContent="space-evenly" onSubmit={handleSubmit}>
-        <ErrorMsg>
-          {errors.email}
-        </ErrorMsg>
+      <ToastContainer />
+      <SignUpForm
+        autoComplete="off"
+        direction="column"
+        justifyContent="space-evenly"
+        onSubmit={handleSubmit}
+      >
+        <ErrorMsg>{errors.email}</ErrorMsg>
         <Input
           value={values.email}
           onChange={handleChange}
@@ -82,9 +82,7 @@ function SignUp() {
           placeholder="이메일"
           onBlur={handleBlur}
         />
-        <ErrorMsg>
-          {errors.nickname}
-        </ErrorMsg>
+        <ErrorMsg>{errors.nickname}</ErrorMsg>
         <Input
           value={values.nickname}
           onChange={handleChange}
@@ -93,9 +91,7 @@ function SignUp() {
           placeholder="닉네임"
           onBlur={handleBlur}
         />
-        <ErrorMsg>
-          {errors.password}
-        </ErrorMsg>
+        <ErrorMsg>{errors.password}</ErrorMsg>
         <Input
           value={values.password}
           onChange={handleChange}
@@ -104,9 +100,7 @@ function SignUp() {
           placeholder="비밀번호"
           onBlur={handleBlur}
         />
-        <ErrorMsg>
-          {errors.passwordConfirm}
-        </ErrorMsg>
+        <ErrorMsg>{errors.passwordConfirm}</ErrorMsg>
         <Input
           value={values.passwordConfirm}
           onChange={handleChange}
@@ -115,9 +109,7 @@ function SignUp() {
           placeholder="비밀번호 확인"
           onBlur={handleBlur}
         />
-        <ErrorMsg>
-          {errors.birth}
-        </ErrorMsg>
+        <ErrorMsg>{errors.birth}</ErrorMsg>
         <Input
           value={values.birth}
           onChange={handleChange}
@@ -126,9 +118,7 @@ function SignUp() {
           placeholder="생일"
           onBlur={handleBlur}
         />
-        <Button type="submit">
-          회원가입하기
-        </Button>
+        <Button type="submit">회원가입하기</Button>
         <LoginLink>
           <p>가치와치 회원이십니까?</p>
           <Link to="/signIn">로그인하기</Link>

@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import {
   Wrapper,
   Header,
-  Title,
   Description,
   GatherForm,
   Label,
@@ -37,18 +35,18 @@ const AddParty = () => {
   const submitForm = () => {
     const invite = inviteMember.join();
     const body = { ...formValues, receiversNickName: invite, leaderNickName: '' };
-    console.log(body)
+
     createParty(body)
-    .then((res) => {
-      setAlertMsg({
-        title: '파티 등록 완료',
-        message: '파티 모집 글이 정상적으로 \n등록되었습니다.',
+      .then((res) => {
+        setAlertMsg({
+          title: '모집이 완료 되었습니다!',
+          message: '파티 모집 글이 정상적으로 \n등록되었습니다.',
+        });
+        setIsAlert(true);
+      })
+      .catch((error) => {
+        console.log(error.response.data.message);
       });
-      setIsAlert(true);
-    }).catch((error) => {
-      console.log(error)
-      console.log(error.response.data.message);
-    });
   };
 
   const validate = (values) => {
@@ -78,11 +76,10 @@ const AddParty = () => {
   };
 
   useEffect(() => {
-    console.log(formErrors);
     if (formErrors === undefined && isVaildate) {
       submitForm();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formErrors]);
 
   const handleChange = (e) => {
@@ -106,21 +103,25 @@ const AddParty = () => {
   return (
     <Wrapper>
       <Header>
-        <Title>파티원 모집하기</Title>
         <Description>파티원을 모집하거나, 원하는 지인을 초대할 수 있어요.</Description>
       </Header>
 
       <GatherForm onSubmit={handleSubmit}>
         {formErrors && <ErrorMessage className="error">{formErrors}</ErrorMessage>}
         <Label htmlFor="title">모집 제목</Label>
-        <CustomInput type="text" name="title" defalutValue={formValues.title} onChange={handleChange} />
+        <CustomInput
+          type="text"
+          name="title"
+          defalutValue={formValues.title}
+          onChange={handleChange}
+        />
 
         <Label htmlFor="searchMember">파티원 초대하기</Label>
         <CustomInput
           type="text"
           name="searchMember"
           placeholder="찾으려는 파티원의 닉네임을 입력해주세요."
-          value={inviteMember}
+          defalutValue={inviteMember}
           onClick={handleClick}
         />
 
@@ -137,7 +138,7 @@ const AddParty = () => {
           type="password"
           name="partyOttPassword"
           placeholder="Password"
-          value={formValues.partyOttPassword}
+          defalutValue={formValues.partyOttPassword}
           onChange={handleChange}
         />
 

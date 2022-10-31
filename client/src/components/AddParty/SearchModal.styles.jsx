@@ -2,19 +2,19 @@ import styled from 'styled-components';
 import { Button, Input } from '../../styles/Common';
 
 const Wrapper = styled.div`
-  position: absolute; 
+  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100vh;
-  background-color: rgba(0,0,0,0.5);
+  background-color: rgba(0, 0, 0, 0.5);
   overflow: hidden;
 `;
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  position: absolute; 
+  position: absolute;
   width: 80%;
   padding: 1rem;
   background-color: #fff;
@@ -30,7 +30,7 @@ const SearchForm = styled.form`
   align-items: center;
   flex-direction: column;
   width: 100%;
-  border-radius: 12px;  
+  border-radius: 12px;
 `;
 
 const SearchInput = styled(Input)`
@@ -45,8 +45,9 @@ const SearchResult = styled.div`
   padding: 1rem;
   margin-bottom: 1rem;
   border-radius: 12px;
-  background-color: ${(props) => props.theme.color.light_200}
+  background-color: ${(props) => props.theme.color.light_200};
 `;
+
 const SearchButton = styled.button`
   width: 2rem;
   height: 2rem;
@@ -68,7 +69,17 @@ const SubmitButton = styled(Button)`
 `;
 
 const CancleButton = styled(SubmitButton)`
-background-color: ${(props) => props.theme.color.warning_300}
+  background-color: ${(props) => props.theme.color.warning_300};
 `;
 
-export { Wrapper, Container, SearchForm, SearchButton, SearchInput, SearchResult, ButtonContainer, SubmitButton, CancleButton };
+export {
+  Wrapper,
+  Container,
+  SearchForm,
+  SearchButton,
+  SearchInput,
+  SearchResult,
+  ButtonContainer,
+  SubmitButton,
+  CancleButton,
+};
