@@ -1,8 +1,8 @@
-package com.example.sockettest.party.components;
+package com.example.sockettest.ottAuth.components;
 
 import org.springframework.stereotype.Component;
 
-@Component
+@Component(value = "DISNEY")
 public class DisneyAuth implements OttAuthComponent{
 
     @Override
