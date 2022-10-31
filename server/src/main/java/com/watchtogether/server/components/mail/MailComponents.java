@@ -15,6 +15,37 @@ public class MailComponents {
 
     public final JavaMailSender javaMailSender;
 
+    /**
+     * 회원가입 인증 코드 메일 전송
+     *
+     * @param email 이메일
+     * @param code 인증코드(15자리 랜덤문자)
+     * @return
+     */
+    public boolean sendAuthEmail(String email, String code) {
+
+        StringBuilder builder = new StringBuilder();
+        String subject = "watchTogether 사이트 가입을 축하드립니다!";
+        String text = builder.append("<p>안녕하세요.</p>")
+            .append("<p>이메일 인증을 완료하기위해 아래 링크를 클릭해주세요!.</p>")
+            .append("<div><a href='http://localhost:8081/api/v1/users/sign-up/verify/?email=")
+            .append(email)
+            .append("&code=")
+            .append(code)
+            .append("'>가입완료</a><div>")
+            .toString();
+
+        return sendMail(email, subject, text);
+    }
+
+
+    /**
+     * 패스워드 초기화 코드 인증 메일 전송
+     *
+     * @param email 이메일
+     * @param code 인증코드(15자리 랜덤문자)
+     * @return
+     */
     public boolean sendResetPasswordEmail(String email, String code) {
 
         StringBuilder builder = new StringBuilder();
