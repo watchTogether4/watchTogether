@@ -10,13 +10,18 @@ function Profile() {
     return getInfo().then((res) => res.data);
   };
   const { data } = useQuery('getInfo', getUserInfo);
+  
   return (
     <Wrapper direction="column" justifyContent="space-between">
-      <ImageContainer>
-        <Avvvatars value={data.email} style='shape' size={130}/>
-      </ImageContainer>
-      <UserName>{data.nickname}</UserName>
-      <UserEmail>{data.email}</UserEmail>
+      {data && (
+        <div>
+          <ImageContainer>
+            <Avvvatars value={data.email} style='shape' size={130}/>
+          </ImageContainer>
+          <UserName>{data.nickname}</UserName>
+          <UserEmail>{data.email}</UserEmail>
+        </div>
+      )}
     </Wrapper>
   );
 }
