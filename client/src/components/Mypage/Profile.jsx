@@ -1,16 +1,22 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useQuery } from 'react-query';
 import { Wrapper, ImageContainer, Image, UserName, UserEmail } from './Profile.styles';
+import Avvvatars from 'avvvatars-react';
+
+import { getInfo } from './../../api/Users';
 
 function Profile() {
-  const user = useSelector((state) => state.user.value);
+  const getUserInfo = () => {
+    return getInfo().then((res) => res.data);
+  };
+  const { data } = useQuery('getInfo', getUserInfo);
   return (
     <Wrapper direction="column" justifyContent="space-between">
       <ImageContainer>
-        <Image />
+        <Avvvatars value={data.email} style='shape' size={130}/>
       </ImageContainer>
-      <UserName>{user.nickname}</UserName>
-      <UserEmail>{user.email}</UserEmail>
+      <UserName>{data.nickname}</UserName>
+      <UserEmail>{data.email}</UserEmail>
     </Wrapper>
   );
 }
