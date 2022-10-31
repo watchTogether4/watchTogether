@@ -6,6 +6,7 @@ import SignIn from './pages/SignInPage';
 import MyPage from './pages/MyPage';
 import SignUp from './pages/SignUpPage';
 import AddParty from './pages/AddPartyPage';
+import UserInfo from './pages/UserInfoPage';
 
 function App() {
   return (
@@ -14,9 +15,11 @@ function App() {
         <Route path="/" element={<MainPage />} />
         <Route path="/signIn" element={<SignIn />} />
         <Route path="/signUp" element={<SignUp />} />
-        {/* 마이 페이지 */}
+
         <Route path="/addParty" element={<AddParty />} />
+
         <Route path="/mypage" element={<MyPage />} />
+        <Route path="/mypage/user" element={<UserInfo />} />
         {/* <Route path="/mypage/myparty" element={<MyParty />} />
           <Route path="/mypage/myparty/:id" element={<MyPartyDetail />} />
           <Route path="/mypage/myparty/:id/chat" element={<Chat />} />
