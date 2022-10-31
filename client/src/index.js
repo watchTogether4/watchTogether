@@ -8,20 +8,26 @@ import 'slick-carousel/slick/slick-theme.css';
 import { ThemeProvider } from 'styled-components';
 import { Provider } from 'react-redux';
 import { CookiesProvider } from 'react-cookie';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
 import theme from './styles/theme/theme';
 import App from './App';
 import store from './store';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+
+const client = new QueryClient();
+
 root.render(
   <CookiesProvider>
     <React.StrictMode>
-      <Provider store={store}>
-        <ThemeProvider theme={theme}>
-          <App />
-        </ThemeProvider>
-      </Provider>
+      <QueryClientProvider client={client}>
+        <Provider store={store}>
+          <ThemeProvider theme={theme}>
+            <App />
+          </ThemeProvider>
+        </Provider>
+      </QueryClientProvider>
     </React.StrictMode>
   </CookiesProvider>,
 );
