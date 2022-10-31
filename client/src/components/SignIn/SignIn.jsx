@@ -4,6 +4,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { loginUser } from '../../api/Users';
 import { setRefreshToken } from '../../utils/Cookie';
 import { SET_TOKEN } from '../../store/Auth';
+import {toast, ToastContainer} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 import {
   Wrapper,
@@ -31,9 +33,19 @@ function Login() {
           setRefreshToken(response.data.token);
           dispatch(SET_TOKEN(response.data.token));
         }
-        return navigate('/mypage');
+        toast.success(<h1>성공적으로 로그인했습니다.</h1>, {
+          position: 'top-center',
+          autoClose: 3000
+        });
+        setTimeout(()=> {
+          navigate('/mypage');
+        }, 3000);
       })
-      .catch((error) => setFormErrors(error.response.data.message));
+      .catch((error) => {
+        toast.error(error.response.data.message, {
+          position: 'top-center',
+        });
+      })
   };
 
   const validate = (values) => {
@@ -90,6 +102,7 @@ function Login() {
 
   return (
     <Wrapper direction="column" justifyContent="space-evenly">
+      <ToastContainer/>
       <Desc justifyContent="flex-start">
         쉬운 파티원 초대와 매칭,
         <br />
