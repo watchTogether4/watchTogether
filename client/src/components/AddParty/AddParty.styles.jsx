@@ -2,22 +2,16 @@ import styled from 'styled-components';
 import { Button, Input } from '../../styles/Common';
 
 const Wrapper = styled.div`
-  position: relative; 
+  position: relative;
   padding: 2rem 1rem;
 `;
 
 const Header = styled.header`
   width: 100%;
-  height: 4.5rem;
-`;
-
-const Title = styled.h2`
-  margin-bottom: 0.5rem;
-  font-weight: 700;
-  font-size: 1.2rem;
 `;
 
 const Description = styled.p`
+  margin-bottom: 1rem;
   font-size: 0.85rem;
 `;
 
@@ -25,7 +19,6 @@ const GatherForm = styled.form`
   width: 100%;
   display: flex;
   flex-direction: column;
-
 `;
 
 const Label = styled.label`
@@ -59,6 +52,11 @@ const ErrorMessage = styled.p`
 export {
   Wrapper,
   Header,
-  Title,
-  Description, GatherForm, Label, CustomInput, Text, SubmitButton, ErrorMessage
+  Description,
+  GatherForm,
+  Label,
+  CustomInput,
+  Text,
+  SubmitButton,
+  ErrorMessage,
 };
