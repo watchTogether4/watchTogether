@@ -11,7 +11,7 @@ const Profile = styled.div`
   height: 100px;
   margin: 1rem auto;
   border-radius: 50%;
-  border: 1px solid red;
+  border: 1px solid grey;
   overflow: hidden;
 
   img {

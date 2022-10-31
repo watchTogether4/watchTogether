@@ -5,6 +5,7 @@ import { Wrapper, Profile, InfoList, Button, Withdrawal } from './UserInfo.style
 import { getInfo } from './../../api/Users';
 import ChangePassword from './ChangeModal';
 import AlertModal from './AlertModal';
+import Avvvatars from 'avvvatars-react';
 
 const UserInfo = () => {
   const getUserInfo = () => {
@@ -28,7 +29,7 @@ const UserInfo = () => {
         {data && (
           <div>
             <Profile>
-              <img src="" alt="" />
+              <Avvvatars value={data.email} style='shape' size={100}/>
             </Profile>
             <InfoList>
               <li>
