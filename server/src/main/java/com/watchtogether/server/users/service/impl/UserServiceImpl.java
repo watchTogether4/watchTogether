@@ -79,7 +79,7 @@ public class UserServiceImpl implements UserService {
             .roles(USER.getRoles())
             .build());
 
-        sendAuthEmail(email, code);
+        mailComponents.sendAuthEmail(email, code);
 
         return UserDto.fromEntity(user);
     }
@@ -185,7 +185,7 @@ public class UserServiceImpl implements UserService {
             .orElseThrow(() -> new UserException(NOT_FOUND_USER));
 
         if (user.getResetPasswordLimitDt().isBefore(LocalDateTime.now()) ||
-             user.getResetPasswordLimitDt() == null) {
+            user.getResetPasswordLimitDt() == null) {
             throw new UserException(EXPIRED_VERIFY_EMAIL_CODE);
         }
 
@@ -223,32 +223,9 @@ public class UserServiceImpl implements UserService {
 
 
     /**
-     * 인증 메일 전송
-     *
-     * @param email
-     * @param code
-     * @return
-     */
-    public boolean sendAuthEmail(String email, String code) {
-
-        StringBuilder builder = new StringBuilder();
-        String subject = "watchTogether 사이트 가입을 축하드립니다!";
-        String text = builder.append("<p>안녕하세요.</p>")
-            .append("<p>이메일 인증을 완료하기위해 아래 링크를 클릭해주세요!.</p>")
-            .append("<div><a href='http://localhost:8081/api/v1/users/sign-up/verify/?email=")
-            .append(email)
-            .append("&code=")
-            .append(code)
-            .append("'>가입완료</a><div>")
-            .toString();
-
-        return mailComponents.sendMail(email, subject, text);
-    }
-
-    /**
      * 문자와 숫자로 조합된 15자리의 코드 생성
      *
-     * @return
+     * @return 문자와 숫자로 조합된 15자리의 코드
      */
     private String getRandomCode() {
         return RandomStringUtils.random(15, true, true);
