@@ -13,7 +13,7 @@ public class ResetNewPassword {
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
-    @Schema(name = "ResetPasswordRequest", description = "비밀번호 초기화 요청")
+    @Schema(name = "ResetNewPasswordRequest", description = "새로운 비밀번호로 변경 요청")
     public static class Request {
 
         @NotBlank(message = "패스워드 초기화 인증 코드를 입력해주세요.")
@@ -30,7 +30,7 @@ public class ResetNewPassword {
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
-    @Schema(name = "ResetPasswordResponse", description = "비밀번호 초기화 응답")
+    @Schema(name = "ResetNewPasswordResponse", description = "새로운 비밀번호로 변경 응답")
     public static class Response {
 
         @Schema(description = "성공 응답 메시지")
