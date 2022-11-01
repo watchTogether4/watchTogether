@@ -87,12 +87,18 @@ public class UserController {
         UserDto userDto = userService.signInUser(request.getEmail(), request.getPassword());
 
         // token 발행
-        String token = tokenProvider.generateToken(userDto.getEmail(), userDto.getRoles());
+        String accessToken = tokenProvider.generateAccessToken(userDto.getEmail(),
+            userDto.getRoles());
+        String refreshToken = tokenProvider.generateRefreshToken(userDto.getRoles());
+
+        // refresh_token 값 , 유효기간 저장
+        userService.saveRefreshToken(userDto.getEmail(), refreshToken);
 
         return ResponseEntity.ok(
             new SignInUser.Response(
                 userDto.getEmail(),
-                token,
+                accessToken,
+                refreshToken,
                 SUCCESS_SIGNIN.getMessage()));
     }
 
@@ -101,7 +107,7 @@ public class UserController {
     public ResponseEntity<MyPageUser.Response> myPage(
         @AuthenticationPrincipal User user) {
 
-        UserDto userDto = userService.myPageUser(user.getEmail());
+        UserDto userDto = userService.InfoUser(user.getEmail());
 
         return ResponseEntity.ok(
             new MyPageUser.Response(

@@ -36,8 +36,11 @@ public class SignInUser {
         @Schema(description = "아이디", example = "abc@ikdmd.kg.lr")
         private String email;
 
-        @Schema(description = "토큰 값")
-        private String token;
+        @Schema(description = "access 토큰 값")
+        private String accessToken;
+
+        @Schema(description = "refresh 토큰 값")
+        private String refreshToken;
 
         @Schema(description = "메시지")
         private String message;
