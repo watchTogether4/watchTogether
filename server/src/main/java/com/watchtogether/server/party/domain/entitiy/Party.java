@@ -57,4 +57,17 @@ public class Party extends BaseEntity{
                 .invisibleDt(LocalDateTime.now().plusDays(1).plusMinutes(1))
                 .build();
     }
+    public static Party fromNicknameIsNull(CreatePartyForm form){
+        return Party.builder()
+                .ottId(form.getOttId())
+                .title(form.getTitle())
+                .body(form.getBody())
+                .people(1)
+                .partyOttId(form.getPartyOttId())
+                .partyOttPassword(form.getPartyOttPassword())
+                .partyFull(false)
+                .leaderVerify(false)
+                .invisibleDt(LocalDateTime.now())
+                .build();
+    }
 }
