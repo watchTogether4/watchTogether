@@ -1,23 +1,17 @@
-/* eslint-disable react/prop-types */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { toast, ToastContainer } from 'react-toastify';
-import {
-  Wrapper,
-  Container,
-  Title,
-  PasswordInput,
-  ButtonContainer,
-  SubmitButton,
-  CancleButton,
-} from './Modal.style';
-import { isCurrentPassword } from './../../api/Users';
-import { putNewPassword } from './../../api/Users';
-import { useEffect } from 'react';
+
+import { ButtonContainer, SubmitButton, CancleButton, ModalInput } from '../../styles/Common';
+import { Title, ErrorMessage } from './../Modal/Modal.styles';
 import 'react-toastify/dist/ReactToastify.css';
 
-const ChangePassword = ({ modal }) => {
+import Modal from './../Modal/Modal';
+import { isCurrentPassword } from './../../api/Users';
+import { putNewPassword } from './../../api/Users';
+
+const PasswordModal = ({ modal }) => {
   const [message, setMessage] = useState('');
   const [isValidate, setIsValidate] = useState('');
 
@@ -59,18 +53,6 @@ const ChangePassword = ({ modal }) => {
     },
   });
 
-  useEffect(() => {
-    if (message === '' && isValidate) {
-      validateNew(values.newPassword);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [message]);
-
-  useEffect(() => {
-    setMessage('');
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [values]);
-
   const validateCurrent = (currentPassword) => {
     const body = { password: currentPassword };
     isCurrentPassword(body)
@@ -89,7 +71,7 @@ const ChangePassword = ({ modal }) => {
       .then((res) => {
         console.log('success');
 
-        toast.success(<h1>{res.data.message}</h1>, {
+        toast.success(<h1>비밀번호가 변경 되었습니다</h1>, {
           position: 'top-center',
           autoClose: 1000,
         });
@@ -102,50 +84,62 @@ const ChangePassword = ({ modal }) => {
       });
   };
 
-  // 취소 버튼 클릭 이벤트
   const handleClick = () => {
     modal(false);
   };
 
+  useEffect(() => {
+    if (message === '' && isValidate) {
+      validateNew(values.newPassword);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [message]);
+
+  useEffect(() => {
+    setMessage('');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [values]);
+
   const error = errors.currentPassword || errors.newPassword || errors.confirmPassword;
 
   return (
-    <Wrapper>
+    <>
       <ToastContainer />
-      <Container onSubmit={handleSubmit}>
+      <Modal handleSubmit={handleSubmit}>
         <Title>비밀번호 변경</Title>
-        <PasswordInput
+        <ModalInput
           type="password"
           name="currentPassword"
           placeholder="현재 비밀번호"
-          onChange={handleChange}
           value={values.currentPassword}
+          onChange={handleChange}
         />
-        <PasswordInput
+        <ModalInput
           type="password"
           name="newPassword"
           placeholder="새 비밀번호"
-          onChange={handleChange}
           value={values.newPassword}
+          onChange={handleChange}
         />
-        <PasswordInput
+        <ModalInput
           type="password"
           name="confirmPassword"
-          placeholder="비밀번호 확인"
-          onChange={handleChange}
+          placeholder="새 비밀번호 확인"
           value={values.confirmPassword}
+          onChange={handleChange}
         />
-        {errors && <div>{error}</div>}
-        {message && <div>{message}</div>}
+        {errors && <ErrorMessage>{error}</ErrorMessage>}
+        {message && <ErrorMessage>{message}</ErrorMessage>}
+
         <ButtonContainer>
           <CancleButton type="button" onClick={handleClick}>
             취소하기
           </CancleButton>
           <SubmitButton type="submit">변경하기</SubmitButton>
         </ButtonContainer>
-      </Container>
-    </Wrapper>
+      </Modal>
+    </>
   );
 };
 
-export default ChangePassword;
+export default PasswordModal;

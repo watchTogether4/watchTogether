@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { useQuery } from 'react-query';
-import { Wrapper, Profile, InfoList, Button, Withdrawal } from './UserInfo.style';
-import { getInfo } from './../../api/Users';
-import ChangePassword from './ChangeModal';
-import AlertModal from './AlertModal';
 import Avvvatars from 'avvvatars-react';
+
+import { Wrapper, Profile, InfoList, Button, Withdrawal } from './UserInfo.styles';
+import { getInfo } from './../../api/Users';
+import AlertModal from './AlertModal';
+import PasswordModal from './PasswordModal';
 
 const UserInfo = () => {
   const getUserInfo = () => {
@@ -32,10 +33,6 @@ const UserInfo = () => {
             </Profile>
             <InfoList>
               <li>
-                <span>닉네임</span>
-                <span>{data.nickname}</span>
-              </li>
-              <li>
                 <span>이메일</span>
                 <span>{data.email}</span>
               </li>
@@ -44,6 +41,10 @@ const UserInfo = () => {
                 <Button type="button" onClick={handleClick} data-name="changePassword">
                   변경하기
                 </Button>
+              </li>
+              <li>
+                <span>닉네임</span>
+                <span>{data.nickname}</span>
               </li>
               <li>
                 <span>생년월일</span>
@@ -56,13 +57,12 @@ const UserInfo = () => {
             </InfoList>
           </div>
         )}
-        <Withdrawal type="button" onClick={handleClick} data={data} data-name="withdrawal">
+        <Withdrawal type="button" onClick={handleClick} data-name="withdrawal">
           탈퇴하기
         </Withdrawal>
       </Wrapper>
-
       {/* 비밀번호 변경 modal */}
-      {isChange && <ChangePassword modal={setIsChange} />}
+      {isChange && <PasswordModal modal={setIsChange} />}
 
       {/* 탈퇴 modal */}
       {isWithdrawal && <AlertModal modal={setIsWithdrawal} />}
