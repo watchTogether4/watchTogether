@@ -17,7 +17,8 @@ public enum UserSuccess {
     SUCCESS_CHANGE_PASSWORD("패스워드 변경에 성공하였습니다."),
     SUCCESS_SEND_RESET_PASSWORD("패스워드 초기화 메일 전송에 성공하였습니다. 메일을 확인하여 코드를 입력해주세요."),
     SUCCESS_VERIFY_RESET_PASSWORD("패스워드 초기화 코드 인증에 성공하였습니다."),
-    SUCCESS_RESET_PASSWORD("패스워드 변경에 성공하였습니다.");
+    SUCCESS_RESET_PASSWORD("패스워드 변경에 성공하였습니다."),
+    SUCCESS_REFRESH_TOKEN("토큰 재발급에 성공하였습니다.");
 
     private String message;
 }

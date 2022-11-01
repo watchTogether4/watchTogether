@@ -1,6 +1,8 @@
 package com.watchtogether.server.exception.handler;
 
 import com.watchtogether.server.exception.PartyException;
+import com.watchtogether.server.exception.TokenException;
+import com.watchtogether.server.exception.response.TokenExceptionResponse;
 import com.watchtogether.server.exception.response.UserExceptionResponse;
 import com.watchtogether.server.exception.UserException;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +27,14 @@ public class CustomExceptionHandler {
 
         return ResponseEntity.badRequest()
                 .body(new UserExceptionResponse(e.getErrorStatus(),e.getUserErrorCode(), e.getMessage()));
+    }
+
+    @ExceptionHandler({TokenException.class})
+    public ResponseEntity<TokenExceptionResponse> RefreshTokenException(final TokenException e) {
+        log.error("UserException is occurred. ", e);
+
+        return ResponseEntity.badRequest()
+            .body(new TokenExceptionResponse(e.getErrorStatus(),e.getRefreshTokenErrorCode(), e.getMessage()));
     }
 
 }
