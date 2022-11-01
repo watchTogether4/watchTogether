@@ -46,16 +46,13 @@ public class PartyServiceImpl implements PartyService {
     @Override
     public Party createParty(CreatePartyForm form) {
         LocalDateTime limitDt = LocalDateTime.now().plusDays(1);
-        Party party = Party.from(form);
 
-        InvitePartyForm leaderForm = InvitePartyForm.builder()
-                .nickname(form.getLeaderNickName())
-                .party(party)
-                .limitDt(limitDt)
-                .build();
-        invitePartyRepository.save(InviteParty.leaderFrom(leaderForm));
 
+        Party party;
         if (form.getReceiversNickName() != null) {
+            party = Party.from(form);
+            buildLeaderForm(form, limitDt, party);
+
             String[] receiverNickName = form.getReceiversNickName().split(",");
             for (String s : receiverNickName) {
                 InvitePartyForm invitePartyForm = InvitePartyForm.builder()
@@ -65,8 +62,22 @@ public class PartyServiceImpl implements PartyService {
                         .build();
                 invitePartyRepository.save(InviteParty.from(invitePartyForm));
             }
+        }else {
+            party = Party.fromNicknameIsNull(form);
+
+            buildLeaderForm(form, limitDt, party);
         }
         return partyRepository.save(party);
+
+    }
+
+    private void buildLeaderForm(CreatePartyForm form, LocalDateTime limitDt, Party party) {
+        InvitePartyForm leaderForm = InvitePartyForm.builder()
+                .nickname(form.getLeaderNickName())
+                .party(party)
+                .limitDt(limitDt)
+                .build();
+        invitePartyRepository.save(InviteParty.leaderFrom(leaderForm));
     }
 
     //파티 초대링크 눌렀을때
