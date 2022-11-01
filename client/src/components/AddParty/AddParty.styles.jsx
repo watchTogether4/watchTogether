@@ -3,7 +3,7 @@ import { Button, Input } from '../../styles/Common';
 
 const Wrapper = styled.div`
   position: relative;
-  padding: 2rem 1rem;
+  /* padding: 0 1rem; */
 `;
 
 const Header = styled.header`
@@ -13,10 +13,12 @@ const Header = styled.header`
 const Description = styled.p`
   margin-bottom: 1rem;
   font-size: 0.85rem;
+  text-align: center;
 `;
 
 const GatherForm = styled.form`
   width: 100%;
+  padding: 0 1rem;
   display: flex;
   flex-direction: column;
 `;
