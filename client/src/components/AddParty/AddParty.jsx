@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Wrapper,
-  Header,
   Description,
   GatherForm,
   Label,
@@ -12,10 +11,12 @@ import {
   ErrorMessage,
 } from './AddParty.styles';
 import SearchModal from './SearchModal';
-import AlertModal from './AlertModal';
 import { createParty } from '../../api/Parties';
+import { toast, ToastContainer } from 'react-toastify';
+import Header from '../Header/Header';
 
 const AddParty = () => {
+  //
   const intialValues = {
     ottId: 0,
     title: '',
@@ -23,13 +24,10 @@ const AddParty = () => {
     partyOttId: '',
     partyOttPassword: '',
   };
-
   const [formValues, setFormValues] = useState(intialValues);
   const [formErrors, setFormErrors] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const [isVaildate, setIsValidate] = useState(false);
-  const [isAlert, setIsAlert] = useState(false);
-  const [alertMsg, setAlertMsg] = useState({});
   const [inviteMember, setinviteMember] = useState([]);
 
   const submitForm = () => {
@@ -38,14 +36,16 @@ const AddParty = () => {
 
     createParty(body)
       .then((res) => {
-        setAlertMsg({
-          title: '모집이 완료 되었습니다!',
-          message: '파티 모집 글이 정상적으로 \n등록되었습니다.',
+        toast.success(<h1>모집 글이 등록되었습니다</h1>, {
+          position: 'top-center',
+          autoClose: 1500,
         });
-        setIsAlert(true);
       })
       .catch((error) => {
-        console.log(error.response.data.message);
+        toast.error(error.response.data.message, {
+          position: 'top-center',
+          autoClose: 1000,
+        });
       });
   };
 
@@ -90,23 +90,26 @@ const AddParty = () => {
   const handleClick = (e) => {
     e.preventDefault();
     if (inviteMember.length === 3) {
-      setAlertMsg({
-        title: '파티 초대 정원 초과',
-        message: '파티원 초대는 최대 3명까지만 \n가능합니다.',
-      });
-      setIsAlert(true);
-    } else {
-      setIsOpen(true);
+      toast.error(
+        <>
+          <h1>파티 초대 정원 초과</h1>
+          <p>파티원 초대는 최대 3명까지만 가능합니다.</p>
+        </>,
+        {
+          position: 'top-center',
+          autoClose: 1000,
+        },
+      );
     }
   };
 
   return (
     <Wrapper>
-      <Header>
-        <Description>파티원을 모집하거나, 원하는 지인을 초대할 수 있어요.</Description>
-      </Header>
+      <ToastContainer />
+      <Header title="파티원 모집하기" path="/"></Header>
 
       <GatherForm onSubmit={handleSubmit}>
+        <Description>파티원을 모집하거나, 원하는 지인을 초대할 수 있어요.</Description>
         {formErrors && <ErrorMessage className="error">{formErrors}</ErrorMessage>}
         <Label htmlFor="title">모집 제목</Label>
         <CustomInput
@@ -160,8 +163,6 @@ const AddParty = () => {
           setIsOpen={setIsOpen}
         />
       )}
-
-      {isAlert && <AlertModal modal={setIsAlert} alert={alertMsg} />}
     </Wrapper>
   );
 };
