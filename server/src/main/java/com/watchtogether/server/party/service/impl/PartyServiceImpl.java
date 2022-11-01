@@ -62,7 +62,7 @@ public class PartyServiceImpl implements PartyService {
                         .build();
                 invitePartyRepository.save(InviteParty.from(invitePartyForm));
             }
-        }else {
+        } else {
             party = Party.fromNicknameIsNull(form);
 
             buildLeaderForm(form, limitDt, party);
@@ -123,6 +123,28 @@ public class PartyServiceImpl implements PartyService {
     }
 
     @Override
+    public ResponseEntity<Object> leaveParty(LeavePartyForm form) {
+        Optional<Party> optionalParty = partyRepository.findById(form.getPartyId());
+        Optional<PartyMember> optionalPartyMember =
+                partyMemberRepository.findByNickNameAndParty(form.getNickName(), optionalParty.get());
+        partyMemberRepository.delete(optionalPartyMember.get());
+
+        Optional<InviteParty> optionalInviteParty =
+                invitePartyRepository.
+                        findByReceiverNickNameAndPartyAndAcceptIsTrue(
+                                form.getNickName(), optionalParty.get());
+        invitePartyRepository.delete(optionalInviteParty.get());
+
+        optionalParty.get().setPartyFull(false);
+        optionalParty.get().setPeople(optionalParty.get().getPeople() - 1);
+        partyRepository.save(optionalParty.get());
+
+        // todo 사용자 알람 추가(회원이 나갔음으로)
+
+        return ResponseEntity.ok().build();
+    }
+
+    @Override
     @Transactional
     public Party addMember(AcceptPartyForm form) {
 
@@ -131,10 +153,10 @@ public class PartyServiceImpl implements PartyService {
         if (optionalParty.isPresent()) {
             inviteParty.setAccept(true);
             Party party = optionalParty.get();
-            if (party.getPeople() < 4){
+            if (party.getPeople() < 4) {
                 party.setPeople(party.getPeople() + 1);
                 return partyRepository.save(party);
-            }else {
+            } else {
                 throw new PartyException(PartyErrorCode.PARTY_IS_FULL);
             }
 

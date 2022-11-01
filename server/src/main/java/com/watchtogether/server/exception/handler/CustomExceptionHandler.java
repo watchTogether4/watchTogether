@@ -23,7 +23,7 @@ public class CustomExceptionHandler {
     }
     @ExceptionHandler({PartyException.class})
     public ResponseEntity<UserExceptionResponse> PartyException(final UserException e) {
-        log.error("UserException is occurred. ", e);
+        log.error("PartyException is occurred. ", e);
 
         return ResponseEntity.badRequest()
                 .body(new UserExceptionResponse(e.getErrorStatus(),e.getUserErrorCode(), e.getMessage()));
