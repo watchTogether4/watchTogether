@@ -2,15 +2,11 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
-import {
-  Wrapper,
-  Container,
-  ButtonContainer,
-  AlertTitle,
-  AlertText,
-  CancleButton,
-  SubmitButton,
-} from './Modal.style';
+
+import { ButtonContainer, SubmitButton, CancleButton } from '../../styles/Common';
+import { AlertTitle, AlertText } from './../Modal/Modal.styles';
+
+import Modal from './../Modal/Modal';
 import { getInfo } from '../../api/Users';
 
 const AlertModal = ({ modal }) => {
@@ -19,6 +15,7 @@ const AlertModal = ({ modal }) => {
     const name = e.target.dataset.name;
     if (name === 'cancle') modal(false);
     if (name === 'withdrawal') {
+      // 서버 데이터 전송 함수
       withdrawal();
     }
   };
@@ -26,23 +23,29 @@ const AlertModal = ({ modal }) => {
   const withdrawal = () => {
     // 서버 데이터 전송 함수
     getInfo().then((res) => {
-      toast.success(<h1>정상적으로 탈퇴 처리 되었습니다.</h1>, {
-        position: 'top-center',
-        autoClose: 1000,
-      });
+      toast.success(
+        <>
+          <h1>회원 탈퇴 완료</h1>
+          <p>다음에 다시 만나요!😥</p>
+        </>,
+        {
+          position: 'top-center',
+          autoClose: 1500,
+        },
+      );
       setTimeout(() => {
         modal(false);
         navigate('/');
-      }, 1000);
+      }, 1500);
     });
   };
 
   return (
-    <Wrapper>
+    <>
       <ToastContainer />
-      <Container>
+      <Modal>
         <AlertTitle>회원 탈퇴</AlertTitle>
-        <AlertText>정말 탈퇴하시나요?</AlertText>
+        <AlertText>정말 탈퇴하시겠습니까? 😥</AlertText>
         <ButtonContainer>
           <CancleButton type="button" onClick={handleClick} data-name="cancle">
             취소하기
@@ -51,8 +54,8 @@ const AlertModal = ({ modal }) => {
             탈퇴하기
           </SubmitButton>
         </ButtonContainer>
-      </Container>
-    </Wrapper>
+      </Modal>
+    </>
   );
 };
 
