@@ -40,7 +40,7 @@ public interface UserService extends UserDetailsService {
      * @param email
      * @return
      */
-    UserDto myPageUser(String email);
+    UserDto InfoUser(String email);
 
     /**
      * 사용자 닉네임 검색
@@ -68,21 +68,35 @@ public interface UserService extends UserDetailsService {
 
     /**
      * 사용자 비밀번호를 재설정 메일 전송
-     * @param email 이메일(아이디)
+     *
+     * @param email    이메일(아이디)
      * @param nickname 닉네임
      */
     void resetPassword(String email, String nickname);
 
     /**
      * 사용자 비밀번호 재설정 인증
+     *
      * @param code 패스워드 초기화 인증 코드
      */
     void authResetPassword(String code);
 
     /**
      * 사용자 비밀번호 재설정
-     * @param code 패스워드 초기화 인증 코드
+     *
+     * @param code     패스워드 초기화 인증 코드
      * @param password 새로운 패스워드
      */
     void updateNewPassword(String code, String password);
+
+
+    /**
+     * refresh 토큰 값 저장
+     *
+     * @param email        아이디
+     * @param refreshToken refresh 토큰 값
+     */
+    void saveRefreshToken(String email, String refreshToken);
+
+
 }

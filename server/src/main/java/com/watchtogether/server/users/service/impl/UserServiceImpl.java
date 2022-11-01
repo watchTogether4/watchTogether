@@ -127,7 +127,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto myPageUser(String email) {
+    public UserDto InfoUser(String email) {
 
         User user = userRepository.findById(email)
             .orElseThrow(() -> new UserException(NOT_FOUND_USER));
@@ -196,6 +196,15 @@ public class UserServiceImpl implements UserService {
         user.setResetPasswordKey("");
         user.setResetPasswordLimitDt(null);
 
+    }
+
+    @Override
+    @Transactional
+    public void saveRefreshToken(String email, String refreshToken) {
+        User user = userRepository.findById(email)
+            .orElseThrow(() -> new UserException(NOT_FOUND_USER));
+
+        user.setRefreshToken(refreshToken);
     }
 
     @Override
