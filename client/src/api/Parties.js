@@ -34,3 +34,13 @@ export const acceptParty = (body) =>
     },
     data: JSON.stringify(body),
   });
+
+export const listParty = (body) => 
+  axios({
+    url: `${BASE_URL}/list`,
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: JSON.stringify(body),
+  })
