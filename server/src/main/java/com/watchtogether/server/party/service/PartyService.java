@@ -2,10 +2,7 @@ package com.watchtogether.server.party.service;
 
 import com.watchtogether.server.party.domain.entitiy.InviteParty;
 import com.watchtogether.server.party.domain.entitiy.Party;
-import com.watchtogether.server.party.domain.model.AcceptPartyForm;
-import com.watchtogether.server.party.domain.model.CreatePartyForm;
-import com.watchtogether.server.party.domain.model.FindMyPartiesForm;
-import com.watchtogether.server.party.domain.model.JoinPartyForm;
+import com.watchtogether.server.party.domain.model.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
@@ -93,5 +90,20 @@ public interface PartyService extends UserDetailsService {
      * @return
      */
     List<Party> showPartyList ();
+
+    /**
+     * 파티 탈퇴
+     *
+     * @return
+     */
+    ResponseEntity<Object> leaveParty(LeavePartyForm form);
+
+
+
+    /**
+     * 파티제거(모든 사용자가 나왔을 때)
+     *
+     * @return
+     */
 
 }

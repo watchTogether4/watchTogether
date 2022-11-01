@@ -1,9 +1,6 @@
 package com.watchtogether.server.party.controller;
 
-import com.watchtogether.server.party.domain.model.AcceptPartyForm;
-import com.watchtogether.server.party.domain.model.CreatePartyForm;
-import com.watchtogether.server.party.domain.model.FindMyPartiesForm;
-import com.watchtogether.server.party.domain.model.JoinPartyForm;
+import com.watchtogether.server.party.domain.model.*;
 import com.watchtogether.server.party.service.impl.PartyServiceImpl;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -41,6 +38,11 @@ public class PartyController {
     @GetMapping("/showPartyList")
     public ResponseEntity<?> showPartyList(){
         return ResponseEntity.ok(partyServiceimpl.showPartyList());
+    }
+
+    @PostMapping("/leave")
+    public ResponseEntity<?> leaveParty(@RequestBody LeavePartyForm form){
+        return ResponseEntity.ok(partyServiceimpl.leaveParty(form));
     }
 
 }
