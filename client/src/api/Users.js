@@ -66,6 +66,10 @@ export const getInfo = () => {
   });
 };
 
+/**
+ * 현재 비밀번호 일치 여부 확인
+ * @param {string} password
+ */
 export const isCurrentPassword = (password) => {
   return axios({
     url: `${BASE_URL}/password`,
@@ -78,6 +82,10 @@ export const isCurrentPassword = (password) => {
   });
 };
 
+/**
+ * 새 비밀번호 변경
+ * @param {string} password
+ */
 export const putNewPassword = (password) => {
   return axios({
     url: `${BASE_URL}/password`,
@@ -87,5 +95,21 @@ export const putNewPassword = (password) => {
       Authorization: `Bearer ${getCookieToken()}`,
     },
     data: JSON.stringify(password),
+  });
+};
+
+/**
+ * 회원 탈퇴
+ * @param {{userId : string, password:string}} body
+ */
+export const withdrawalUser = (body) => {
+  return axios({
+    url: `${BASE_URL}/`,
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json;charset=UTF-8',
+      Authorization: `Bearer ${getCookieToken()}`,
+    },
+    data: JSON.stringify(body),
   });
 };

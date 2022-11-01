@@ -1,5 +1,8 @@
 /* eslint-disable react/prop-types */
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
+import { toast, ToastContainer } from 'react-toastify';
 import {
   Wrapper,
   Container,
@@ -11,40 +14,72 @@ import {
 } from './Modal.style';
 import { isCurrentPassword } from './../../api/Users';
 import { putNewPassword } from './../../api/Users';
+import { useEffect } from 'react';
+import 'react-toastify/dist/ReactToastify.css';
 
 const ChangePassword = ({ modal }) => {
-  const initialValue = { currentPassword: '', newPassword: '', confirmPassword: '' };
-  const [password, setPassword] = useState(initialValue);
   const [message, setMessage] = useState('');
-  const [isValidate, setIsValidate] = useState(false);
-  // const handleClick = () => {
-  //   if (alert.title === '파티 등록 완료') {
-  //     navigate('/');
-  //     modal(false);
-  //   }
-  //   modal(false);
-  // };
+  const [isValidate, setIsValidate] = useState('');
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setPassword({ ...password, [name]: value });
-  };
+  const { values, errors, handleChange, handleSubmit } = useFormik({
+    initialValues: {
+      currentPassword: '',
+      newPassword: '',
+      confirmPassword: '',
+    },
 
-  // 취소 버튼 클릭 이벤트
-  const handleClick = () => {
-    modal(false);
-  };
+    validationSchema: Yup.object().shape({
+      currentPassword: Yup.string()
+        .min(8, '비밀번호는 최소 8자리 이상입니다!')
+        .max(16, '비밀번호는 최대 16자리입니다!')
+        .required('현재 비밀번호를 입력하세요!'),
+      newPassword: Yup.string()
+        .min(8, '비밀번호는 최소 8자리 이상입니다!')
+        .max(16, '비밀번호는 최대 16자리입니다!')
+        .required('새 비밀번호를 입력하세요!')
+        .matches(
+          /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?])[^\s]*$/,
+          '영어, 숫자, 공백을 제외한 특수문자를 모두 포함해야 합니다!',
+        )
+        .notOneOf(
+          [Yup.ref('currentPassword')],
+          '현재 비밀번호와 같은 비밀번호로 변경할 수 없습니다!',
+        ),
+      confirmPassword: Yup.string()
+        .oneOf([Yup.ref('newPassword'), null], '비밀번호가 일치하지 않습니다!')
+        .required('비밀번호 확인을 입력하세요!'),
+    }),
+
+    onSubmit: async (values) => {
+      validateCurrent(values.currentPassword);
+
+      if (message === '' && isValidate) {
+        validateNew(values.newPassword);
+      }
+    },
+  });
+
+  useEffect(() => {
+    if (message === '' && isValidate) {
+      validateNew(values.newPassword);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [message]);
+
+  useEffect(() => {
+    setMessage('');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [values]);
 
   const validateCurrent = (currentPassword) => {
     const body = { password: currentPassword };
     isCurrentPassword(body)
       .then((res) => {
-        setMessage(res.data);
-        modal(false);
+        if (message !== '') setMessage('');
+        setIsValidate(true);
       })
       .catch((error) => {
-        console.log(error.response.data.message);
-        setMessage(error.response.data.message);
+        setMessage('현재 비밀번호가 일치하지 않습니다.');
       });
   };
 
@@ -52,68 +87,31 @@ const ChangePassword = ({ modal }) => {
     const body = { password: newPassword };
     putNewPassword(body)
       .then((res) => {
-        console.log(res.data);
-        setMessage(res.data);
+        console.log('success');
+
+        toast.success(<h1>{res.data.message}</h1>, {
+          position: 'top-center',
+          autoClose: 1000,
+        });
+        setTimeout(() => {
+          modal(false);
+        }, 1000);
       })
       .catch((error) => {
-        console.log(error.response.data.message);
         setMessage(error.response.data.message);
       });
   };
 
-  const formValidate = () => {
-    const { currentPassword, newPassword, confirmPassword } = password;
-
-    let error = '';
-
-    if (!currentPassword) {
-      error = '현재 비밀번호를 입력해주세요.';
-    } else if (!newPassword) {
-      error = '새 비밀번호를 입력해주세요.';
-    } else if (!confirmPassword) {
-      error = '비밀번호를 다시 한번 확인해주세요.';
-    } else {
-      if (currentPassword === newPassword) {
-        error = '현재 비밀번호와 같은 비밀번호로 변경할 수 없습니다.';
-      }
-      if (newPassword !== confirmPassword) error = '비밀번호가 서로 다릅니다.';
-    }
-
-    return error;
+  // 취소 버튼 클릭 이벤트
+  const handleClick = () => {
+    modal(false);
   };
 
-  const validatePassword = () => {
-    const { currentPassword, newPassword } = password;
-    setIsValidate(false);
-
-    validateCurrent(currentPassword);
-
-    if (isValidate === true) {
-      validateNew(newPassword);
-    }
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    setMessage(formValidate(password));
-
-    if (formValidate(password) === '') {
-      validatePassword();
-    }
-
-    setIsValidate(true);
-  };
-
-  useEffect(() => {
-    if (message === '' && isValidate) {
-      validatePassword();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [message]);
+  const error = errors.currentPassword || errors.newPassword || errors.confirmPassword;
 
   return (
     <Wrapper>
+      <ToastContainer />
       <Container onSubmit={handleSubmit}>
         <Title>비밀번호 변경</Title>
         <PasswordInput
@@ -121,19 +119,23 @@ const ChangePassword = ({ modal }) => {
           name="currentPassword"
           placeholder="현재 비밀번호"
           onChange={handleChange}
+          value={values.currentPassword}
         />
         <PasswordInput
           type="password"
           name="newPassword"
           placeholder="새 비밀번호"
           onChange={handleChange}
+          value={values.newPassword}
         />
         <PasswordInput
           type="password"
           name="confirmPassword"
           placeholder="비밀번호 확인"
           onChange={handleChange}
+          value={values.confirmPassword}
         />
+        {errors && <div>{error}</div>}
         {message && <div>{message}</div>}
         <ButtonContainer>
           <CancleButton type="button" onClick={handleClick}>
