@@ -16,9 +16,12 @@ import com.watchtogether.server.users.domain.dto.TokenDto;
 import com.watchtogether.server.users.domain.entitiy.User;
 import com.watchtogether.server.users.domain.repository.UserRepository;
 import com.watchtogether.server.users.service.JwtService;
+import java.util.concurrent.TimeUnit;
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +32,8 @@ public class JwtServiceImpl implements JwtService {
 
     private final TokenProvider tokenProvider;
     private final UserRepository userRepository;
+
+    private final RedisTemplate redisTemplate;
 
     @Override
     @Transactional
@@ -84,5 +89,25 @@ public class JwtServiceImpl implements JwtService {
             .accessToken(newAccessToken)
             .refreshToken(newRefreshToken)
             .build();
+    }
+
+    @Override
+    @Transactional
+    public void signOutUser(HttpServletRequest request) {
+
+        String accessToken = tokenProvider.resolveAccessTokenFromRequest(request);
+
+        // access token 에서 User email 가져오기
+        Authentication authentication = tokenProvider.getAuthentication(accessToken);
+
+        // User table 에서 refresh token 값 삭제하기
+        User user = userRepository.findById(authentication.getName())
+            .orElseThrow(() -> new UserException(NOT_FOUND_USER));
+        user.setRefreshToken("");
+
+        // 해당 access token 유효시간을 blackList에 저장하기
+        Long expiration = tokenProvider.getExpiration(accessToken);
+        redisTemplate.opsForValue().set(accessToken, "logout", expiration, TimeUnit.MILLISECONDS);
+
     }
 }

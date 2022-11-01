@@ -22,6 +22,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 @Slf4j
@@ -31,6 +32,11 @@ public class TokenProvider {
 
     private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24;   // 1 day
     private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 60;   // 1 hour
+
+    // token 헤더에 넣을, 토큰의 유형 지정
+    public static final String TOKEN_HEADER = "Authorization";
+    // 인증 타입
+    public static final String TOKEN_PREFIX = "Bearer ";
     private static final String KEY_ROLES = "roles";
     public static final String SUCCESS = "true";
     private final UserServiceImpl userServiceImpl;
@@ -186,5 +192,28 @@ public class TokenProvider {
         } catch (ExpiredJwtException e) {
             return e.getClaims();
         }
+    }
+
+    public String resolveAccessTokenFromRequest(HttpServletRequest request) {
+
+        // token 구조 유형 유효성 검사
+        String token = request.getHeader(TOKEN_HEADER);
+
+        if (!ObjectUtils.isEmpty(token) && token.startsWith(TOKEN_PREFIX)) {
+            log.info("token's value : " + token.substring(TOKEN_PREFIX.length()));
+            return token.substring(TOKEN_PREFIX.length());
+        }
+        return null;
+    }
+
+    public Long getExpiration(String token) {
+        // token 남음 유효 시간
+        Date expiration =
+            Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getExpiration();
+
+        // 현재 시간
+        Long now = new Date().getTime();
+
+        return (expiration.getTime() - now);
     }
 }
