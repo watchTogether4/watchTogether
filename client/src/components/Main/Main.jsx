@@ -2,7 +2,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import icons from '../../mocks/icons';
-import { Wrapper, Inner, Title, Desc, Carousel, Icon, StartBtn } from './Main.style';
+import { Wrapper, Inner, Title, Desc, Carousel, Icon, StartBtn } from './Main.styles';
 import { getCookieToken } from '../../utils/Cookie';
 
 function Main() {
