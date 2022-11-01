@@ -38,4 +38,9 @@ public class PartyController {
         return ResponseEntity.ok(partyServiceimpl.joinPartyAndCheckFull(form));
     }
 
+    @GetMapping("/showPartyList")
+    public ResponseEntity<?> showPartyList(){
+        return ResponseEntity.ok(partyServiceimpl.showPartyList());
+    }
+
 }
