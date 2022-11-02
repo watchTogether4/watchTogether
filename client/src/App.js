@@ -8,12 +8,15 @@ import SignUp from './pages/SignUpPage';
 import AddParty from './pages/AddPartyPage';
 import UserInfo from './pages/UserInfoPage';
 import PartyList from './pages/PartyListPage';
+import Reset from './pages/ResetPage';
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<MainPage />} />
+
+        <Route path="/code=:code" element={<Reset />} />
         <Route path="/signIn" element={<SignIn />} />
         <Route path="/signUp" element={<SignUp />} />
 
