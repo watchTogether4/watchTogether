@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { useQuery } from 'react-query';
-
-import { Wrapper, Profile, InfoList, Button, Withdrawal } from './UserInfo.style';
-import { getInfo } from './../../api/Users';
-import ChangePassword from './ChangeModal';
-import AlertModal from './AlertModal';
 import Avvvatars from 'avvvatars-react';
+
+import { Wrapper, Profile, InfoList, Button, Withdrawal } from './UserInfo.styles';
+import { getInfo } from './../../api/Users';
+import AlertModal from './AlertModal';
+import PasswordModal from './PasswordModal';
 
 const UserInfo = () => {
   const getUserInfo = () => {
@@ -29,7 +29,7 @@ const UserInfo = () => {
         {data && (
           <div>
             <Profile>
-              <Avvvatars value={data.email} style='shape' size={100}/>
+              <Avvvatars value={data.email} style="shape" size={100} />
             </Profile>
             <InfoList>
               <li>
@@ -61,9 +61,8 @@ const UserInfo = () => {
           탈퇴하기
         </Withdrawal>
       </Wrapper>
-
       {/* 비밀번호 변경 modal */}
-      {isChange && <ChangePassword modal={setIsChange} />}
+      {isChange && <PasswordModal modal={setIsChange} />}
 
       {/* 탈퇴 modal */}
       {isWithdrawal && <AlertModal modal={setIsWithdrawal} />}

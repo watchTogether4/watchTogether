@@ -35,6 +35,10 @@ public class Party extends BaseEntity{
 
     private String partyOttPassword;
 
+    private boolean partyFull;
+
+    private LocalDateTime invisibleDt;
+
     private boolean leaderVerify;
 
     @OneToMany(mappedBy = "party")
@@ -48,7 +52,22 @@ public class Party extends BaseEntity{
                 .people(1)
                 .partyOttId(form.getPartyOttId())
                 .partyOttPassword(form.getPartyOttPassword())
+                .partyFull(false)
                 .leaderVerify(false)
+                .invisibleDt(LocalDateTime.now().plusDays(1).plusMinutes(1))
+                .build();
+    }
+    public static Party fromNicknameIsNull(CreatePartyForm form){
+        return Party.builder()
+                .ottId(form.getOttId())
+                .title(form.getTitle())
+                .body(form.getBody())
+                .people(1)
+                .partyOttId(form.getPartyOttId())
+                .partyOttPassword(form.getPartyOttPassword())
+                .partyFull(false)
+                .leaderVerify(false)
+                .invisibleDt(LocalDateTime.now())
                 .build();
     }
 }

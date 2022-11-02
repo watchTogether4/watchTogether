@@ -9,17 +9,17 @@ import SignUp from './pages/SignUpPage';
 import AddParty from './pages/AddPartyPage';
 import UserInfo from './pages/UserInfoPage';
 import PartyList from './pages/PartyListPage';
-import Select from './pages/SelectPage';
-import Ott from './pages/OttPage';
+import Reset from './pages/ResetPage';
 
 function App() {
   return (
     <BrowserRouter>
-      <AnimatePresence>
-        <Routes>
-          <Route path="/" element={<MainPage />} />
-          <Route path="/signIn" element={<SignIn />} />
-          <Route path="/signUp" element={<SignUp />} />
+      <Routes>
+        <Route path="/" element={<MainPage />} />
+
+        <Route path="/code=:code" element={<Reset />} />
+        <Route path="/signIn" element={<SignIn />} />
+        <Route path="/signUp" element={<SignUp />} />
 
           <Route path="/addParty" element={<AddParty />} />
 

@@ -1,6 +1,6 @@
 import Flex from './Flex';
-import Button from './Button';
-import Input from './Input';
+import { ButtonContainer, Button, SubmitButton, CancleButton } from './Button';
+import { Input, ModalInput } from './Input';
 import Hidden from './Hidden';
 
-export { Button, Flex, Input, Hidden };
+export { Flex, ButtonContainer, Button, SubmitButton, CancleButton, Input, ModalInput, Hidden };

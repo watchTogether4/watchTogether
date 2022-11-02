@@ -3,6 +3,7 @@ package com.watchtogether.server.exception.handler;
 import static com.watchtogether.server.exception.type.AuthErrorCode.EXPIRED_TOKEN;
 import static com.watchtogether.server.exception.type.AuthErrorCode.INVALID_TOKEN;
 import static com.watchtogether.server.exception.type.AuthErrorCode.IS_EMPTY_TOKEN;
+import static com.watchtogether.server.exception.type.AuthErrorCode.IS_SIGN_OUT_TOKEN;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.watchtogether.server.exception.response.AuthExceptionResponse;
@@ -49,6 +50,14 @@ public class AuthenticationEntryPointHandler implements AuthenticationEntryPoint
          */
         if (exception == "INVALID_TOKEN") {
             errorCode = INVALID_TOKEN;
+            setResponse(response, errorCode);
+        }
+
+        /**
+         * 로그아웃 처리된 토큰 값인 경우
+         */
+        if (exception == "IS_SIGN_OUT_TOKEN") {
+            errorCode = IS_SIGN_OUT_TOKEN;
             setResponse(response, errorCode);
         }
 

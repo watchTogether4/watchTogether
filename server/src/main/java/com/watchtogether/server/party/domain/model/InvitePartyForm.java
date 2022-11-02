@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Builder
 @NoArgsConstructor
@@ -16,6 +18,8 @@ public class InvitePartyForm {
     private Boolean isLeader;
 
     private Party party;
+
+    private LocalDateTime limitDt;
 
 
 }

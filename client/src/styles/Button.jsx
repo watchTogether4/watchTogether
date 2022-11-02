@@ -1,7 +1,10 @@
-/* eslint-disable react/jsx-props-no-spreading */
-import React from 'react';
 import styled from 'styled-components';
-import Flex from './Flex';
+
+const ButtonContainer = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+`;
 
 const Button = styled.button`
   width: 100%;
@@ -13,4 +16,15 @@ const Button = styled.button`
   border-radius: 12px;
 `;
 
-export default Button;
+const SubmitButton = styled(Button)`
+  width: 48%;
+  height: 2.5rem;
+  margin-bottom: 0;
+  border-radius: 1rem;
+`;
+
+const CancleButton = styled(SubmitButton)`
+  background-color: ${(props) => props.theme.color.warning_300};
+`;
+
+export { ButtonContainer, Button, SubmitButton, CancleButton };

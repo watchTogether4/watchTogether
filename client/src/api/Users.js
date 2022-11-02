@@ -66,6 +66,58 @@ export const getInfo = () => {
   });
 };
 
+/**
+ * 비밀번호 초기화 이메일 전송
+ * @param {{email:string; name: string}} body
+ */
+export const findPassword = (body) => {
+  return axios({
+    url: `${BASE_URL}/reset-password`,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json;charset=UTF-8',
+    },
+    data: JSON.stringify(body),
+  });
+};
+
+/**
+ * 비밀번호 초기화 메일 인증
+ * @param {string} code
+ * @returns
+ */
+export const checkCode = (code) => {
+  return axios({
+    url: `${BASE_URL}/reset-password`,
+    methode: 'GET',
+    headers: {
+      'Content-Type': 'application/json;charset=UTF-8',
+    },
+    params: {
+      code: code,
+    },
+  });
+};
+
+/**
+ * 비밀번호 초기화 메일 인증
+ * @param {{code: string; password: string}} body
+ */
+export const resetPassword = (body) => {
+  return axios({
+    url: `${BASE_URL}/reset-password`,
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json;charset=UTF-8',
+    },
+    data: JSON.stringify(body),
+  });
+};
+
+/**
+ * 현재 비밀번호 일치 여부 확인
+ * @param {string} password
+ */
 export const isCurrentPassword = (password) => {
   return axios({
     url: `${BASE_URL}/password`,
@@ -78,6 +130,10 @@ export const isCurrentPassword = (password) => {
   });
 };
 
+/**
+ * 새 비밀번호 변경
+ * @param {string} password
+ */
 export const putNewPassword = (password) => {
   return axios({
     url: `${BASE_URL}/password`,
@@ -87,5 +143,21 @@ export const putNewPassword = (password) => {
       Authorization: `Bearer ${getCookieToken()}`,
     },
     data: JSON.stringify(password),
+  });
+};
+
+/**
+ * 회원 탈퇴
+ * @param {{userId : string, password:string}} body
+ */
+export const withdrawalUser = (body) => {
+  return axios({
+    url: `${BASE_URL}/`,
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json;charset=UTF-8',
+      Authorization: `Bearer ${getCookieToken()}`,
+    },
+    data: JSON.stringify(body),
   });
 };

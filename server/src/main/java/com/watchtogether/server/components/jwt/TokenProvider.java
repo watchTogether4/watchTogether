@@ -1,7 +1,11 @@
 package com.watchtogether.server.components.jwt;
 
-import static com.watchtogether.server.exception.type.AuthErrorCode.EXPIRED_TOKEN;
-import static com.watchtogether.server.exception.type.AuthErrorCode.INVALID_TOKEN;
+import static com.watchtogether.server.exception.type.TokenErrorCode.EXPIRED_ACCESS_TOKEN;
+import static com.watchtogether.server.exception.type.TokenErrorCode.EXPIRED_REFRESH_TOKEN;
+import static com.watchtogether.server.exception.type.TokenErrorCode.EXPIRED_TOKEN;
+import static com.watchtogether.server.exception.type.TokenErrorCode.INVALID_ACCESS_TOKEN;
+import static com.watchtogether.server.exception.type.TokenErrorCode.INVALID_REFRESH_TOKEN;
+import static com.watchtogether.server.exception.type.TokenErrorCode.INVALID_TOKEN;
 
 import com.watchtogether.server.users.service.impl.UserServiceImpl;
 import io.jsonwebtoken.Claims;
@@ -18,6 +22,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 @Slf4j
@@ -25,8 +30,15 @@ import org.springframework.util.StringUtils;
 @RequiredArgsConstructor
 public class TokenProvider {
 
-    private static final long TOKEN_EXPIRE_TIME = 1000 * 60 * 60;   // 1 hour
+    private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24;   // 1 day
+    private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 60;   // 1 hour
+
+    // token 헤더에 넣을, 토큰의 유형 지정
+    public static final String TOKEN_HEADER = "Authorization";
+    // 인증 타입
+    public static final String TOKEN_PREFIX = "Bearer ";
     private static final String KEY_ROLES = "roles";
+    public static final String SUCCESS = "true";
     private final UserServiceImpl userServiceImpl;
 
     @Value("{spring.jwt.secret}")
@@ -39,7 +51,7 @@ public class TokenProvider {
      * @param roles  사용자 역할
      * @return Jwt 값
      */
-    public String generateToken(String userId, String roles) {
+    public String generateAccessToken(String userId, String roles) {
 
         // 사용의 권한정보 저장
         Claims claims = Jwts.claims().setSubject(userId);
@@ -49,7 +61,28 @@ public class TokenProvider {
         Date now = new Date();
 
         // 토큰 만료 시간
-        Date expiredDate = new Date(now.getTime() + TOKEN_EXPIRE_TIME);
+        Date expiredDate = new Date(now.getTime() + ACCESS_TOKEN_EXPIRE_TIME);
+
+        // 토큰에 주입
+        return Jwts.builder()
+            .setClaims(claims)
+            .setIssuedAt(now) // 토큰 생성된 시간
+            .setExpiration(expiredDate) // 토큰 만료 시간
+            .signWith(SignatureAlgorithm.HS512, secretKey) // 사용할 암호화 알고리즘, 비밀키
+            .compact();
+    }
+
+    public String generateRefreshToken(String roles) {
+
+        // 사용의 권한정보 저장
+        Claims claims = Jwts.claims().setSubject(null);
+        claims.put(KEY_ROLES, roles);
+
+        // 토큰 생성된 시간
+        Date now = new Date();
+
+        // 토큰 만료 시간
+        Date expiredDate = new Date(now.getTime() + REFRESH_TOKEN_EXPIRE_TIME);
 
         // 토큰에 주입
         return Jwts.builder()
@@ -61,7 +94,19 @@ public class TokenProvider {
     }
 
     public Authentication getAuthentication(String jwt, HttpServletRequest request) {
-        UserDetails userDetails = this.userServiceImpl.loadUserByUsername(getUserId(jwt, request));
+        UserDetails userDetails = userServiceImpl.loadUserByUsername(getUserId(jwt, request));
+
+        return new UsernamePasswordAuthenticationToken(userDetails, "",
+            userDetails.getAuthorities());
+    }
+
+    // jwt로 인증 정보를 조회
+    public Authentication getAuthentication(String token) {
+
+        // jwt 에서 Claims 추출
+        Claims claims = parseClaims(token);
+
+        UserDetails userDetails = userServiceImpl.loadUserByUsername(claims.getSubject());
 
         return new UsernamePasswordAuthenticationToken(userDetails, "",
             userDetails.getAuthorities());
@@ -91,6 +136,35 @@ public class TokenProvider {
         return !claims.getExpiration().before(new Date());
     }
 
+    // refresh 토큰 유효성 및 만료일자 확인
+    public String validToken(String token) {
+        try {
+            Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
+            return SUCCESS;
+        } catch (ExpiredJwtException e) {
+            log.error(e.toString());
+            return EXPIRED_REFRESH_TOKEN.getErrorCode();
+
+        } catch (JwtException | IllegalArgumentException e) {
+            log.error(e.toString());
+            return INVALID_REFRESH_TOKEN.getErrorCode();
+        }
+    }
+
+    public String validAccessToken(String token) {
+        try {
+            Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
+            return SUCCESS;
+        } catch (ExpiredJwtException e) {
+            log.error(e.toString());
+            return EXPIRED_ACCESS_TOKEN.getErrorCode();
+
+        } catch (JwtException | IllegalArgumentException e) {
+            log.error(e.toString());
+            return INVALID_ACCESS_TOKEN.getErrorCode();
+        }
+    }
+
 
     private Claims parseClaims(String token, HttpServletRequest request) {
 
@@ -109,5 +183,37 @@ public class TokenProvider {
             request.setAttribute("exception", INVALID_TOKEN.getErrorCode());
         }
         return claims;
+    }
+
+    // jwt 토큰 복화해서 가져오기
+    private Claims parseClaims(String token) {
+        try {
+            return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
+        } catch (ExpiredJwtException e) {
+            return e.getClaims();
+        }
+    }
+
+    public String resolveAccessTokenFromRequest(HttpServletRequest request) {
+
+        // token 구조 유형 유효성 검사
+        String token = request.getHeader(TOKEN_HEADER);
+
+        if (!ObjectUtils.isEmpty(token) && token.startsWith(TOKEN_PREFIX)) {
+            log.info("token's value : " + token.substring(TOKEN_PREFIX.length()));
+            return token.substring(TOKEN_PREFIX.length());
+        }
+        return null;
+    }
+
+    public Long getExpiration(String token) {
+        // token 남음 유효 시간
+        Date expiration =
+            Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getExpiration();
+
+        // 현재 시간
+        Long now = new Date().getTime();
+
+        return (expiration.getTime() - now);
     }
 }

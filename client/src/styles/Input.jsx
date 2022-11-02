@@ -10,4 +10,11 @@ const Input = styled.input`
   border-radius: 12px;
 `;
 
-export default Input;
+const ModalInput = styled(Input)`
+  margin-bottom: 0.5rem;
+  border: 0;
+  border-radius: 1rem;
+  background-color: ${(props) => props.theme.color.light_200};
+`;
+
+export { Input, ModalInput };
