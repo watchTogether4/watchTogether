@@ -1,6 +1,5 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import OttImage from './Image/netflix.png';
 import {
   CardWrapper,
   CardOtt,
@@ -8,18 +7,18 @@ import {
   CardPerson,
   } from './Card.styles';
 
-export function Card() {
+export function Card({ottUrl, title, person}) {
   const navigate = useNavigate();
 
   return(
-    <CardWrapper onclick={() => {
-      navigate(`https://localhost:3000/signIn`)
+    <CardWrapper onClick={() => {
+      navigate(`/signUp`)
     }}>
-      <CardOtt src={OttImage}/>
-      <CardTitle>
+      <CardOtt src={ottUrl}/>
+      <CardTitle>{title}
         넷플릭스 패밀리 구해요!
       </CardTitle>
-      <CardPerson>
+      <CardPerson>{person}
         3/4
       </CardPerson>
     </CardWrapper>
