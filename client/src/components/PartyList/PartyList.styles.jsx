@@ -1,8 +1,14 @@
 import styled from 'styled-components';
-import { Flex } from '../../styles/Common';
 
-const CardWrapper = styled.div`
-  position: relative;
-  padding: 2rem 1rem;
+const Wrapper = styled.div`
+  width: 100%;
 `;
 
+const Board = styled.div`
+  width: 100%;
+`;
+
+export {
+  Wrapper,
+  Board,
+};
