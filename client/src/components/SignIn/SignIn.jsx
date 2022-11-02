@@ -4,8 +4,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import { loginUser } from '../../api/Users';
 import { setRefreshToken } from '../../utils/Cookie';
 import { SET_TOKEN } from '../../store/Auth';
-import {toast, ToastContainer} from "react-toastify";
+import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import FindPassword from './FindPassword';
 
 import {
   Wrapper,
@@ -14,7 +15,7 @@ import {
   Desc,
   LoginForm,
   ErrorMessage,
-  SignUpLink,
+  LinkContainer,
 } from './SignIn.styles';
 
 function Login() {
@@ -25,19 +26,20 @@ function Login() {
   const [formValues, setFormValues] = useState(intialValues);
   const [formErrors, setFormErrors] = useState('');
   const [isVaildate, setIsValidate] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   const submitForm = async () => {
     await loginUser(formValues)
       .then((response) => {
         if (response.status === 200) {
-          setRefreshToken(response.data.token);
-          dispatch(SET_TOKEN(response.data.token));
+          setRefreshToken(response.data.refreshToken);
+          dispatch(SET_TOKEN(response.data.accessToken));
         }
         toast.success(<h1>성공적으로 로그인했습니다.</h1>, {
           position: 'top-center',
-          autoClose: 3000
+          autoClose: 3000,
         });
-        setTimeout(()=> {
+        setTimeout(() => {
           navigate('/mypage');
         }, 3000);
       })
@@ -45,7 +47,7 @@ function Login() {
         toast.error(error.response.data.message, {
           position: 'top-center',
         });
-      })
+      });
   };
 
   const validate = (values) => {
@@ -88,6 +90,11 @@ function Login() {
     setIsValidate(true);
   };
 
+  const handleClick = (e) => {
+    e.preventDefault();
+    setIsOpen(true);
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormValues({ ...formValues, [name]: value });
@@ -102,7 +109,7 @@ function Login() {
 
   return (
     <Wrapper direction="column" justifyContent="space-evenly">
-      <ToastContainer/>
+      <ToastContainer />
       <Desc justifyContent="flex-start">
         쉬운 파티원 초대와 매칭,
         <br />
@@ -135,11 +142,15 @@ function Login() {
 
         {formErrors && <ErrorMessage className="error">{formErrors}</ErrorMessage>}
         <LoginButton type="submit">로그인</LoginButton>
-        <SignUpLink>
-          <p>가치와치 계정이 없으신가요? </p>
+        <LinkContainer justifyContent="space-between">
+          <button type="button" onClick={handleClick}>
+            비밀번호 찾기
+          </button>
           <Link to="/signUp">회원가입</Link>
-        </SignUpLink>
+        </LinkContainer>
       </LoginForm>
+
+      {isOpen && <FindPassword modal={setIsOpen} />}
     </Wrapper>
   );
 }

@@ -29,13 +29,18 @@ const LoginInput = styled(Input)`
 const LoginButton = styled(Button)`
   margin-top: 0.5rem;
 `;
-const SignUpLink = styled.div`
+
+const LinkContainer = styled.div`
   ${Flex}
   width: 100%;
   font-size: 0.9rem;
   font-weight: 600;
-  p {
-    margin-right: 0.5rem;
+
+  button {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: ${(props) => props.theme.color.warning_300};
+    background-color: transparent;
   }
   a {
     color: ${(props) => props.theme.color.success_200};
@@ -50,4 +55,4 @@ const ErrorMessage = styled.p`
   color: red;
 `;
 
-export { Wrapper, LoginInput, LoginButton, Desc, LoginForm, ErrorMessage, SignUpLink };
+export { Wrapper, LoginInput, LoginButton, Desc, LoginForm, ErrorMessage, LinkContainer };
