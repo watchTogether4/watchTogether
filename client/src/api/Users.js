@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { getCookieToken } from '../utils/Cookie';
+const accessToken = localStorage.getItem('access-token');
 
 const BASE_URL = '/api/v1/users';
 
@@ -11,10 +11,11 @@ export const loginUser = async (data) => {
   return axios({
     url: `${BASE_URL}/sign-in`,
     method: 'POST',
-    headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+    headers: { 'Content-Type': 'application/json' },
     data: JSON.stringify(data),
   });
 };
+
 /**
  * 로그아웃 - GET
  */
@@ -61,7 +62,7 @@ export const getInfo = () => {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json;charset=UTF-8',
-      Authorization: `Bearer ${getCookieToken()}`,
+      Authorization: `Bearer ${accessToken}`,
     },
   });
 };
@@ -124,7 +125,7 @@ export const isCurrentPassword = (password) => {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json;charset=UTF-8',
-      Authorization: `Bearer ${getCookieToken()}`,
+      Authorization: `Bearer ${accessToken}`,
     },
     data: JSON.stringify(password),
   });
@@ -140,7 +141,7 @@ export const putNewPassword = (password) => {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json;charset=UTF-8',
-      Authorization: `Bearer ${getCookieToken()}`,
+      Authorization: `Bearer ${accessToken}`,
     },
     data: JSON.stringify(password),
   });
@@ -156,7 +157,7 @@ export const withdrawalUser = (body) => {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json;charset=UTF-8',
-      Authorization: `Bearer ${getCookieToken()}`,
+      Authorization: `Bearer ${accessToken}`,
     },
     data: JSON.stringify(body),
   });
