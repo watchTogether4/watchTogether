@@ -32,8 +32,9 @@ const AddPartyModal = ({ setIsOpen, inviteMember, setinviteMember }) => {
 
   const addMember = () => {
     const nickname = searchMember;
+    const accessToken = localStorage.getItem('access-token');
 
-    searchUser(nickname)
+    searchUser(nickname, accessToken)
       .then((res) => {
         console.log(res.data);
         setinviteMember([...inviteMember, searchMember]);

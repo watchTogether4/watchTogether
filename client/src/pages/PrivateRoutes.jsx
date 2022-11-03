@@ -18,30 +18,30 @@ const PrivateRoutes = () => {
   };
 
   useEffect(() => {
-    getInfo()
-      .then((res) => console.log(res.data))
-      .catch(() => {
-        axios({
-          url: '/api/v1/refresh-token',
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json;charset=UTF-8',
-            Authorization: `Bearer ${accessToken}`,
-          },
-          data: JSON.stringify(body),
+    try {
+      getInfo(accessToken).then((res) => console.log(res.data));
+    } catch (error) {
+      axios({
+        url: '/api/v1/refresh-token',
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8',
+          Authorization: `Bearer ${accessToken}`,
+        },
+        data: JSON.stringify(body),
+      })
+        .then((response) => {
+          console.log(response.data);
+          setRefreshToken(response.data.refreshToken);
+          localStorage.setItem('access-token', response.data.accessToken);
+          navigate('/partyList');
         })
-          .then((response) => {
-            console.log(response.data);
-            setRefreshToken(response.data.refreshToken);
-            localStorage.setItem('access-token', response.data.accessToken);
-            navigate('/partyList');
-          })
-          .catch((error) => {
-            console.log(error);
-            console.log(error.response.data.message);
-            navigate('/signIn');
-          });
-      });
+        .catch((error) => {
+          console.log(error);
+          console.log(error.response.data.message);
+          navigate('/signIn');
+        });
+    }
   }, []);
 
   return (

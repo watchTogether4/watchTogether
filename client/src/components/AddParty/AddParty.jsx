@@ -14,10 +14,10 @@ import SearchModal from './SearchModal';
 import { createParty } from '../../api/Parties';
 import { toast, ToastContainer } from 'react-toastify';
 
-const AddParty = ({ setPage, value }) => {
+const AddParty = () => {
   const navigate = useNavigate();
   const intialValues = {
-    ottId: value.ott,
+    ottId: '',
     title: '',
     body: '',
     partyOttId: '',
@@ -31,11 +31,11 @@ const AddParty = ({ setPage, value }) => {
   const [inviteMember, setinviteMember] = useState([]);
 
   const submitForm = () => {
-    const invite = inviteMember.join();
-    const body = { ...formValues, receiversNickName: null | invite };
+    const accessToken = localStorage.getItem('access-token');
+    const invite = inviteMember.length !== 0 ? inviteMember.join() : null;
+    const body = { ...formValues, receiversNickName: invite };
 
-    console.log(body);
-    createParty(body)
+    createParty(body, accessToken)
       .then((res) => {
         console.log(res.data);
         toast.success(<h1>모집 글이 등록되었습니다</h1>, {
@@ -43,7 +43,6 @@ const AddParty = ({ setPage, value }) => {
           autoClose: 1500,
         });
         setTimeout(() => {
-          setPage(0);
           navigate('/partyList');
         }, 1500);
       })
@@ -130,7 +129,7 @@ const AddParty = ({ setPage, value }) => {
           type="text"
           name="searchMember"
           placeholder="찾으려는 파티원의 닉네임을 입력해주세요."
-          defalutValue={inviteMember}
+          value={inviteMember}
           onClick={handleClick}
         />
 
