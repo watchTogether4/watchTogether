@@ -7,10 +7,12 @@ import SignIn from './pages/SignInPage';
 import SignUp from './pages/SignUpPage';
 import Select from './pages/SelectPage';
 import PartyList from './pages/PartyListPage';
+import AddParty from './pages/AddPartyPage';
 import MyPage from './pages/MyPage';
 import UserInfo from './pages/UserInfoPage';
 import Reset from './pages/ResetPage';
 import PrivateRoutes from './pages/PrivateRoutes';
+import OttPage from './pages/OttPage';
 
 function App() {
   return (
@@ -23,7 +25,9 @@ function App() {
 
           <Route element={<PrivateRoutes />}>
             <Route path="/select" element={<Select />} />
+            <Route path="/ott" element={<OttPage />} />
             <Route path="/partyList" element={<PartyList />} />
+            <Route path="/addParty" element={<AddParty />} />
 
             <Route path="/mypage" element={<MyPage />} />
             <Route path="/mypage/user" element={<UserInfo />} />
