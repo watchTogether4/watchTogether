@@ -3,7 +3,9 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import icons from '../../mocks/icons';
 import { Wrapper, Inner, Title, Desc, Carousel, Icon, StartBtn } from './Main.styles';
-import { getCookieToken } from '../../utils/Cookie';
+import { getCookieToken, setRefreshToken, removeCookieToken } from '../../utils/Cookie';
+import { useSelector } from 'react-redux';
+import axios from 'axios';
 
 function Main() {
   const navigate = useNavigate();
@@ -31,13 +33,36 @@ function Main() {
 
   const isValidateToken = (e) => {
     e.preventDefault();
-    const token = getCookieToken();
-    if (token !== undefined) {
-      navigate('/mypage');
-    } else {
-      navigate('/signIn');
-    }
+    const accessToken = localStorage.getItem('access-token');
+    const refreshToken = getCookieToken();
+
+    const body = {
+      accessToken,
+      refreshToken,
+    };
+
+    axios({
+      url: '/api/v1/refresh-token',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+        Authorization: `Bearer ${accessToken}`,
+      },
+      data: JSON.stringify(body),
+    })
+      .then((response) => {
+        console.log(response.data);
+        setRefreshToken(response.data.refreshToken);
+        localStorage.setItem('access-token', response.data.accessToken);
+        navigate('/partyList');
+      })
+      .catch((error) => {
+        console.log(error);
+        console.log(error.response.data.message);
+        navigate('/signIn');
+      });
   };
+
   return (
     <Wrapper>
       <Inner>

@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 
@@ -17,6 +18,7 @@ import store from './store';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 const client = new QueryClient();
+axios.defaults.withCredentials = true;
 
 root.render(
   <CookiesProvider>

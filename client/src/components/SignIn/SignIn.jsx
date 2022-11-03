@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { loginUser } from '../../api/Users';
-import { setRefreshToken } from '../../utils/Cookie';
+
 import { SET_TOKEN } from '../../store/Auth';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import FindPassword from './FindPassword';
+import { setRefreshToken } from './../../utils/Cookie';
 
 import {
   Wrapper,
@@ -31,19 +32,21 @@ function Login() {
   const submitForm = async () => {
     await loginUser(formValues)
       .then((response) => {
+        console.log(response.data);
         if (response.status === 200) {
-          setRefreshToken(response.data.refreshToken);
-          dispatch(SET_TOKEN(response.data.accessToken));
+          setRefreshToken(response.data.refreshToken); // 쿠키
+          localStorage.setItem('access-token', response.data.accessToken); //
         }
         toast.success(<h1>성공적으로 로그인했습니다.</h1>, {
           position: 'top-center',
-          autoClose: 3000,
+          autoClose: 1000,
         });
         setTimeout(() => {
-          navigate('/mypage');
-        }, 3000);
+          navigate('/select');
+        }, 1000);
       })
       .catch((error) => {
+        console.log(error);
         toast.error(error.response.data.message, {
           position: 'top-center',
         });
