@@ -98,5 +98,21 @@ public interface UserService extends UserDetailsService {
      */
     void saveRefreshToken(String email, String refreshToken);
 
+    /**
+     * 사용자 회원 탈퇴 하기 전, 이메일 패스워드 잔액 검사
+     *
+     * @param email    이메일
+     * @param password 패스워드
+     * @return
+     */
+    UserDto checkUserAndCash(String email, String password);
+
+    /**
+     * 사용자 회원 탈퇴
+     *
+     * @param email
+     */
+    void deleteUser(String email);
+
 
 }

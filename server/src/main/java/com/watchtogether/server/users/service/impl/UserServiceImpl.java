@@ -4,6 +4,7 @@ import static com.watchtogether.server.exception.type.UserErrorCode.ALREADY_SIGN
 import static com.watchtogether.server.exception.type.UserErrorCode.ALREADY_SIGNUP_NICKNAME;
 import static com.watchtogether.server.exception.type.UserErrorCode.ALREADY_VERIFY_EMAIL;
 import static com.watchtogether.server.exception.type.UserErrorCode.EXPIRED_VERIFY_EMAIL_CODE;
+import static com.watchtogether.server.exception.type.UserErrorCode.IS_EXIST_BALANCE;
 import static com.watchtogether.server.exception.type.UserErrorCode.LEAVE_USER;
 import static com.watchtogether.server.exception.type.UserErrorCode.NEED_VERIFY_EMAIL;
 import static com.watchtogether.server.exception.type.UserErrorCode.NOT_FOUND_NICKNAME;
@@ -127,6 +128,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
+    public void deleteUser(String email) {
+
+        User user = userRepository.findById(email)
+            .orElseThrow(() -> new UserException(NOT_FOUND_USER));
+
+        userRepository.delete(user);
+
+    }
+
+
+    @Override
     public UserDto InfoUser(String email) {
 
         User user = userRepository.findById(email)
@@ -206,6 +219,22 @@ public class UserServiceImpl implements UserService {
 
         user.setRefreshToken(refreshToken);
     }
+
+    @Override
+    public UserDto checkUserAndCash(String email, String password) {
+        User user = userRepository.findById(email)
+            .orElseThrow(() -> new UserException(NOT_FOUND_USER));
+
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new UserException(WRONG_PASSWORD_USER);
+        }
+        if (user.getCash() != 0) {
+            throw new UserException(IS_EXIST_BALANCE);
+        }
+
+        return UserDto.fromEntity(user);
+    }
+
 
     @Override
     public void checkPassword(String email, String password) {
