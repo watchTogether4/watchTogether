@@ -61,7 +61,7 @@ const PasswordModal = ({ modal }) => {
         setIsValidate(true);
       })
       .catch((error) => {
-        setMessage('현재 비밀번호가 일치하지 않습니다.');
+        setMessage(error.response.data.message);
       });
   };
 

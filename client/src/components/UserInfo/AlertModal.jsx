@@ -7,7 +7,7 @@ import { ButtonContainer, SubmitButton, CancleButton } from '../../styles/Common
 import { AlertTitle, AlertText } from './../Modal/Modal.styles';
 
 import Modal from './../Modal/Modal';
-import { getInfo } from '../../api/Users';
+import { withdrawalUser } from '../../api/Users';
 
 const AlertModal = ({ modal }) => {
   const navigate = useNavigate();
@@ -22,7 +22,7 @@ const AlertModal = ({ modal }) => {
 
   const withdrawal = () => {
     // 서버 데이터 전송 함수
-    getInfo().then((res) => {
+    withdrawalUser().then((res) => {
       toast.success(
         <>
           <h1>회원 탈퇴 완료</h1>
