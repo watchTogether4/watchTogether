@@ -1,5 +1,4 @@
 import axios from 'axios';
-const accessToken = localStorage.getItem('access-token');
 
 const BASE_URL = '/api/v1/users';
 
@@ -19,11 +18,11 @@ export const loginUser = async (data) => {
 /**
  * 로그아웃 - GET
  */
-export const logoutUser = () => {
+export const logoutUser = (token) => {
   return axios({
-    url: `${BASE_URL}/sign-in`,
-    method: 'GET',
-    headers: { 'Content-Type': 'application/json' },
+    url: `/api/v1/sign-out`,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
   });
 };
 
@@ -42,11 +41,11 @@ export const isValidateToken = () => {
  * 파티원 초대 - 닉네임 검색
  * @param {string} name
  */
-export const searchUser = (name) => {
+export const searchUser = (name, token) => {
   return axios({
     url: `${BASE_URL}/search-user`,
     method: 'GET',
-    headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+    headers: { 'Content-Type': 'application/json;charset=UTF-8', Authorization: `Bearer ${token}` },
     params: {
       nickname: name,
     },
@@ -56,13 +55,13 @@ export const searchUser = (name) => {
 /**
  * 마이페이지 - 유저 정보 가져오기
  */
-export const getInfo = () => {
+export const getInfo = (token) => {
   return axios({
     url: `${BASE_URL}/my-page`,
     method: 'GET',
     headers: {
       'Content-Type': 'application/json;charset=UTF-8',
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: `Bearer ${token}`,
     },
   });
 };
@@ -119,13 +118,13 @@ export const resetPassword = (body) => {
  * 현재 비밀번호 일치 여부 확인
  * @param {string} password
  */
-export const isCurrentPassword = (password) => {
+export const isCurrentPassword = (password, token) => {
   return axios({
     url: `${BASE_URL}/password`,
     method: 'POST',
     headers: {
       'Content-Type': 'application/json;charset=UTF-8',
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: `Bearer ${token}`,
     },
     data: JSON.stringify(password),
   });
@@ -135,13 +134,13 @@ export const isCurrentPassword = (password) => {
  * 새 비밀번호 변경
  * @param {string} password
  */
-export const putNewPassword = (password) => {
+export const putNewPassword = (password, token) => {
   return axios({
     url: `${BASE_URL}/password`,
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json;charset=UTF-8',
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: `Bearer ${token}`,
     },
     data: JSON.stringify(password),
   });
@@ -151,13 +150,13 @@ export const putNewPassword = (password) => {
  * 회원 탈퇴
  * @param {{userId : string, password:string}} body
  */
-export const withdrawalUser = (body) => {
+export const withdrawalUser = (body, token) => {
   return axios({
     url: `${BASE_URL}/`,
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json;charset=UTF-8',
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: `Bearer ${token}`,
     },
     data: JSON.stringify(body),
   });
