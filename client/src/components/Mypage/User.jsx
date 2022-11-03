@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import { IoIosArrowForward } from 'react-icons/io';
 import { InfoList, List } from './User.styles';
@@ -18,7 +18,7 @@ function Chat() {
   };
   return (
     <>
-      <Profile />
+      <Profile data={data} />
       <InfoList direction="column" alignItems="flex-start">
         <List justifyContent="space-between" onClick={() => handleClick('user')}>
           내 정보
