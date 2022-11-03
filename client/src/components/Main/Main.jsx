@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import icons from '../../mocks/icons';
+import icons from '../../mocks/platform';
 import { Wrapper, Inner, Title, Desc, Carousel, Icon, StartBtn } from './Main.styles';
 import { getCookieToken, setRefreshToken, removeCookieToken } from '../../utils/Cookie';
 import { useSelector } from 'react-redux';

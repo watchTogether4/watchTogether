@@ -1,18 +1,15 @@
 import React, { useState } from 'react';
-import { useQuery } from 'react-query';
 import Avvvatars from 'avvvatars-react';
 
 import { Wrapper, Profile, InfoList, Button, Withdrawal } from './UserInfo.styles';
-import { getInfo } from './../../api/Users';
 import AlertModal from './AlertModal';
 import PasswordModal from './PasswordModal';
+import { useLocation } from 'react-router-dom';
 
 const UserInfo = () => {
-  const getUserInfo = () => {
-    return getInfo().then((res) => res.data);
-  };
+  const { state } = useLocation();
+  console.log(state);
 
-  const { data, isLoading } = useQuery('getInfo', getUserInfo);
   const [isChange, setIsChange] = useState(false);
   const [isWithdrawal, setIsWithdrawal] = useState(false);
 
@@ -26,15 +23,15 @@ const UserInfo = () => {
   return (
     <>
       <Wrapper>
-        {data && (
+        {state && (
           <div>
             <Profile>
-              <Avvvatars value={data.email} style="shape" size={100} />
+              <Avvvatars value={state.email} style="shape" size={100} />
             </Profile>
             <InfoList>
               <li>
                 <span>이메일</span>
-                <span>{data.email}</span>
+                <span>{state.email}</span>
               </li>
               <li>
                 <span>비밀번호</span>
@@ -44,15 +41,15 @@ const UserInfo = () => {
               </li>
               <li>
                 <span>닉네임</span>
-                <span>{data.nickname}</span>
+                <span>{state.nickname}</span>
               </li>
               <li>
                 <span>생년월일</span>
-                <span>{data.birth}</span>
+                <span>{state.birth}</span>
               </li>
               <li>
                 <span>캐시 잔액</span>
-                <span>{data.cash}</span>
+                <span>{state.cash}</span>
               </li>
             </InfoList>
           </div>

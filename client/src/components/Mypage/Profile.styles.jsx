@@ -24,6 +24,7 @@ const UserName = styled.p`
   margin-bottom: 0.25rem;
   font-size: 1.1rem;
   font-weight: 600;
+  text-align: center;
 `;
 
 const UserEmail = styled.p`

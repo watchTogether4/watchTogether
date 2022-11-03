@@ -13,16 +13,16 @@ import {
 import SearchModal from './SearchModal';
 import { createParty } from '../../api/Parties';
 import { toast, ToastContainer } from 'react-toastify';
-import Header from '../Header/Header';
 
-const AddParty = () => {
-  //
+const AddParty = ({ setPage, value }) => {
+  const navigate = useNavigate();
   const intialValues = {
-    ottId: 0,
+    ottId: value.ott,
     title: '',
     body: '',
     partyOttId: '',
     partyOttPassword: '',
+    leaderNickName: '',
   };
   const [formValues, setFormValues] = useState(intialValues);
   const [formErrors, setFormErrors] = useState('');
@@ -32,14 +32,20 @@ const AddParty = () => {
 
   const submitForm = () => {
     const invite = inviteMember.join();
-    const body = { ...formValues, receiversNickName: invite, leaderNickName: '' };
+    const body = { ...formValues, receiversNickName: null | invite };
 
+    console.log(body);
     createParty(body)
       .then((res) => {
+        console.log(res.data);
         toast.success(<h1>모집 글이 등록되었습니다</h1>, {
           position: 'top-center',
           autoClose: 1500,
         });
+        setTimeout(() => {
+          setPage(0);
+          navigate('/partyList');
+        }, 1500);
       })
       .catch((error) => {
         toast.error(error.response.data.message, {
@@ -100,14 +106,14 @@ const AddParty = () => {
           autoClose: 1000,
         },
       );
+    } else {
+      setIsOpen(true);
     }
   };
 
   return (
     <Wrapper>
       <ToastContainer />
-      <Header title="파티원 모집하기" path="/"></Header>
-
       <GatherForm onSubmit={handleSubmit}>
         <Description>파티원을 모집하거나, 원하는 지인을 초대할 수 있어요.</Description>
         {formErrors && <ErrorMessage className="error">{formErrors}</ErrorMessage>}
