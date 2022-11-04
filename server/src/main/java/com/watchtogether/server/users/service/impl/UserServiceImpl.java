@@ -4,10 +4,12 @@ import static com.watchtogether.server.exception.type.UserErrorCode.ALREADY_SIGN
 import static com.watchtogether.server.exception.type.UserErrorCode.ALREADY_SIGNUP_NICKNAME;
 import static com.watchtogether.server.exception.type.UserErrorCode.ALREADY_VERIFY_EMAIL;
 import static com.watchtogether.server.exception.type.UserErrorCode.EXPIRED_VERIFY_EMAIL_CODE;
+import static com.watchtogether.server.exception.type.UserErrorCode.IS_EXIST_BALANCE;
 import static com.watchtogether.server.exception.type.UserErrorCode.LEAVE_USER;
 import static com.watchtogether.server.exception.type.UserErrorCode.NEED_VERIFY_EMAIL;
 import static com.watchtogether.server.exception.type.UserErrorCode.NOT_FOUND_NICKNAME;
 import static com.watchtogether.server.exception.type.UserErrorCode.NOT_FOUND_USER;
+import static com.watchtogether.server.exception.type.UserErrorCode.SAME_PASSWORD;
 import static com.watchtogether.server.exception.type.UserErrorCode.WRONG_PASSWORD_USER;
 import static com.watchtogether.server.exception.type.UserErrorCode.WRONG_VERIFY_EMAIL_CODE;
 import static com.watchtogether.server.users.domain.type.Authority.USER;
@@ -127,6 +129,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
+    public void deleteUser(String email) {
+
+        User user = userRepository.findById(email)
+            .orElseThrow(() -> new UserException(NOT_FOUND_USER));
+
+        userRepository.delete(user);
+
+    }
+
+
+    @Override
     public UserDto InfoUser(String email) {
 
         User user = userRepository.findById(email)
@@ -184,9 +198,15 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByResetPasswordKey(code)
             .orElseThrow(() -> new UserException(NOT_FOUND_USER));
 
+        // 패스워드 초기화 코드의 유효기간이 지난 경우
         if (user.getResetPasswordLimitDt().isBefore(LocalDateTime.now()) ||
             user.getResetPasswordLimitDt() == null) {
             throw new UserException(EXPIRED_VERIFY_EMAIL_CODE);
+        }
+
+        // 기존 패스워드와 동일한지 여부 검사
+        if (passwordEncoder.matches(password, user.getPassword())) {
+            throw new UserException(SAME_PASSWORD);
         }
 
         //패스워드 암호화
@@ -208,6 +228,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserDto checkUserAndCash(String email, String password) {
+        User user = userRepository.findById(email)
+            .orElseThrow(() -> new UserException(NOT_FOUND_USER));
+
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new UserException(WRONG_PASSWORD_USER);
+        }
+        if (user.getCash() != 0) {
+            throw new UserException(IS_EXIST_BALANCE);
+        }
+
+        return UserDto.fromEntity(user);
+    }
+
+
+    @Override
     public void checkPassword(String email, String password) {
         User user = userRepository.findById(email)
             .orElseThrow(() -> new UserException(NOT_FOUND_USER));
@@ -222,6 +258,11 @@ public class UserServiceImpl implements UserService {
     public void updateUserPassword(String email, String password) {
         User user = userRepository.findById(email)
             .orElseThrow(() -> new UserException(NOT_FOUND_USER));
+
+        // 기존 패스워드와 동일한지 여부 검사
+        if (passwordEncoder.matches(password, user.getPassword())) {
+            throw new UserException(SAME_PASSWORD);
+        }
 
         // 패스워드 암호화
         String encodePassword = passwordEncoder.encode(password);

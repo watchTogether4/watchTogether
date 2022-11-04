@@ -1,14 +1,14 @@
 import React from 'react';
 import Header from '../components/Header/Header';
-import AddParty from '../components/AddParty/AddParty';
+import AddParty from './../components/AddParty/AddParty';
 
-const AddPartyPage = () => {
+function AddPartyPage() {
   return (
     <>
-      <Header title="파티원 모집하기" path="/"></Header>
+      <Header title="파티 모집하기" path="/ott"></Header>
       <AddParty />
     </>
   );
-};
+}
 
 export default AddPartyPage;

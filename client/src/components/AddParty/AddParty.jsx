@@ -13,16 +13,16 @@ import {
 import SearchModal from './SearchModal';
 import { createParty } from '../../api/Parties';
 import { toast, ToastContainer } from 'react-toastify';
-import Header from '../Header/Header';
 
 const AddParty = () => {
-  //
+  const navigate = useNavigate();
   const intialValues = {
-    ottId: 0,
+    ottId: '',
     title: '',
     body: '',
     partyOttId: '',
     partyOttPassword: '',
+    leaderNickName: '',
   };
   const [formValues, setFormValues] = useState(intialValues);
   const [formErrors, setFormErrors] = useState('');
@@ -31,15 +31,20 @@ const AddParty = () => {
   const [inviteMember, setinviteMember] = useState([]);
 
   const submitForm = () => {
-    const invite = inviteMember.join();
-    const body = { ...formValues, receiversNickName: invite, leaderNickName: '' };
+    const accessToken = localStorage.getItem('access-token');
+    const invite = inviteMember.length !== 0 ? inviteMember.join() : null;
+    const body = { ...formValues, receiversNickName: invite };
 
-    createParty(body)
+    createParty(body, accessToken)
       .then((res) => {
+        console.log(res.data);
         toast.success(<h1>모집 글이 등록되었습니다</h1>, {
           position: 'top-center',
           autoClose: 1500,
         });
+        setTimeout(() => {
+          navigate('/partyList');
+        }, 1500);
       })
       .catch((error) => {
         toast.error(error.response.data.message, {
@@ -100,14 +105,14 @@ const AddParty = () => {
           autoClose: 1000,
         },
       );
+    } else {
+      setIsOpen(true);
     }
   };
 
   return (
     <Wrapper>
       <ToastContainer />
-      <Header title="파티원 모집하기" path="/"></Header>
-
       <GatherForm onSubmit={handleSubmit}>
         <Description>파티원을 모집하거나, 원하는 지인을 초대할 수 있어요.</Description>
         {formErrors && <ErrorMessage className="error">{formErrors}</ErrorMessage>}
@@ -124,7 +129,7 @@ const AddParty = () => {
           type="text"
           name="searchMember"
           placeholder="찾으려는 파티원의 닉네임을 입력해주세요."
-          defalutValue={inviteMember}
+          value={inviteMember}
           onClick={handleClick}
         />
 

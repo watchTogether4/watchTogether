@@ -271,6 +271,16 @@ public class PartyServiceImpl implements PartyService {
         throw new PartyException(PartyErrorCode.NOT_FOUND_PARTY);
     }
 
+    // todo 파티 탈퇴 전 자신이 속한 파티 존재 여부 확인
+    @Override
+    public void findMyPartiesBeforeDeleteUser(String nickName) {
+
+        List<PartyMember> myPartyListId = partyMemberRepository.findByNickName(nickName);
+         if(!myPartyListId.isEmpty()){
+             throw new PartyException(PartyErrorCode.FOUND_USER_BEFORE_DELETE);
+        }
+    }
+
 
     @Override
     public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {

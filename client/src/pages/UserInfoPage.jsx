@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { RiLogoutBoxRLine } from 'react-icons/ri';
 import { removeCookieToken } from './../utils/Cookie';
 import { useNavigate } from 'react-router-dom';
+import { logoutUser } from './../api/Users';
 
 const LogoutBtn = styled.button`
   width: 3rem;
@@ -16,9 +17,18 @@ const LogoutBtn = styled.button`
 
 const UserInfoPage = () => {
   const navigate = useNavigate();
+  const accessToken = localStorage.getItem('access-token');
 
   const handleClick = () => {
-    removeCookieToken();
+    logoutUser(accessToken)
+      .then((res) => {
+        localStorage.removeItem('access-token');
+        removeCookieToken();
+        console.log(res.data);
+      })
+      .catch((error) => {
+        console.log(error.response.data.message);
+      });
     navigate('/');
   };
 

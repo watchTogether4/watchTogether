@@ -19,7 +19,7 @@ public enum TokenErrorCode {
     IS_EMPTY_TOKEN(HttpStatus.UNAUTHORIZED.value(), "IS_EMPTY_TOKEN", "토큰 값이 비어있습니다."),
     IS_EMPTY_ACCESS_TOKEN(HttpStatus.UNAUTHORIZED.value(), "IS_EMPTY_ACCESS_TOKEN", "access 토큰 값이 비어있습니다."),
     IS_EMPTY_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED.value(), "IS_EMPTY_REFRESH_TOKEN", "refresh 토큰 값이 비어있습니다."),
-    WRONG_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED.value(), "WRONG_REFRESH_TOKEN", "fresh 토큰 값이 일치하지 않습니다.");
+    WRONG_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED.value(), "WRONG_REFRESH_TOKEN", "refresh 토큰 값이 일치하지 않습니다.");
 
     private final int errorStatus;
     private final String errorCode;
