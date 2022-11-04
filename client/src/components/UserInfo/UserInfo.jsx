@@ -8,7 +8,6 @@ import { useLocation } from 'react-router-dom';
 
 const UserInfo = () => {
   const { state } = useLocation();
-  console.log(state);
 
   const [isChange, setIsChange] = useState(false);
   const [isWithdrawal, setIsWithdrawal] = useState(false);
@@ -62,7 +61,7 @@ const UserInfo = () => {
       {isChange && <PasswordModal modal={setIsChange} />}
 
       {/* 탈퇴 modal */}
-      {isWithdrawal && <AlertModal modal={setIsWithdrawal} />}
+      {isWithdrawal && <AlertModal modal={setIsWithdrawal} data={state} />}
     </>
   );
 };
