@@ -106,4 +106,13 @@ public interface PartyService extends UserDetailsService {
      * @return
      */
 
+
+    // todo 파티 탈퇴 전 자신이 속한 파티 존재 여부 확인
+
+    /**
+     * 파티 탈퇴 전 자신이 속한 파티 존재 여부 확인
+     * @param nickname 닉네임
+     */
+    void findMyPartiesBeforeDeleteUser(String nickname);
+
 }
