@@ -1,5 +1,6 @@
 package com.watchtogether.server.party.domain.repository;
 
+import com.watchtogether.server.party.domain.entitiy.InviteParty;
 import com.watchtogether.server.party.domain.entitiy.Party;
 import com.watchtogether.server.party.domain.entitiy.PartyMember;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,4 +14,7 @@ public interface PartyMemberRepository extends JpaRepository<PartyMember, Long> 
     List<PartyMember> findByNickName(String nickname);
 
     Optional<PartyMember> findByNickNameAndParty(String nickName, Party party);
+
+
 }
+
