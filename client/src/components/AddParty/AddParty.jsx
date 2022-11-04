@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
   Wrapper,
   Description,
@@ -16,7 +16,7 @@ import { toast, ToastContainer } from 'react-toastify';
 
 const AddParty = () => {
   const navigate = useNavigate();
-  const intialValues = {
+  const initialValues = {
     ottId: '',
     title: '',
     body: '',
@@ -24,16 +24,21 @@ const AddParty = () => {
     partyOttPassword: '',
     leaderNickName: '',
   };
-  const [formValues, setFormValues] = useState(intialValues);
+  const [formValues, setFormValues] = useState(initialValues);
   const [formErrors, setFormErrors] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const [isVaildate, setIsValidate] = useState(false);
   const [inviteMember, setinviteMember] = useState([]);
+  
+  const {state} = useLocation();
+  const ott = state.ott['ott'];
+  initialValues.ottId = ott;
+  console.log(state, initialValues.ottId)
 
   const submitForm = () => {
     const accessToken = localStorage.getItem('access-token');
     const invite = inviteMember.length !== 0 ? inviteMember.join() : null;
-    const body = { ...formValues, receiversNickName: invite };
+    const body = { ...formValues, receiversNickName: invite, };
 
     createParty(body, accessToken)
       .then((res) => {

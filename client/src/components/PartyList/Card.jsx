@@ -7,19 +7,19 @@ import {
   CardPerson,
   } from './Card.styles';
 
-export function Card({ottUrl, title, person}) {
+export function Card({ott, title, people}) {
   const navigate = useNavigate();
 
   return(
     <CardWrapper onClick={() => {
       navigate(`/signUp`)
     }}>
-      <CardOtt src={ottUrl}/>
-      <CardTitle>{title}
-        넷플릭스 패밀리 구해요!
+      <CardOtt src={ott}/>
+      <CardTitle>
+        {title}
       </CardTitle>
-      <CardPerson>{person}
-        3/4
+      <CardPerson>
+        {people}
       </CardPerson>
     </CardWrapper>
   );
