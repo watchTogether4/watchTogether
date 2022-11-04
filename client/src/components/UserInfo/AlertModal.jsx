@@ -8,8 +8,9 @@ import { AlertTitle, AlertText } from './../Modal/Modal.styles';
 
 import Modal from './../Modal/Modal';
 import { withdrawalUser } from '../../api/Users';
+import { removeCookieToken } from './../../utils/Cookie';
 
-const AlertModal = ({ modal }) => {
+const AlertModal = ({ modal, data }) => {
   const navigate = useNavigate();
   const handleClick = (e) => {
     const name = e.target.dataset.name;
@@ -21,23 +22,35 @@ const AlertModal = ({ modal }) => {
   };
 
   const withdrawal = () => {
+    const accessToken = localStorage.getItem('access-token');
     // 서버 데이터 전송 함수
-    withdrawalUser().then((res) => {
-      toast.success(
-        <>
-          <h1>회원 탈퇴 완료</h1>
-          <p>다음에 다시 만나요!😥</p>
-        </>,
-        {
-          position: 'top-center',
-          autoClose: 1500,
-        },
-      );
-      setTimeout(() => {
-        modal(false);
-        navigate('/');
-      }, 1500);
-    });
+
+    withdrawalUser(data, accessToken)
+      .then((res) => {
+        console.log(res.data);
+        localStorage.removeItem('access-token');
+        removeCookieToken();
+
+        toast.success(
+          <>
+            <h1>회원 탈퇴 완료</h1>
+            <p>다음에 다시 만나요!😥</p>
+          </>,
+          {
+            position: 'top-center',
+            autoClose: 1500,
+          },
+        );
+
+        setTimeout(() => {
+          modal(false);
+          navigate('/');
+        }, 1500);
+      })
+      .catch((error) => {
+        console.log(error);
+        console.log(error.response.data.message);
+      });
   };
 
   return (

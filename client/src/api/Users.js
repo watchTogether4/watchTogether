@@ -148,7 +148,7 @@ export const putNewPassword = (password, token) => {
 
 /**
  * 회원 탈퇴
- * @param {{userId : string, password:string}} body
+ * @param {{email : string, password:string}} body
  */
 export const withdrawalUser = (body, token) => {
   return axios({

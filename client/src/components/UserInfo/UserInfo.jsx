@@ -8,7 +8,8 @@ import { useLocation } from 'react-router-dom';
 
 const UserInfo = () => {
   const { state } = useLocation();
-  console.log(state);
+  const { data, password } = state;
+  const body = { email: data.email, password: password };
 
   const [isChange, setIsChange] = useState(false);
   const [isWithdrawal, setIsWithdrawal] = useState(false);
@@ -23,15 +24,15 @@ const UserInfo = () => {
   return (
     <>
       <Wrapper>
-        {state && (
+        {data && (
           <div>
             <Profile>
-              <Avvvatars value={state.email} style="shape" size={100} />
+              <Avvvatars value={data.email} style="shape" size={100} />
             </Profile>
             <InfoList>
               <li>
                 <span>이메일</span>
-                <span>{state.email}</span>
+                <span>{data.email}</span>
               </li>
               <li>
                 <span>비밀번호</span>
@@ -41,15 +42,15 @@ const UserInfo = () => {
               </li>
               <li>
                 <span>닉네임</span>
-                <span>{state.nickname}</span>
+                <span>{data.nickname}</span>
               </li>
               <li>
                 <span>생년월일</span>
-                <span>{state.birth}</span>
+                <span>{data.birth}</span>
               </li>
               <li>
                 <span>캐시 잔액</span>
-                <span>{state.cash}</span>
+                <span>{data.cash}</span>
               </li>
             </InfoList>
           </div>
@@ -62,7 +63,7 @@ const UserInfo = () => {
       {isChange && <PasswordModal modal={setIsChange} />}
 
       {/* 탈퇴 modal */}
-      {isWithdrawal && <AlertModal modal={setIsWithdrawal} />}
+      {isWithdrawal && <AlertModal modal={setIsWithdrawal} data={body} />}
     </>
   );
 };
