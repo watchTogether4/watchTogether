@@ -24,11 +24,8 @@ const AlertModal = ({ modal, data }) => {
   const withdrawal = () => {
     const accessToken = localStorage.getItem('access-token');
     // 서버 데이터 전송 함수
-    const body = {
-      email: data.email,
-      password: data.password,
-    };
-    withdrawalUser(body, accessToken)
+
+    withdrawalUser(data, accessToken)
       .then((res) => {
         console.log(res.data);
         localStorage.removeItem('access-token');
@@ -50,7 +47,10 @@ const AlertModal = ({ modal, data }) => {
           navigate('/');
         }, 1500);
       })
-      .catch((error) => console.log(error));
+      .catch((error) => {
+        console.log(error);
+        console.log(error.response.data.message);
+      });
   };
 
   return (

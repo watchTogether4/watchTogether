@@ -15,7 +15,6 @@ const PasswordConfirm = ({ modal, data }) => {
   const navigate = useNavigate();
   const accessToken = localStorage.getItem('access-token');
   const [message, setMessage] = useState('');
-  const [info, setInfo] = useState(data);
 
   const { values, errors, handleChange, handleSubmit } = useFormik({
     initialValues: {
@@ -33,14 +32,16 @@ const PasswordConfirm = ({ modal, data }) => {
       const body = { password: values.password };
       isCurrentPassword(body, accessToken)
         .then((response) => {
-          if (message !== '') setMessage('');
-
-          setInfo({ ...info, password: values.password });
           toast.success(<h1>비밀번호 검사 성공</h1>, { position: 'top-center', autoClose: 1000 });
 
           setTimeout(() => {
             modal(false);
-            navigate('./user', { state: info });
+            navigate('./user', {
+              state: {
+                data: data,
+                password: values.password,
+              },
+            });
           }, 1000);
         })
         .catch((error) => {
