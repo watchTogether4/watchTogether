@@ -5,7 +5,6 @@ import lombok.Data;
 @Data
 public class OttAuthRequest {
 
-    private String partyId;
     private String id;
     private String password;
     private String ottType;
