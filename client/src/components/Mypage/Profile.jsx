@@ -6,8 +6,9 @@ import Avvvatars from 'avvvatars-react';
 import { getInfo } from './../../api/Users';
 
 function Profile() {
+  const accessToken = localStorage.getItem('access-token');
   const getUserInfo = () => {
-    return getInfo().then((res) => res.data);
+    return getInfo(accessToken).then((res) => res.data);
   };
   const { data } = useQuery('getInfo', getUserInfo);
   

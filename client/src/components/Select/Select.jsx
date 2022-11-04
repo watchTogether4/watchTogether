@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, } from 'react-router-dom';
 import { Wrapper, SelectSection, ButtonSection, RoleTitle, RoleText, TextBox, Leader, Follower, NextButton } from './Select.styles';
 import { Button } from '../../styles/Common';
 import { motion } from 'framer-motion';
@@ -60,10 +60,8 @@ function Select() {
           </Follower>
         </SelectSection>
         <ButtonSection>
-          <Button>
-            <Link to="/ott">
+          <Button onClick={()=> navigate('/ott', {state: {role: {role}}})}>
               다음
-            </Link>
           </Button>
         </ButtonSection>
       </Wrapper>

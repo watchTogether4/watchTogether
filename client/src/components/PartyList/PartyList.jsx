@@ -1,18 +1,19 @@
 import React, { useState } from 'react';
-import { useQuery } from 'react-query';
 import { Card } from './Card'
-import { listParty } from './../../api/Parties';
+import { showPartyList } from './../../api/Parties';
 import { Wrapper, Board } from './PartyList.styles';
+import icons from '../../mocks/platform';
 
 function PartyList() {
-  const getList = () => {
-    return listParty().then((res) => res.data);
+  const accessToken = localStorage.getItem('access-token');
+  const [boardList, setBoardList] = useState([]);
+  const getBoardList = () => {
+    return showPartyList(accessToken).then((res) => {
+      console.log(res.data)});
   };
-  const { data } = useQuery('listParty', getList);
-  const [boardList] = useState([]);
-  const sortList = () => {
-
-  };
+  getBoardList().then(result=> setBoardList(result));
+  // const sortList = () => {
+  // };
 
   return (
     <>
@@ -20,18 +21,12 @@ function PartyList() {
         <Board>
           {boardList.map((data) => (
             <Card 
-              ottUrl={`./Image/${data.ottId}`} 
+              ottUrl={data.partyOttId} 
               title={data.title} 
-              person={data.person}
+              people={data.people}
             />
           ))}
         </Board>
-        <Card/>
-        <Card/>
-        <Card/>
-        <Card/>
-        <Card/>
-        <Card/>
       </Wrapper>
     </>
   );
