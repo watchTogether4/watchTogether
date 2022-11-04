@@ -18,6 +18,7 @@ public enum UserErrorCode {
     WRONG_VERIFY_EMAIL_CODE(HttpStatus.BAD_REQUEST.value(), "WRONG_VERIFY_EMAIL_CODE","인증 메일 코드가 일치하지 않습니다."),
     EXPIRED_VERIFY_EMAIL_CODE(HttpStatus.BAD_REQUEST.value(), "EXPIRED_VERIFY_EMAIL_CODE","인증 기간이 만료되었습니다."),
     WRONG_PASSWORD_USER(HttpStatus.BAD_REQUEST.value(), "WRONG_PASSWORD_USER","패스워드가 일치하지 않습니다."),
+    SAME_PASSWORD(HttpStatus.BAD_REQUEST.value(), "SAME_PASSWORD","기존의 패스워드와 일치합니다."),
     NOT_FOUND_NICKNAME(HttpStatus.BAD_REQUEST.value(), "NOT_FOUND_NICKNAME","일치하는 닉네임이 없습니다."),
     IS_EXIST_BALANCE(HttpStatus.BAD_REQUEST.value(), "IS_EXIST_BALANCE","잔액이 남아있습니다.");
 
