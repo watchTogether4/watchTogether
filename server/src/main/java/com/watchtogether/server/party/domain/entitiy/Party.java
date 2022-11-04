@@ -6,6 +6,7 @@ import lombok.*;
 import org.hibernate.envers.AuditOverride;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +41,8 @@ public class Party extends BaseEntity{
     private LocalDateTime invisibleDt;
 
     private boolean leaderVerify;
+
+    private LocalDate payDt;
 
     @OneToMany(mappedBy = "party")
     private List<PartyMember> members = new ArrayList<>();

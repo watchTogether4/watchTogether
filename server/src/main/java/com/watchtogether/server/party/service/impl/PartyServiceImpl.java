@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -97,8 +98,6 @@ public class PartyServiceImpl implements PartyService {
 
     @Override
     public ResponseEntity<Object> joinParty(JoinPartyForm form) {
-        // 1. 파티 아이디와 유저 닉네임을 받고
-        // 2. 그것을 토대로 invite party 테이블에 accept을 true 상태로 저장 및 파티인원 증가 +1;
         LocalDateTime limitDt = LocalDateTime.now().plusDays(1);
         Optional<Party> optionalParty = partyRepository.findById(form.getPartyId());
         if (optionalParty.isPresent()) {
@@ -119,7 +118,6 @@ public class PartyServiceImpl implements PartyService {
 
         throw new PartyException(PartyErrorCode.NOT_FOUND_PARTY);
 
-        // todo 같은 사람이 참가할수 도 있다. 예외처리 필요
     }
     @Override
     public List<Party> showPartyList() {
@@ -193,6 +191,7 @@ public class PartyServiceImpl implements PartyService {
             Party party = optionalParty.get();
             if (party.getPeople() == 4) {
                 party.setPartyFull(true);
+                party.setPayDt(LocalDate.now());
                 List<InviteParty> list = invitePartyRepository.findByParty(party);
                 savePartyMember(party.getId());
                 invitePartyRepository.deleteAll(list);
