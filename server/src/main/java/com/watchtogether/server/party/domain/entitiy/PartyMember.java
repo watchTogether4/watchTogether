@@ -8,8 +8,6 @@ import lombok.*;
 import org.hibernate.envers.AuditOverride;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Entity
 @Setter
@@ -23,7 +21,9 @@ public class PartyMember extends BaseEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String NickName;
+    private String nickName;
+
+    private boolean isLeader;
 
     @JsonIgnore
     @ManyToOne
@@ -31,7 +31,8 @@ public class PartyMember extends BaseEntity{
     private Party party;
     public static PartyMember from(InvitePartyForm form){
         return PartyMember.builder()
-                .NickName(form.getReceiverNickName())
+                .nickName(form.getNickname())
+                .isLeader(form.getIsLeader())
                 .party(form.getParty())
                 .build();
     }

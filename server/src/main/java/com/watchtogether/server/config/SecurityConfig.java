@@ -61,6 +61,8 @@ public class SecurityConfig {
     public WebSecurityCustomizer configure() {
         return web -> web.ignoring()
             .antMatchers(
+                "/v3/api-docs/**",
+                "/api-docs/**",
                 "/api-document/**",
                 "/swagger-ui.html",
                 "/swagger-ui/**"
@@ -86,7 +88,11 @@ public class SecurityConfig {
             .and()
             .authorizeRequests()    //요청에 대한 권한 체크
             .requestMatchers(CorsUtils::isPreFlightRequest).permitAll() //  Preflight 요청은 허용
-            .antMatchers("/api/v1/users/sign-in", "/api/v1/users/sign-up/**").permitAll()
+            .antMatchers(
+                "/api/v1/refresh-token",
+                "/api/v1/users/sign-in",
+                "/api/v1/users/sign-up/**",
+                "/api/v1/users/reset-password/**").permitAll()
             .anyRequest().authenticated()
 
             .and()

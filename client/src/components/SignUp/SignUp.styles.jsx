@@ -22,7 +22,7 @@ const LoginLink = styled.div`
     margin-right: 0.5rem;
   }
   a {
-    color:${(props) => props.theme.color.success_200};
+    color: ${(props) => props.theme.color.success_200};
   }
 `;
 

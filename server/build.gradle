@@ -23,11 +23,14 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-security'
+    // redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     // jwt
     implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
     // gmail smtp
-    implementation 'org.springframework.boot:spring-boot-starter-mail:2.7.4'
+    implementation 'org.springframework.boot:spring-boot-starter-mail:2.7.5'
     // envers : hibernate 에서 만든 데이터 변경 이력을 로깅하기
+
     implementation 'org.springframework.data:spring-data-envers'
     //swagger
     implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.6.7'

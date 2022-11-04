@@ -10,7 +10,7 @@ const ImageContainer = styled.div`
   width: 130px;
   height: 130px;
   margin-bottom: 0.8rem;
-  border: 1px solid red;
+  border: 1px solid grey;
   overflow: hidden;
   border-radius: 50%;
 `;
@@ -24,6 +24,7 @@ const UserName = styled.p`
   margin-bottom: 0.25rem;
   font-size: 1.1rem;
   font-weight: 600;
+  text-align: center;
 `;
 
 const UserEmail = styled.p`

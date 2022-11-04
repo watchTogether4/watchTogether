@@ -9,15 +9,19 @@ const InfoList = styled.ul`
 const List = styled.li`
   ${Flex}
   width: 100%;
-  padding: 1rem;
+  padding: 1.2rem 1rem;
   border-bottom: 1px solid ${(props) => props.theme.color.light_300};
   cursor: pointer;
 
-  a {
-    display: block;
+  /* button {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     width: 100%;
     height: 100%;
-  }
+    padding: 1.2rem 1rem;
+    background-color: transparent;
+  } */
 `;
 
 export { InfoList, List };

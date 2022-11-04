@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import {
   Wrapper,
-  Header,
-  Title,
   Description,
   GatherForm,
   Label,
@@ -14,44 +11,47 @@ import {
   ErrorMessage,
 } from './AddParty.styles';
 import SearchModal from './SearchModal';
-import AlertModal from './AlertModal';
+import { createParty } from '../../api/Parties';
+import { toast, ToastContainer } from 'react-toastify';
 
 const AddParty = () => {
+  const navigate = useNavigate();
   const intialValues = {
-    ottId: 0,
+    ottId: '',
     title: '',
     body: '',
     partyOttId: '',
     partyOttPassword: '',
+    leaderNickName: '',
   };
-
   const [formValues, setFormValues] = useState(intialValues);
   const [formErrors, setFormErrors] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const [isVaildate, setIsValidate] = useState(false);
-  const [isAlert, setIsAlert] = useState(false);
-  const [alertMsg, setAlertMsg] = useState({});
   const [inviteMember, setinviteMember] = useState([]);
 
   const submitForm = () => {
-    const invite = inviteMember.join();
+    const accessToken = localStorage.getItem('access-token');
+    const invite = inviteMember.length !== 0 ? inviteMember.join() : null;
     const body = { ...formValues, receiversNickName: invite };
 
-    axios({
-      url: '/api/parties/create',
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      data: JSON.stringify(body),
-    }).then((res) => {
-      console.log(res.data);
-      setAlertMsg({
-        title: '파티 등록 완료',
-        message: '파티 모집 글이 정상적으로 \n등록되었습니다.',
+    createParty(body, accessToken)
+      .then((res) => {
+        console.log(res.data);
+        toast.success(<h1>모집 글이 등록되었습니다</h1>, {
+          position: 'top-center',
+          autoClose: 1500,
+        });
+        setTimeout(() => {
+          navigate('/partyList');
+        }, 1500);
+      })
+      .catch((error) => {
+        toast.error(error.response.data.message, {
+          position: 'top-center',
+          autoClose: 1000,
+        });
       });
-      setIsAlert(true);
-    });
   };
 
   const validate = (values) => {
@@ -81,10 +81,10 @@ const AddParty = () => {
   };
 
   useEffect(() => {
-    console.log(formErrors);
-    if (Object.keys(formErrors).length === 0 && isVaildate) {
+    if (formErrors === undefined && isVaildate) {
       submitForm();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formErrors]);
 
   const handleChange = (e) => {
@@ -95,11 +95,16 @@ const AddParty = () => {
   const handleClick = (e) => {
     e.preventDefault();
     if (inviteMember.length === 3) {
-      setAlertMsg({
-        title: '파티 초대 정원 초과',
-        message: '파티원 초대는 최대 3명까지만 \n가능합니다.',
-      });
-      setIsAlert(true);
+      toast.error(
+        <>
+          <h1>파티 초대 정원 초과</h1>
+          <p>파티원 초대는 최대 3명까지만 가능합니다.</p>
+        </>,
+        {
+          position: 'top-center',
+          autoClose: 1000,
+        },
+      );
     } else {
       setIsOpen(true);
     }
@@ -107,15 +112,17 @@ const AddParty = () => {
 
   return (
     <Wrapper>
-      <Header>
-        <Title>파티원 모집하기</Title>
-        <Description>파티원을 모집하거나, 원하는 지인을 초대할 수 있어요.</Description>
-      </Header>
-
+      <ToastContainer />
       <GatherForm onSubmit={handleSubmit}>
+        <Description>파티원을 모집하거나, 원하는 지인을 초대할 수 있어요.</Description>
         {formErrors && <ErrorMessage className="error">{formErrors}</ErrorMessage>}
         <Label htmlFor="title">모집 제목</Label>
-        <CustomInput type="text" name="title" value={formValues.title} onChange={handleChange} />
+        <CustomInput
+          type="text"
+          name="title"
+          defalutValue={formValues.title}
+          onChange={handleChange}
+        />
 
         <Label htmlFor="searchMember">파티원 초대하기</Label>
         <CustomInput
@@ -132,14 +139,14 @@ const AddParty = () => {
           type="text"
           name="partyOttId"
           placeholder="ID"
-          value={formValues.partyOttId}
+          defalutValue={formValues.partyOttId}
           onChange={handleChange}
         />
         <CustomInput
           type="password"
           name="partyOttPassword"
           placeholder="Password"
-          value={formValues.partyOttPassword}
+          defalutValue={formValues.partyOttPassword}
           onChange={handleChange}
         />
 
@@ -147,7 +154,7 @@ const AddParty = () => {
         <Text
           name="body"
           placeholder="여기에 입력하세요"
-          value={formValues.body}
+          defalutValue={formValues.body}
           onChange={handleChange}
         />
 
@@ -161,8 +168,6 @@ const AddParty = () => {
           setIsOpen={setIsOpen}
         />
       )}
-
-      {isAlert && <AlertModal modal={setIsAlert} alert={alertMsg} />}
     </Wrapper>
   );
 };

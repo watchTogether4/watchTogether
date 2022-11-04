@@ -1,11 +1,7 @@
 package com.watchtogether.server.components.jwt;
 
-import static com.watchtogether.server.exception.type.AuthErrorCode.INVALID_TOKEN;
-import static com.watchtogether.server.exception.type.AuthErrorCode.INVALID_TOKEN_PREFIX;
-import static com.watchtogether.server.exception.type.AuthErrorCode.IS_EMPTY_TOKEN;
+import static com.watchtogether.server.exception.type.AuthErrorCode.IS_SIGN_OUT_TOKEN;
 
-import com.watchtogether.server.exception.type.AuthErrorCode;
-import io.jsonwebtoken.JwtException;
 import java.io.IOException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -13,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -27,11 +24,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     // token 헤더에 넣을, 토큰의 유형 지정
     public static final String TOKEN_HEADER = "Authorization";
-
     // 인증 타입
     public static final String TOKEN_PREFIX = "Bearer ";
-
     private final TokenProvider tokenProvider;
+    private final RedisTemplate redisTemplate;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
@@ -40,12 +36,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String token = resolveTokenFromRequest(request);
 
         // token 유효성 검증
-        if (StringUtils.hasText(token) && tokenProvider.validToken(token,request)) {
-            Authentication auth = tokenProvider.getAuthentication(token, request);
-            SecurityContextHolder.getContext().setAuthentication(auth);
+        if (StringUtils.hasText(token) && tokenProvider.validToken(token, request)) {
+            String isLogout = (String) redisTemplate.opsForValue().get(token);
 
-            log.info(String.format("[%s] -> %s", tokenProvider.getUserId(token, request),
-                request.getRequestURI()));
+            if (!ObjectUtils.isEmpty(isLogout)) {
+                request.setAttribute("exception", IS_SIGN_OUT_TOKEN.getErrorCode());
+            } else {
+                Authentication auth = tokenProvider.getAuthentication(token, request);
+                SecurityContextHolder.getContext().setAuthentication(auth);
+
+                log.info(String.format("[%s] -> %s", tokenProvider.getUserId(token, request),
+                    request.getRequestURI()));
+            }
         }
 
         filterChain.doFilter(request, response);

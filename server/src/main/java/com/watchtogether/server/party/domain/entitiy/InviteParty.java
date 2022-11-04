@@ -4,7 +4,6 @@ package com.watchtogether.server.party.domain.entitiy;
 import com.watchtogether.server.party.domain.model.InvitePartyForm;
 import com.watchtogether.server.users.domain.entitiy.BaseEntity;
 import lombok.*;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.hibernate.envers.AuditOverride;
 
 import javax.persistence.*;
@@ -31,6 +30,7 @@ public class InviteParty extends BaseEntity{
     private String receiverNickName;
     private String receiverUUID;
     private boolean accept;
+    private boolean isLeader;
     private LocalDateTime limitDt;
 
 
@@ -38,27 +38,41 @@ public class InviteParty extends BaseEntity{
         this.party = party;
     }
 
-
-    public static InviteParty from(InvitePartyForm form){
-        String uuid = UUID.randomUUID().toString()
-                .replaceAll("-", "").substring(0, 15);
-        return InviteParty.builder()
-                .receiverNickName(form.getReceiverNickName())
-                .receiverUUID(uuid)
-                .accept(false)
-                .limitDt(LocalDateTime.now().plusDays(1))
-                .party(form.getParty())
-                .build();
-    }
     public static InviteParty leaderFrom(InvitePartyForm form){
         String uuid = UUID.randomUUID().toString()
                 .replaceAll("-", "").substring(0, 15);
         return InviteParty.builder()
-                .receiverNickName(form.getReceiverNickName())
+                .receiverNickName(form.getNickname())
                 .receiverUUID(uuid)
                 .accept(true)
-                .limitDt(LocalDateTime.now().plusDays(1))
+                .isLeader(true)
+                .limitDt(form.getLimitDt())
                 .party(form.getParty())
                 .build();
     }
+    public static InviteParty from(InvitePartyForm form){
+        String uuid = UUID.randomUUID().toString()
+                .replaceAll("-", "").substring(0, 15);
+        return InviteParty.builder()
+                .receiverNickName(form.getNickname())
+                .receiverUUID(uuid)
+                .accept(false)
+                .isLeader(false)
+                .limitDt(form.getLimitDt())
+                .party(form.getParty())
+                .build();
+    }
+
+    public static InviteParty joinPartyFrom(InvitePartyForm form){
+        String uuid = UUID.randomUUID().toString()
+                .replaceAll("-", "").substring(0, 15);
+        return InviteParty.builder()
+                .receiverNickName(form.getNickname())
+                .receiverUUID(uuid)
+                .accept(true)
+                .isLeader(false)
+                .party(form.getParty())
+                .build();
+    }
+
 }

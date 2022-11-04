@@ -4,9 +4,12 @@ import static com.watchtogether.server.exception.type.UserErrorCode.ALREADY_SIGN
 import static com.watchtogether.server.exception.type.UserErrorCode.ALREADY_SIGNUP_NICKNAME;
 import static com.watchtogether.server.exception.type.UserErrorCode.ALREADY_VERIFY_EMAIL;
 import static com.watchtogether.server.exception.type.UserErrorCode.EXPIRED_VERIFY_EMAIL_CODE;
+import static com.watchtogether.server.exception.type.UserErrorCode.IS_EXIST_BALANCE;
 import static com.watchtogether.server.exception.type.UserErrorCode.LEAVE_USER;
 import static com.watchtogether.server.exception.type.UserErrorCode.NEED_VERIFY_EMAIL;
+import static com.watchtogether.server.exception.type.UserErrorCode.NOT_FOUND_NICKNAME;
 import static com.watchtogether.server.exception.type.UserErrorCode.NOT_FOUND_USER;
+import static com.watchtogether.server.exception.type.UserErrorCode.SAME_PASSWORD;
 import static com.watchtogether.server.exception.type.UserErrorCode.WRONG_PASSWORD_USER;
 import static com.watchtogether.server.exception.type.UserErrorCode.WRONG_VERIFY_EMAIL_CODE;
 import static com.watchtogether.server.users.domain.type.Authority.USER;
@@ -37,12 +40,19 @@ public class UserServiceImpl implements UserService {
     private final MailComponents mailComponents;
     private final PasswordEncoder passwordEncoder;
 
+    @Override
+    public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new UserException(NOT_FOUND_USER));
+        return user;
+    }
 
     @Override
     @Transactional
     public UserDto singUpUser(String email, String nickname, String password, LocalDate birth) {
 
         boolean existEmail = userRepository.existsById(email.toLowerCase(Locale.ROOT));
+
         if (existEmail) {
             throw new UserException(ALREADY_SIGNUP_EMAIL);
         }
@@ -71,7 +81,7 @@ public class UserServiceImpl implements UserService {
             .roles(USER.getRoles())
             .build());
 
-        sendAuthEmail(email, code);
+        mailComponents.sendAuthEmail(email, code);
 
         return UserDto.fromEntity(user);
     }
@@ -79,6 +89,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void verifyUser(String email, String code) {
+
         User user = userRepository.findById(email)
             .orElseThrow(() -> new UserException(NOT_FOUND_USER));
 
@@ -118,7 +129,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto myPageUser(String email) {
+    @Transactional
+    public void deleteUser(String email) {
+
+        User user = userRepository.findById(email)
+            .orElseThrow(() -> new UserException(NOT_FOUND_USER));
+
+        userRepository.delete(user);
+
+    }
+
+
+    @Override
+    public UserDto InfoUser(String email) {
 
         User user = userRepository.findById(email)
             .orElseThrow(() -> new UserException(NOT_FOUND_USER));
@@ -126,42 +149,135 @@ public class UserServiceImpl implements UserService {
         return UserDto.fromEntity(user);
     }
 
-    /**
-     * 인증 메일 전송
-     *
-     * @param email
-     * @param code
-     * @return
-     */
-    public boolean sendAuthEmail(String email, String code) {
+    @Override
+    public String searchNickname(String nickname) {
 
-        StringBuilder builder = new StringBuilder();
-        String subject = "watchTogether 사이트 가입을 축하드립니다!";
-        String text = builder.append("<p>안녕하세요.</p>")
-            .append("<p>이메일 인증을 완료하기위해 아래 링크를 클릭해주세요!.</p>")
-            .append("<div><a href='http://localhost:8081/api/v1/users/sign-up/verify/?email=")
-            .append(email)
-            .append("&code=")
-            .append(code)
-            .append("'>가입완료</a><div>")
-            .toString();
+        boolean existNickname = userRepository.existsByNickname(nickname);
 
-        return mailComponents.sendMail(email, subject, text);
+        if (!existNickname) {
+            throw new UserException(NOT_FOUND_NICKNAME);
+        }
+
+        return nickname;
     }
+
+    @Override
+    @Transactional
+    public void resetPassword(String email, String nickname) {
+
+        User user = userRepository.findByEmailAndNickname(email, nickname)
+            .orElseThrow(() -> new UserException(NOT_FOUND_USER));
+
+        // 랜덤 코드 생성
+        String code = getRandomCode();
+
+        user.setResetPasswordKey(code);
+        user.setResetPasswordLimitDt(LocalDateTime.now().plusDays(1));
+
+        mailComponents.sendResetPasswordEmail(email, code);
+
+    }
+
+    @Override
+    @Transactional
+    public void authResetPassword(String code) {
+
+        User user = userRepository.findByResetPasswordKey(code)
+            .orElseThrow(() -> new UserException(NOT_FOUND_USER));
+
+        if (user.getResetPasswordLimitDt().isBefore(LocalDateTime.now()) ||
+            user.getResetPasswordLimitDt() == null) {
+            throw new UserException(EXPIRED_VERIFY_EMAIL_CODE);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void updateNewPassword(String code, String password) {
+
+        User user = userRepository.findByResetPasswordKey(code)
+            .orElseThrow(() -> new UserException(NOT_FOUND_USER));
+
+        // 패스워드 초기화 코드의 유효기간이 지난 경우
+        if (user.getResetPasswordLimitDt().isBefore(LocalDateTime.now()) ||
+            user.getResetPasswordLimitDt() == null) {
+            throw new UserException(EXPIRED_VERIFY_EMAIL_CODE);
+        }
+
+        // 기존 패스워드와 동일한지 여부 검사
+        if (passwordEncoder.matches(password, user.getPassword())) {
+            throw new UserException(SAME_PASSWORD);
+        }
+
+        //패스워드 암호화
+        String encodePassword = passwordEncoder.encode(password);
+
+        user.setPassword(encodePassword);
+        user.setResetPasswordKey("");
+        user.setResetPasswordLimitDt(null);
+
+    }
+
+    @Override
+    @Transactional
+    public void saveRefreshToken(String email, String refreshToken) {
+        User user = userRepository.findById(email)
+            .orElseThrow(() -> new UserException(NOT_FOUND_USER));
+
+        user.setRefreshToken(refreshToken);
+    }
+
+    @Override
+    public UserDto checkUserAndCash(String email, String password) {
+        User user = userRepository.findById(email)
+            .orElseThrow(() -> new UserException(NOT_FOUND_USER));
+
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new UserException(WRONG_PASSWORD_USER);
+        }
+        if (user.getCash() != 0) {
+            throw new UserException(IS_EXIST_BALANCE);
+        }
+
+        return UserDto.fromEntity(user);
+    }
+
+
+    @Override
+    public void checkPassword(String email, String password) {
+        User user = userRepository.findById(email)
+            .orElseThrow(() -> new UserException(NOT_FOUND_USER));
+
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new UserException(WRONG_PASSWORD_USER);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void updateUserPassword(String email, String password) {
+        User user = userRepository.findById(email)
+            .orElseThrow(() -> new UserException(NOT_FOUND_USER));
+
+        // 기존 패스워드와 동일한지 여부 검사
+        if (passwordEncoder.matches(password, user.getPassword())) {
+            throw new UserException(SAME_PASSWORD);
+        }
+
+        // 패스워드 암호화
+        String encodePassword = passwordEncoder.encode(password);
+
+        user.setPassword(encodePassword);
+
+    }
+
 
     /**
      * 문자와 숫자로 조합된 15자리의 코드 생성
      *
-     * @return
+     * @return 문자와 숫자로 조합된 15자리의 코드
      */
     private String getRandomCode() {
         return RandomStringUtils.random(15, true, true);
-    }
-
-    @Override
-    public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
-        User user = userRepository.findById(userId)
-            .orElseThrow(() -> new UserException(NOT_FOUND_USER));
-        return user;
     }
 }
