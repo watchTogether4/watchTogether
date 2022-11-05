@@ -32,47 +32,36 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class User extends BaseEntity implements UserDetails {
 
     @Id
-    @Column(name = "email")
     private String email;
 
-    @Column(name = "nickname", unique = true)
+    @Column(unique = true)
     private String nickname;
 
-    @Column(name = "password")
     private String password;
 
-    @Column(name = "cash", nullable = false, columnDefinition = "INT DEFAULT 0")
+    @Column(nullable = false, columnDefinition = "INT DEFAULT 0")
     private Long cash;
 
-    @Column(name = "birth")
     private LocalDate birth;
 
-    @Column(name = "email_verify", nullable = false, columnDefinition = "BIT DEFAULT 0")
+    @Column(nullable = false, columnDefinition = "BIT DEFAULT 0")
     private boolean emailVerify;
 
-    @Column(name = "email_verify_code")
     private String emailVerifyCode;
 
-    @Column(name = "email_verify_expired_dt")
     private LocalDateTime emailVerifyExpiredDt;
 
-    @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private UserStatus status;
 
-    @Column(name = "roles")
     private String roles;
 
-    @Column(name = "last_login_dt")
     private LocalDateTime lastLoginDt;
 
-    @Column(name = "reset_password_key")
     private String resetPasswordKey;
 
-    @Column(name = "reset_password_limit_dt")
     private LocalDateTime resetPasswordLimitDt;
 
-    @Column(name = "refresh_token")
     private String refreshToken;
 
 
