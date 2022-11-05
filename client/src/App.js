@@ -8,6 +8,7 @@ import SignUp from './pages/SignUpPage';
 import Select from './pages/SelectPage';
 import PartyList from './pages/PartyListPage';
 import AddParty from './pages/AddPartyPage';
+import Alarm from './pages/AlarmPage';
 import MyPage from './pages/MyPage';
 import UserInfo from './pages/UserInfoPage';
 import Reset from './pages/ResetPage';
@@ -32,6 +33,7 @@ function App() {
             <Route path="/mypage" element={<MyPage />} />
             <Route path="/mypage/user" element={<UserInfo />} />
 
+            <Route path="/message" element={<Alarm />} />
             <Route path="/code=:code" element={<Reset />} />
           </Route>
 
