@@ -8,10 +8,13 @@ import com.example.sockettest.alert.persist.entity.User; // TODO: 2022/11/05 서
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.weaver.ast.Literal;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,7 +35,8 @@ public class AlertService {
 
     @Transactional
     public void checkAlert(String notificationId) {
-        Notification notification = alertRepository.findById(Long.parseLong(notificationId)).orElseThrow(()->new RuntimeException("알림을 찾을 수 없습니다."));
+        Notification notification = alertRepository.findById(Long.parseLong(notificationId))
+                .orElseThrow(()->new RuntimeException("알림을 찾을 수 없습니다."));
         notification.setCheckAlert(true);
     }
 
@@ -41,5 +45,14 @@ public class AlertService {
         return notifications.stream()
                 .map(m -> new AlertDto(m))
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    @Scheduled(cron = "0 0 0 * * *")
+    public void deleteAlert() {
+        List<Notification> notifications = alertRepository
+                .findByExpiredDtLessThanEqual(LocalDateTime.now());
+
+        alertRepository.deleteAllInBatch(notifications);
     }
 }
