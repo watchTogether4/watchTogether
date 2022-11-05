@@ -1,8 +1,20 @@
-import React from 'react';
-import { MenuWrapper } from './Menu.styles';
+import React, { useState, useEffect } from 'react';
+import { MenuWrapper, Bedge } from './Menu.styles';
 import { Link } from 'react-router-dom';
 import { FaRegEnvelope, FaUserAlt, FaSearch, FaPen } from 'react-icons/fa';
+import { useSelector, useDispatch } from 'react-redux';
+import { toRead } from '../../store/Message';
+
 const Menu = ({ page }) => {
+  const dispatch = useDispatch();
+  const [bedge, setBedge] = useState(1);
+
+  useEffect(() => {
+    // 메뉴바가 렌더링 될 때 마다 읽지 않은 메시지가 있는지 확인 -> bedge 갯수 수정
+
+    dispatch(toRead(bedge));
+  }, []);
+
   return (
     <MenuWrapper>
       <li>
@@ -18,7 +30,8 @@ const Menu = ({ page }) => {
         </Link>
       </li>
       <li>
-        <Link to="/">
+        <Link to="/message">
+          {bedge > 0 && <Bedge> {bedge} </Bedge>}
           <FaRegEnvelope size={22} color={page === 'alarm' ? '#006FFD' : '#71727A'} />
           쪽지함
         </Link>
