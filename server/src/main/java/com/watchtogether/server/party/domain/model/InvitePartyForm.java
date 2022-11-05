@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 public class InvitePartyForm {
     private String nickname;
 
-    private Boolean isLeader;
+    private Boolean leader;
 
     private Party party;
 
