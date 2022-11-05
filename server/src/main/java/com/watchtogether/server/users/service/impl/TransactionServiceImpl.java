@@ -14,6 +14,8 @@ import com.watchtogether.server.users.domain.repository.TransactionRepository;
 import com.watchtogether.server.users.domain.repository.UserRepository;
 import com.watchtogether.server.users.service.TransactionService;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,14 +46,27 @@ public class TransactionServiceImpl implements TransactionService {
 
         return TransactionDto.fromEntity(
             transactionRepository.save(Transaction.builder()
-                .transactionType(CHARGE)
-                .transactionResultType(ACCEPT)
+                .transactionType(CHARGE.getDescription())
+                .transactionResultType(ACCEPT.getDescription())
                 .user(user)
                 .amount(amount)
                 .balanceSnapshot(user.getCash())
-                .traderNickname("")
+                .traderEmail("")
                 .transactionDt(LocalDateTime.now())
                 .build()));
 
+    }
+
+    @Override
+    public List<TransactionDto> userCashList(String email) {
+
+        User user = userRepository.findById(email)
+            .orElseThrow(() -> new UserException(NOT_FOUND_USER));
+
+        List<Transaction> transactionList = transactionRepository.findByUserOrderByIdDesc(user);
+
+        return transactionList.stream()
+            .map(TransactionDto::fromEntity)
+            .collect(Collectors.toList());
     }
 }
