@@ -54,7 +54,7 @@ public class TransactionCharge {
         private Long balanceSnapshot;
 
         @Schema(description = "거래자 닉네임")
-        private String traderNickname;
+        private String traderEmail;
 
         @Schema(description = "거래 일시")
         private LocalDateTime transactionDt;
