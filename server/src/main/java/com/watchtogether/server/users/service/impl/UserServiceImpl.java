@@ -244,13 +244,15 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public void checkPassword(String email, String password) {
+    public UserDto checkPassword(String email, String password) {
         User user = userRepository.findById(email)
             .orElseThrow(() -> new UserException(NOT_FOUND_USER));
 
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new UserException(WRONG_PASSWORD_USER);
         }
+
+        return UserDto.fromEntity(user);
     }
 
     @Override

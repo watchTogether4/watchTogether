@@ -56,7 +56,7 @@ public interface UserService extends UserDetailsService {
      * @param email    이메일(아이디)
      * @param password 현재 패스워드
      */
-    void checkPassword(String email, String password);
+    UserDto checkPassword(String email, String password);
 
 
     /**
