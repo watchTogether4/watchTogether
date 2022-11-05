@@ -6,20 +6,15 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class InvitePartyForm {
-    private String nickname;
+public class SendInviteAlertForm {
 
-    private Boolean leader;
+    private String nickName;
+
+    private String uuid;
 
     private Party party;
-
-    private LocalDateTime limitDt;
-
-
 }

@@ -17,8 +17,9 @@ public class PartyController {
 
     @PostMapping("/create")
     public ResponseEntity<?> createParty(@RequestBody CreatePartyForm form){
-        return ResponseEntity.ok(partyServiceimpl.createParty(form));
+        return ResponseEntity.ok(partyServiceimpl.createPartyAndSendInviteAlert(form));
     }
+    // todo 알림 api를 위해 초대한 사람의 유저 닉네임, 초대한 사람의 uuid 파티 아이디 전달 필요  :  create 함수를 따로 빼서 전달
 
     @PostMapping("/accept")
     public ResponseEntity<?> acceptParty(@RequestBody AcceptPartyForm form){

@@ -30,7 +30,7 @@ public class InviteParty extends BaseEntity{
     private String receiverNickName;
     private String receiverUUID;
     private boolean accept;
-    private boolean isLeader;
+    private boolean leader;
     private LocalDateTime limitDt;
 
 
@@ -45,7 +45,7 @@ public class InviteParty extends BaseEntity{
                 .receiverNickName(form.getNickname())
                 .receiverUUID(uuid)
                 .accept(true)
-                .isLeader(true)
+                .leader(true)
                 .limitDt(form.getLimitDt())
                 .party(form.getParty())
                 .build();
@@ -57,7 +57,7 @@ public class InviteParty extends BaseEntity{
                 .receiverNickName(form.getNickname())
                 .receiverUUID(uuid)
                 .accept(false)
-                .isLeader(false)
+                .leader(false)
                 .limitDt(form.getLimitDt())
                 .party(form.getParty())
                 .build();
@@ -70,7 +70,7 @@ public class InviteParty extends BaseEntity{
                 .receiverNickName(form.getNickname())
                 .receiverUUID(uuid)
                 .accept(true)
-                .isLeader(false)
+                .leader(false)
                 .party(form.getParty())
                 .build();
     }
