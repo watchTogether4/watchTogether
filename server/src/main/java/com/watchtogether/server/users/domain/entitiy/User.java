@@ -1,5 +1,9 @@
 package com.watchtogether.server.users.domain.entitiy;
 
+import static com.watchtogether.server.exception.type.TransactionErrorCode.INSUFFICIENT_CASH;
+import static com.watchtogether.server.exception.type.TransactionErrorCode.INVALID_REQUEST;
+
+import com.watchtogether.server.exception.TransactionException;
 import com.watchtogether.server.users.domain.type.UserStatus;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -63,6 +67,21 @@ public class User extends BaseEntity implements UserDetails {
     private LocalDateTime resetPasswordLimitDt;
 
     private String refreshToken;
+
+    public void plusCash(Long amount) {
+        if (amount <= 0) {
+            throw new TransactionException(INVALID_REQUEST);
+        }
+
+        this.cash += amount;
+    }
+
+    public void minusCash(Long amount) {
+        if (amount > this.cash) {
+            throw new TransactionException(INSUFFICIENT_CASH);
+        }
+        this.cash -= amount;
+    }
 
 
     @Override
