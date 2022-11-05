@@ -10,6 +10,7 @@ import com.watchtogether.server.party.domain.model.*;
 import com.watchtogether.server.party.domain.repository.InvitePartyRepository;
 import com.watchtogether.server.party.domain.repository.PartyMemberRepository;
 import com.watchtogether.server.party.domain.repository.PartyRepository;
+import com.watchtogether.server.party.domain.type.AlertType;
 import com.watchtogether.server.party.service.PartyService;
 import com.watchtogether.server.users.domain.entitiy.User;
 import com.watchtogether.server.users.domain.repository.UserRepository;
@@ -80,6 +81,7 @@ public class PartyServiceImpl implements PartyService {
                     .nickName(invitePartyList.get(i).getReceiverNickName())
                     .uuid(invitePartyList.get(i).getReceiverUUID())
                     .party(party)
+                    .alertType(AlertType.INVITE)
                     .build();
             inviteAlertList.add(sendInviteAlertForm);
         }

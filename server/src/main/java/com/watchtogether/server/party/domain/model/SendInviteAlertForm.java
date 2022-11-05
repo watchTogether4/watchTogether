@@ -1,6 +1,7 @@
 package com.watchtogether.server.party.domain.model;
 
 import com.watchtogether.server.party.domain.entitiy.Party;
+import com.watchtogether.server.party.domain.type.AlertType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,4 +18,7 @@ public class SendInviteAlertForm {
     private String uuid;
 
     private Party party;
+
+    private AlertType alertType;
 }
+
