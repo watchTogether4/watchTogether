@@ -5,7 +5,7 @@ import AddParty from './../components/AddParty/AddParty';
 function AddPartyPage() {
   return (
     <>
-      <Header title="파티 모집하기" path="/ott"></Header>
+      <Header title="파티 모집하기" path="/select"></Header>
       <AddParty />
     </>
   );

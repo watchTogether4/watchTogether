@@ -115,4 +115,6 @@ public interface PartyService extends UserDetailsService {
      */
     void findMyPartiesBeforeDeleteUser(String nickname);
 
+    List<SendInviteAlertForm> sendInviteAlert(Party party);
+
 }

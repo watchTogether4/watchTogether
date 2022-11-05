@@ -27,6 +27,7 @@ import com.watchtogether.server.users.domain.model.SignUpUser;
 import com.watchtogether.server.users.domain.model.VerifyEmail;
 import com.watchtogether.server.users.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -105,7 +106,7 @@ public class UserController {
     @GetMapping("/my-page")
     @Operation(summary = "사용자 마이페이지", description = "로그인한 사용자 정보를 조회한다.")
     public ResponseEntity<MyPageUser.Response> myPage(
-        @AuthenticationPrincipal User user) {
+        @Parameter(hidden = true) @AuthenticationPrincipal User user) {
 
         UserDto userDto = userService.InfoUser(user.getEmail());
 
@@ -172,7 +173,7 @@ public class UserController {
     @Operation(summary = "사용자 마이페이지 새로운 비밀번호로 변경 전 현재 비밀번호 체크", description = "사용자의 비밀번호를 새로운 비밀번호로 변경하기 전 현재 비밀번호를 체크한다.")
     public ResponseEntity<CheckPassword.Response> checkPassword(
         @Validated @RequestBody CheckPassword.Request request
-        , @AuthenticationPrincipal User user) {
+        , @Parameter(hidden = true) @AuthenticationPrincipal User user) {
 
         userService.checkPassword(user.getEmail(), request.getPassword());
 
@@ -185,7 +186,7 @@ public class UserController {
     @Operation(summary = "사용자 마이페이지 새로운 비밀번호로 변경", description = "사용자의 비밀번호를 새로운 비밀번호로 변경한다.")
     public ResponseEntity<ChangePassword.Response> changeNewPassword(
         @Validated @RequestBody ChangePassword.Request request
-        , @AuthenticationPrincipal User user) {
+        , @Parameter(hidden = true) @AuthenticationPrincipal User user) {
 
         userService.updateUserPassword(user.getEmail(), request.getPassword());
 

@@ -10,6 +10,7 @@ import com.watchtogether.server.party.domain.model.*;
 import com.watchtogether.server.party.domain.repository.InvitePartyRepository;
 import com.watchtogether.server.party.domain.repository.PartyMemberRepository;
 import com.watchtogether.server.party.domain.repository.PartyRepository;
+import com.watchtogether.server.party.domain.type.AlertType;
 import com.watchtogether.server.party.service.PartyService;
 import com.watchtogether.server.users.domain.entitiy.User;
 import com.watchtogether.server.users.domain.repository.UserRepository;
@@ -23,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,14 +42,11 @@ public class PartyServiceImpl implements PartyService {
     private final PartyMemberRepository partyMemberRepository;
     private final UserRepository userRepository;
     private final EntityManagerFactory emf;
-    private final EntityManager em;
 
     // 파티장이 파티 생성 클릭
     @Override
     public Party createParty(CreatePartyForm form) {
         LocalDateTime limitDt = LocalDateTime.now().plusDays(1);
-
-
         Party party;
         if (form.getReceiversNickName() != null) {
             party = Party.from(form);
@@ -61,21 +60,50 @@ public class PartyServiceImpl implements PartyService {
                         .limitDt(limitDt)
                         .build();
                 invitePartyRepository.save(InviteParty.from(invitePartyForm));
+                // 알림 -> id -> 알림테이블에 저장
+                // 초대 한 사람이 있다면 초대테이블에 저장
             }
         } else {
-            party = Party.fromNicknameIsNull(form);
 
+            party = Party.fromNicknameIsNull(form);
             buildLeaderForm(form, limitDt, party);
         }
         return partyRepository.save(party);
-
+        // todo 초대시 알림기능!
     }
+
+    @Override
+    public List<SendInviteAlertForm> sendInviteAlert(Party party) {
+        List<SendInviteAlertForm> inviteAlertList = new ArrayList<>();
+        List<InviteParty> invitePartyList = invitePartyRepository.findByPartyAndLeaderIsFalse(party);
+        for (int i = 0; i < invitePartyList.size(); i++) {
+            SendInviteAlertForm sendInviteAlertForm = SendInviteAlertForm.builder()
+                    .nickName(invitePartyList.get(i).getReceiverNickName())
+                    .uuid(invitePartyList.get(i).getReceiverUUID())
+                    .party(party)
+                    .alertType(AlertType.INVITE)
+                    .build();
+            inviteAlertList.add(sendInviteAlertForm);
+        }
+        return inviteAlertList;
+    }
+
+    public List<SendInviteAlertForm> createPartyAndSendInviteAlert(CreatePartyForm form) {
+        List<SendInviteAlertForm> list = new ArrayList<>();
+        if (form.getReceiversNickName() != null) {
+            list = sendInviteAlert(createParty(form));
+        } else {
+            createParty(form);
+        }
+        return list;
+    }
+
 
     private void buildLeaderForm(CreatePartyForm form, LocalDateTime limitDt, Party party) {
         InvitePartyForm leaderForm = InvitePartyForm.builder()
                 .nickname(form.getLeaderNickName())
                 .party(party)
-                .limitDt(limitDt)
+                .limitDt(LocalDateTime.now())
                 .build();
         invitePartyRepository.save(InviteParty.leaderFrom(leaderForm));
     }
@@ -95,11 +123,13 @@ public class PartyServiceImpl implements PartyService {
 
     @Override
     public ResponseEntity<Object> joinParty(JoinPartyForm form) {
-        // 1. 파티 아이디와 유저 닉네임을 받고
-        // 2. 그것을 토대로 invite party 테이블에 accept을 true 상태로 저장 및 파티인원 증가 +1;
         LocalDateTime limitDt = LocalDateTime.now().plusDays(1);
         Optional<Party> optionalParty = partyRepository.findById(form.getPartyId());
         if (optionalParty.isPresent()) {
+            if (invitePartyRepository.findByReceiverNickNameAndParty(form.getNickName(), optionalParty.get()).isPresent()
+                    || partyMemberRepository.findByNickNameAndParty(form.getNickName(), optionalParty.get()).isPresent()) {
+                throw new PartyException(PartyErrorCode.ALREADY_JOIN_PARTY);
+            }
             Party party = optionalParty.get();
             InvitePartyForm invitePartyForm = InvitePartyForm.builder()
                     .party(optionalParty.get())
@@ -112,12 +142,13 @@ public class PartyServiceImpl implements PartyService {
         }
 
         throw new PartyException(PartyErrorCode.NOT_FOUND_PARTY);
+
     }
 
     @Override
     public List<Party> showPartyList() {
         LocalDateTime now = LocalDateTime.now();
-        List<Party> partyList = new ArrayList<>();
+        List<Party> partyList;
         partyList = partyRepository.findByPartyFullIsFalseAndInvisibleDtBefore(now);
         return partyList;
     }
@@ -127,19 +158,25 @@ public class PartyServiceImpl implements PartyService {
         Optional<Party> optionalParty = partyRepository.findById(form.getPartyId());
         Optional<PartyMember> optionalPartyMember =
                 partyMemberRepository.findByNickNameAndParty(form.getNickName(), optionalParty.get());
-        partyMemberRepository.delete(optionalPartyMember.get());
+        optionalPartyMember.ifPresent(partyMemberRepository::delete);
+
 
         Optional<InviteParty> optionalInviteParty =
                 invitePartyRepository.
                         findByReceiverNickNameAndPartyAndAcceptIsTrue(
                                 form.getNickName(), optionalParty.get());
-        invitePartyRepository.delete(optionalInviteParty.get());
+        optionalInviteParty.ifPresent(invitePartyRepository::delete);
+
 
         optionalParty.get().setPartyFull(false);
         optionalParty.get().setPeople(optionalParty.get().getPeople() - 1);
         partyRepository.save(optionalParty.get());
 
         // todo 사용자 알람 추가(회원이 나갔음으로)
+        // todo 리더일경우 어떻게 할지 논의 필요
+        // todo 파티 멤버 테이블에서 자신뿐만 아니라
+
+        // todo 한달 주기로 오늘 메시지로 갱신할지 말지 결정하는
 
         return ResponseEntity.ok().build();
     }
@@ -182,12 +219,18 @@ public class PartyServiceImpl implements PartyService {
             Party party = optionalParty.get();
             if (party.getPeople() == 4) {
                 party.setPartyFull(true);
-                return savePartyMember(party.getId());
+                party.setPayDt(LocalDate.now());
+                List<InviteParty> list = invitePartyRepository.findByParty(party);
+                savePartyMember(party.getId());
+                invitePartyRepository.deleteAll(list);
+                return ResponseEntity.ok().build();
             } else {
                 return null;
             }
         }
         throw new PartyException(PartyErrorCode.NOT_FOUND_PARTY);
+
+        // todo 데이터 값 넘기기 파티아이디, ott아이디, 파티 리더, 파티 파티원 데이터 보내기
     }
 
 
@@ -198,7 +241,7 @@ public class PartyServiceImpl implements PartyService {
         for (Object[] object : list) {
             InvitePartyForm invitePartyForm = InvitePartyForm.builder()
                     .nickname((String) object[0])
-                    .isLeader((Boolean) object[1])
+                    .leader((Boolean) object[1])
                     .party((Party) object[2])
                     .limitDt(limitDt)
                     .build();
@@ -212,7 +255,7 @@ public class PartyServiceImpl implements PartyService {
         EntityManager entityManager = emf.createEntityManager();
 
         Query query = entityManager
-                .createQuery(" select i.receiverNickName,i.isLeader ,i.party " +
+                .createQuery(" select i.receiverNickName,i.leader ,i.party " +
                         " from InviteParty i " +
                         " where i.accept = true and i.party.id=:partyId ");
         query.setParameter("partyId", partyId);
@@ -233,7 +276,6 @@ public class PartyServiceImpl implements PartyService {
 
     @Override
     public List<String> myPartyMembers(List<Optional<Party>> list) {
-        List<String> membersList = new ArrayList<>();
         if (!list.isEmpty()) {
             for (int i = 0; i < list.size(); i++) {
                 list.get(i).get().getMembers().get(i).getNickName();
@@ -261,8 +303,8 @@ public class PartyServiceImpl implements PartyService {
     public void findMyPartiesBeforeDeleteUser(String nickName) {
 
         List<PartyMember> myPartyListId = partyMemberRepository.findByNickName(nickName);
-         if(!myPartyListId.isEmpty()){
-             throw new PartyException(PartyErrorCode.FOUND_USER_BEFORE_DELETE);
+        if (!myPartyListId.isEmpty()) {
+            throw new PartyException(PartyErrorCode.FOUND_USER_BEFORE_DELETE);
         }
     }
 

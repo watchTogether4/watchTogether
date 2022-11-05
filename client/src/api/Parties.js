@@ -13,6 +13,10 @@ const BASE_URL = `/api/v1/parties`;
  * receiversNickName: string
  * }} body
  */
+
+/**
+ * 파티 모집 글 등록하기
+ */
 export const createParty = (body, token) =>
   axios({
     url: `${BASE_URL}/create`,
@@ -24,6 +28,9 @@ export const createParty = (body, token) =>
     data: JSON.stringify(body),
   });
 
+/**
+ * 파티 신청 수락하기
+ */
 export const acceptParty = (body, token) =>
   axios({
     url: `${BASE_URL}/accept`,
@@ -35,12 +42,15 @@ export const acceptParty = (body, token) =>
     data: JSON.stringify(body),
   });
 
-export const listParty = (body) =>
+/**
+ * 파티 목록 출력하기
+ */  
+export const showPartyList = (token) =>
   axios({
     url: `${BASE_URL}/showPartyList`,
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
     },
-    data: JSON.stringify(body),
   });

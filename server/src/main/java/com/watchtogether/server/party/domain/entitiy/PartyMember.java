@@ -32,7 +32,7 @@ public class PartyMember extends BaseEntity{
     public static PartyMember from(InvitePartyForm form){
         return PartyMember.builder()
                 .nickName(form.getNickname())
-                .isLeader(form.getIsLeader())
+                .isLeader(form.getLeader())
                 .party(form.getParty())
                 .build();
     }

@@ -1,27 +1,24 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-  CardWrapper,
-  CardOtt,
-  CardTitle,
-  CardPerson,
-  } from './Card.styles';
+import { CardWrapper, CardOtt, CardDesc, CardTitle, CardPerson } from './Card.styles';
+import { IoIosArrowForward } from 'react-icons/io';
 
-export function Card({ottUrl, title, person}) {
+export function Card({ ottUrl, title, people }) {
   const navigate = useNavigate();
-
-  return(
-    <CardWrapper onClick={() => {
-      navigate(`/signUp`)
-    }}>
-      <CardOtt src={ottUrl}/>
-      <CardTitle>{title}
-        넷플릭스 패밀리 구해요!
-      </CardTitle>
-      <CardPerson>{person}
-        3/4
-      </CardPerson>
+  const image = ottUrl ? ottUrl[0].image : '';
+  console.log(ottUrl);
+  return (
+    <CardWrapper
+      onClick={() => {
+        navigate(`/`);
+      }}
+    >
+      <CardOtt src={image} />
+      <CardDesc>
+        <CardTitle>{title}</CardTitle>
+        <CardPerson>모집 인원 : {people} / 4</CardPerson>
+      </CardDesc>
+      <IoIosArrowForward size={30} />
     </CardWrapper>
   );
 }
-

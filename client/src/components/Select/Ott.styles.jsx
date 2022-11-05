@@ -11,7 +11,6 @@ const Wrapper = styled.div`
 const OttSection = styled.div`
   ${Flex}
   width: 100%;
-  height: calc(75vh);
   padding: 0rem;
   margin: 0rem;
 `;
@@ -27,24 +26,32 @@ const ButtonSection = styled.div`
 const OttButton = styled.div`
   ${Flex}
   margin: 0.5rem;
-  padding: 0.5rem;
+  padding: 1.5rem 1rem;
   text-align: center;
   width: 100%;
   height: 100%;
   border-radius: 12px;
-  background-color: #F8F9FE;
-  box-shadow: 0 5px 10px -7px rgba(0,0,0,1);
+  background-color: #f8f9fe;
+  box-shadow: 0 5px 10px -7px rgba(0, 0, 0, 1);
   overflow: hidden;
-  border: 2px solid ${props=>props.clicked ? props.theme.color.highlight_500: '#ffffff' };
+  border: 2px solid ${(props) => (props.clicked ? props.theme.color.highlight_500 : '#ffffff')};
 
-  &:hover{
+  &:hover {
     border: 2px solid ${(props) => props.theme.color.highlight_500};
   }
 `;
 
-export {
-    Wrapper,
-    OttSection,
-    ButtonSection,
-    OttButton,
-};
+const OttTitle = styled.h2`
+  font-weight: 600;
+`;
+
+const OttText = styled.p`
+  margin-top: 0.3rem;
+  font-size: 0.9rem;
+
+  span {
+    font-weight: 600;
+  }
+`;
+
+export { Wrapper, OttSection, OttTitle, OttText, ButtonSection, OttButton };
