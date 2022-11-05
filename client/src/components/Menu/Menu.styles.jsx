@@ -9,6 +9,8 @@ const MenuWrapper = styled.ul`
   display: flex;
   align-items: center;
   box-shadow: 0 -1px 10px ${(props) => props.theme.color.light_200};
+  background-color: ${(props) => props.theme.color.white};
+
   li {
     width: 25%;
     height: 100%;
