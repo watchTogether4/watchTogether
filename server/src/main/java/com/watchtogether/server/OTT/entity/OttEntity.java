@@ -6,15 +6,16 @@ import org.hibernate.envers.AuditOverride;
 
 import javax.persistence.*;
 
-@Entity
+
 @Getter
 @Builder
 @AuditOverride(forClass = BaseEntity.class)
 @AllArgsConstructor
 @NoArgsConstructor
+@Entity(name="ott")
 public class OttEntity extends BaseEntity{
     @Id
-    @Column(name = "invite_id")
+    @Column(name = "ott_id")
     private Long id;
     // 넷플릭스     : 1
     // 왓챠        : 2
@@ -30,6 +31,6 @@ public class OttEntity extends BaseEntity{
     // 500원으로 통일
     private Long fee;
     // 전체금액 / 4
-    private  String ImagePath;
+    private  String imagePath;
     // 이미지 경로
 }
