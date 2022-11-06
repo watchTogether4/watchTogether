@@ -2,13 +2,14 @@ package com.watchtogether.server.alert.dto;
 
 
 import com.watchtogether.server.alert.persist.entity.Notification;
+import com.watchtogether.server.party.domain.type.AlertType;
 import lombok.Data;
 
 @Data
 public class AlertDto {
 
         private Long notificationId;
-        private String type;
+        private AlertType type;
         private String message;
 
 
