@@ -1,12 +1,8 @@
 package com.watchtogether.server.users.domain.entitiy;
 
-import com.watchtogether.server.users.domain.type.TransactionResultType;
-import com.watchtogether.server.users.domain.type.TransactionType;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -33,12 +29,9 @@ public class Transaction extends BaseEntity {
     @Column(name = "transaction_id")
     private Long id;
 
+    private String transactionType;
 
-    @Enumerated(EnumType.STRING)
-    private TransactionType transactionType;
-
-    @Enumerated(EnumType.STRING)
-    private TransactionResultType transactionResultType;
+    private String transactionResultType;
 
     @ManyToOne
     private User user;
@@ -47,7 +40,7 @@ public class Transaction extends BaseEntity {
 
     private Long balanceSnapshot;
 
-    private String traderNickname;
+    private String traderEmail;
 
     private LocalDateTime transactionDt;
 
