@@ -25,4 +25,16 @@ public class TransactionApplicaion {
             ottDto.getCommissionMember(),
             ottDto.getFee());
     }
+
+    public TransactionDto userCashWithdrawCancel(String leaderEmail, Long ottId, String email) {
+
+        OttDto ottDto = ottService.searchOtt(ottId);
+
+        return transactionService.userCashWithdrawCancel(
+            leaderEmail,
+            email,
+            ottDto.getCommissionMember(),
+            ottDto.getFee());
+
+    }
 }

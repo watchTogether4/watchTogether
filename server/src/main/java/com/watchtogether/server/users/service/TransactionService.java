@@ -37,4 +37,18 @@ public interface TransactionService {
         String email,
         int commissionMember,
         Long fee);
+
+    /**
+     * 사용자 파티 탈퇴 시 선결제 취소
+     * @param leaderEmail       파티장 아이디
+     * @param email             사용자 아이디
+     * @param commissionMember  파티원 수수료
+     * @param fee               전체 이용료 / 4
+     * @return
+     */
+    TransactionDto userCashWithdrawCancel(
+        String leaderEmail,
+        String email,
+        int commissionMember,
+        Long fee);
 }
