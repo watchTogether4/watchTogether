@@ -73,7 +73,7 @@ public class PartyServiceImpl implements PartyService {
     }
 
     @Override
-    public List<SendInviteAlertForm> sendInviteAlert(Party party) {
+    public List<SendInviteAlertForm> sendInviteAlert(Party party, String leader) {
         List<SendInviteAlertForm> inviteAlertList = new ArrayList<>();
         List<InviteParty> invitePartyList = invitePartyRepository.findByPartyAndLeaderIsFalse(party);
         for (int i = 0; i < invitePartyList.size(); i++) {
@@ -81,6 +81,7 @@ public class PartyServiceImpl implements PartyService {
                     .nickName(invitePartyList.get(i).getReceiverNickName())
                     .uuid(invitePartyList.get(i).getReceiverUUID())
                     .party(party)
+                    .sender(leader)
                     .alertType(AlertType.INVITE)
                     .build();
             inviteAlertList.add(sendInviteAlertForm);
@@ -88,10 +89,28 @@ public class PartyServiceImpl implements PartyService {
         return inviteAlertList;
     }
 
+    @Override
+    public ResponseEntity<Object> checkMessage(String nickName, Long partyId) {
+        Optional<Party> party = partyRepository.findById(partyId);
+        if (party.isEmpty()){
+            throw new PartyException(PartyErrorCode.NOT_FOUND_PARTY);
+        }
+        else {
+            Optional<PartyMember> partyMember = partyMemberRepository.findByNickNameAndParty(nickName, party.get());
+            if (partyMember.isPresent()){
+                partyMember.get().setCheck(true);
+                partyMemberRepository.save(partyMember.get());
+            }else {
+                throw new PartyException(PartyErrorCode.NOT_FOUND_USER);
+            }
+        }
+        return ResponseEntity.ok().build();
+    }
+
     public List<SendInviteAlertForm> createPartyAndSendInviteAlert(CreatePartyForm form) {
         List<SendInviteAlertForm> list = new ArrayList<>();
         if (form.getReceiversNickName() != null) {
-            list = sendInviteAlert(createParty(form));
+            list = sendInviteAlert(createParty(form), form.getLeaderNickName());
         } else {
             createParty(form);
         }
@@ -110,6 +129,7 @@ public class PartyServiceImpl implements PartyService {
 
     //파티 초대링크 눌렀을때
     public ResponseEntity<Object> acceptParty(AcceptPartyForm form) {
+
         addMember(form);
         addPartyMember(form);
         return ResponseEntity.ok().build();
@@ -230,7 +250,6 @@ public class PartyServiceImpl implements PartyService {
         }
         throw new PartyException(PartyErrorCode.NOT_FOUND_PARTY);
 
-        // todo 데이터 값 넘기기 파티아이디, ott아이디, 파티 리더, 파티 파티원 데이터 보내기
     }
 
 

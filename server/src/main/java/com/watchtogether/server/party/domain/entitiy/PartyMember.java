@@ -25,6 +25,8 @@ public class PartyMember extends BaseEntity{
 
     private boolean isLeader;
 
+    private boolean check;
+
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "party_id")
@@ -34,6 +36,7 @@ public class PartyMember extends BaseEntity{
                 .nickName(form.getNickname())
                 .isLeader(form.getLeader())
                 .party(form.getParty())
+                .check(true)
                 .build();
     }
 }
