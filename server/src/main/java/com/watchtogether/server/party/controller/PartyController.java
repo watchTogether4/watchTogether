@@ -26,14 +26,14 @@ public class PartyController {
        return ResponseEntity.ok(partyServiceimpl.acceptParty(form));
     }
 
-    @GetMapping("/find-myParties")
-    public ResponseEntity<?> myParties(@RequestBody FindMyPartiesForm form){
-        return ResponseEntity.ok(partyServiceimpl.findMyParties(form));
-    }
-
     @PostMapping("/join")
     public ResponseEntity<?> joinParty(@RequestBody JoinPartyForm form){
         return ResponseEntity.ok(partyServiceimpl.joinPartyAndCheckFull(form));
+    }
+
+    @GetMapping("/find-myParties")
+    public ResponseEntity<?> myParties(@RequestBody FindMyPartiesForm form){
+        return ResponseEntity.ok(partyServiceimpl.findMyParties(form));
     }
 
     @GetMapping("/showPartyList")
