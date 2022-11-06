@@ -6,10 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
@@ -25,8 +22,9 @@ public class Notification {
     @Column(name = "user_email")
     private String email;
 
-    @Column(name = "party_id")
-    private String partyId;
+    @ManyToOne
+    @JoinColumn(name = "party_id")
+    private Party party;
 
     @Column(name = "notification_type")
     private String type;
@@ -46,13 +44,13 @@ public class Notification {
     @Column(name = "notification_invite_uuid")
     private String inviteId;
 
-    public Notification(String email, String partyId, String inviteId, String message, String type) {
+    public Notification(String email, Party party, String inviteId, String message, String type) {
         this.email = email;
-        this.partyId = partyId;
+        this.party = party;
         this.type = type;
         this.message = message;
         this.createdDt = LocalDateTime.now();
-        this.expiredDt = LocalDateTime.now().plusDays(2); // TODO: 2022/11/05 만료일 내부적으로 상의 필요
+        this.expiredDt = LocalDateTime.now().plusDays(3);
         this.checkAlert = false;
         this.inviteId = inviteId;
     }
