@@ -11,4 +11,6 @@ import java.util.List;
 @Repository
 public interface PartyRepository extends JpaRepository<Party, Long> {
     List<Party> findByPartyFullIsFalseAndInvisibleDtBefore(LocalDateTime now);
+
+    List<Party> findByPayDt(LocalDate today);
 }
