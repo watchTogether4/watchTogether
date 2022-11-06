@@ -1,12 +1,15 @@
 package com.watchtogether.server.users.controller;
 
 import static com.watchtogether.server.users.domain.type.TransactionSuccess.SUCCESS_CHARGE;
+import static com.watchtogether.server.users.domain.type.TransactionSuccess.SUCCESS_PREPAYMENT;
 import static com.watchtogether.server.users.domain.type.TransactionSuccess.SUCCESS_TRANSACTION_LIST;
 
 import com.watchtogether.server.users.domain.dto.TransactionDto;
 import com.watchtogether.server.users.domain.entitiy.User;
 import com.watchtogether.server.users.domain.model.TransactionCharge;
 import com.watchtogether.server.users.domain.model.TransactionList;
+import com.watchtogether.server.users.domain.model.TransactionWithdraw;
+import com.watchtogether.server.users.service.Application.TransactionApplicaion;
 import com.watchtogether.server.users.service.TransactionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -28,6 +31,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class TransactionController {
 
     private final TransactionService transactionService;
+
+    private final TransactionApplicaion transactionApplicaion;
 
 
     @GetMapping
@@ -61,6 +66,30 @@ public class TransactionController {
                 , transactionDto.getTraderEmail()
                 , transactionDto.getTransactionDt()
                 , SUCCESS_CHARGE.getMessage()
+            )
+        );
+    }
+
+    @PostMapping("/withdraw")
+    @Operation(summary = "사용자 캐쉬 출금", description = "사용자가 파티 참가 시 선결제.")
+    public ResponseEntity<TransactionWithdraw.Response> cashWithdraw(
+        @Validated @RequestBody TransactionWithdraw.Request request
+        , @Parameter(hidden = true) @AuthenticationPrincipal User user) {
+
+        TransactionDto transactionDto =
+            transactionApplicaion.userCashWithdraw(
+                request.getLeaderEmail(), request.getOttId(), user.getEmail());
+
+        return ResponseEntity.ok(
+            new TransactionWithdraw.Response(
+                transactionDto.getEmail()
+                , transactionDto.getTransactionType()
+                , transactionDto.getTransactionResultType()
+                , transactionDto.getAmount()
+                , transactionDto.getBalanceSnapshot()
+                , transactionDto.getTraderEmail()
+                , transactionDto.getTransactionDt()
+                , SUCCESS_PREPAYMENT.getMessage()
             )
         );
     }

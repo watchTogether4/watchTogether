@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 public enum UserErrorCode {
 
     NOT_FOUND_USER(HttpStatus.BAD_REQUEST.value(), "NOT_FOUND_USER", "일치하는 사용자가 없습니다."),
+    NOT_FOUND_LEADER(HttpStatus.BAD_REQUEST.value(), "NOT_FOUND_LEADER", "일치하는 파티장 아이디가 없습니다."),
     LEAVE_USER(HttpStatus.BAD_REQUEST.value(), "LEAVE_USER","탈퇴한 사용자입니다."),
     NEED_VERIFY_EMAIL(HttpStatus.BAD_REQUEST.value(), "NEED_VERIFY_EMAIL","이메일 인증을 완료해주세요."),
     ALREADY_SIGNUP_EMAIL(HttpStatus.BAD_REQUEST.value(), "ALREADY_SIGNUP_EMAIL","이미 사용중인 이메일입니다."),
