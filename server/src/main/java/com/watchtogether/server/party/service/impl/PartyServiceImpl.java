@@ -28,10 +28,12 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 
 import static com.watchtogether.server.exception.type.UserErrorCode.NOT_FOUND_USER;
+import static com.watchtogether.server.party.domain.type.AlertType.CHANGE_PASSWORD;
 
 @Service
 @RequiredArgsConstructor
@@ -73,18 +75,18 @@ public class PartyServiceImpl implements PartyService {
     }
 
     @Override
-    public List<SendInviteAlertForm> sendInviteAlert(Party party, String leader) {
-        List<SendInviteAlertForm> inviteAlertList = new ArrayList<>();
+    public List<SendAlertForm> sendInviteAlert(Party party, String leader) {
+        List<SendAlertForm> inviteAlertList = new ArrayList<>();
         List<InviteParty> invitePartyList = invitePartyRepository.findByPartyAndLeaderIsFalse(party);
         for (int i = 0; i < invitePartyList.size(); i++) {
-            SendInviteAlertForm sendInviteAlertForm = SendInviteAlertForm.builder()
+            SendAlertForm sendAlertForm = SendAlertForm.builder()
                     .nickName(invitePartyList.get(i).getReceiverNickName())
                     .uuid(invitePartyList.get(i).getReceiverUUID())
-                    .party(party)
+                    .partyId(party.getId())
                     .sender(leader)
                     .alertType(AlertType.INVITE)
                     .build();
-            inviteAlertList.add(sendInviteAlertForm);
+            inviteAlertList.add(sendAlertForm);
         }
         return inviteAlertList;
     }
@@ -92,23 +94,64 @@ public class PartyServiceImpl implements PartyService {
     @Override
     public ResponseEntity<Object> checkMessage(String nickName, Long partyId) {
         Optional<Party> party = partyRepository.findById(partyId);
-        if (party.isEmpty()){
+        if (party.isEmpty()) {
             throw new PartyException(PartyErrorCode.NOT_FOUND_PARTY);
-        }
-        else {
+        } else {
             Optional<PartyMember> partyMember = partyMemberRepository.findByNickNameAndParty(nickName, party.get());
-            if (partyMember.isPresent()){
-                partyMember.get().setCheck(true);
+            if (partyMember.isPresent()) {
+                partyMember.get().setAlertCheck(true);
                 partyMemberRepository.save(partyMember.get());
-            }else {
+            } else {
                 throw new PartyException(PartyErrorCode.NOT_FOUND_USER);
             }
         }
         return ResponseEntity.ok().build();
     }
 
-    public List<SendInviteAlertForm> createPartyAndSendInviteAlert(CreatePartyForm form) {
-        List<SendInviteAlertForm> list = new ArrayList<>();
+    @Override
+    public List<SendAlertForm> changePassword(String nickname, Long partyId, String password, String newPassword) {
+
+        Optional<Party> optionalParty = partyRepository.findById(partyId);
+
+        if (optionalParty.isPresent()){
+            Party party = optionalParty.get();
+            if (Objects.equals(party.getLeaderNickname(), nickname)){
+                if (Objects.equals(party.getPartyOttPassword(), password)){
+                    if (party.getPartyOttPassword().equals(newPassword)){
+                        throw new PartyException(PartyErrorCode.SAME_PASSWORD_OTT);
+                    }
+                    List<SendAlertForm> sendAlertFormList = new ArrayList<>();
+                    party.setPartyOttPassword(newPassword);
+                    partyRepository.save(party);
+                    for (int i = 0; i < party.getMembers().size(); i++) {
+                        SendAlertForm sendAlertForm = SendAlertForm.builder()
+                                .alertType(CHANGE_PASSWORD)
+                                .sender(party.getLeaderNickname())
+                                .partyId(party.getId())
+                                .nickName(party.getMembers().get(i).getNickName())
+                                .build();
+                        sendAlertFormList.add(sendAlertForm);
+                    }
+
+                    return sendAlertFormList;
+                }else {
+                    throw new PartyException(PartyErrorCode.WRONG_PASSWORD_OTT);
+                }
+            }else {
+                throw new PartyException(PartyErrorCode.NOT_LEADER);
+            }
+
+        }else {
+            throw new PartyException(PartyErrorCode.NOT_FOUND_PARTY);
+        }
+
+        // todo 이후 메시지 전송api호출필요
+    }
+
+
+
+    public List<SendAlertForm> createPartyAndSendInviteAlert(CreatePartyForm form) {
+        List<SendAlertForm> list = new ArrayList<>();
         if (form.getReceiversNickName() != null) {
             list = sendInviteAlert(createParty(form), form.getLeaderNickName());
         } else {
@@ -192,12 +235,9 @@ public class PartyServiceImpl implements PartyService {
         optionalParty.get().setPeople(optionalParty.get().getPeople() - 1);
         partyRepository.save(optionalParty.get());
 
-        // todo 사용자 알람 추가(회원이 나갔음으로)
-        // todo 리더일경우 어떻게 할지 논의 필요
         // todo 파티 멤버 테이블에서 자신뿐만 아니라
-
         // todo 한달 주기로 오늘 메시지로 갱신할지 말지 결정하는
-
+        // todo 이후 메시지 전송필요
         return ResponseEntity.ok().build();
     }
 

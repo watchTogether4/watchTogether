@@ -50,4 +50,9 @@ public class PartyController {
         return ResponseEntity.ok(partyServiceimpl.checkMessage(userNickname, partyId));
     }
 
+    @PostMapping("/changePassword")
+    public ResponseEntity<?> changePassword(String nickname, Long partyId, String password, String newPassword){
+        return ResponseEntity.ok(partyServiceimpl.changePassword(nickname, partyId, password, newPassword));
+    }
+
 }
