@@ -1,5 +1,6 @@
 package com.watchtogether.server.users.controller;
 
+import static com.watchtogether.server.users.domain.type.TransactionSuccess.SUCCESS_CANCEL_PREPAYMENT;
 import static com.watchtogether.server.users.domain.type.TransactionSuccess.SUCCESS_CHARGE;
 import static com.watchtogether.server.users.domain.type.TransactionSuccess.SUCCESS_PREPAYMENT;
 import static com.watchtogether.server.users.domain.type.TransactionSuccess.SUCCESS_TRANSACTION_LIST;
@@ -90,6 +91,30 @@ public class TransactionController {
                 , transactionDto.getTraderEmail()
                 , transactionDto.getTransactionDt()
                 , SUCCESS_PREPAYMENT.getMessage()
+            )
+        );
+    }
+
+    @PostMapping("/withdraw/cancel")
+    @Operation(summary = "사용자 캐쉬 출금 취소", description = "사용자가 파티 탈퇴 시 선결제 취소.")
+    public ResponseEntity<TransactionWithdraw.Response> cashWithdrawCancel(
+        @Validated @RequestBody TransactionWithdraw.Request request
+        , @Parameter(hidden = true) @AuthenticationPrincipal User user) {
+
+        TransactionDto transactionDto =
+            transactionApplicaion.userCashWithdrawCancel(
+                request.getLeaderEmail(), request.getOttId(), user.getEmail());
+
+        return ResponseEntity.ok(
+            new TransactionWithdraw.Response(
+                transactionDto.getEmail()
+                , transactionDto.getTransactionType()
+                , transactionDto.getTransactionResultType()
+                , transactionDto.getAmount()
+                , transactionDto.getBalanceSnapshot()
+                , transactionDto.getTraderEmail()
+                , transactionDto.getTransactionDt()
+                , SUCCESS_CANCEL_PREPAYMENT.getMessage()
             )
         );
     }
