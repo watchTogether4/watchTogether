@@ -12,14 +12,16 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class SendAlertForm {
 
-    private String nickName;
+    private String nickName; // 받는사람
 
-    private String uuid;
+    private String uuid; // 초대 일경우   uuid
 
-    private Long partyId;
+    private Long partyId; // 파티 아이디
 
-    private String sender;
+    private String sender; // 보내는 사람
 
-    private AlertType alertType;
+    private AlertType alertType; // 알림 타입
+
+    private Long ottId; // ott 아이디
 }
 

@@ -11,8 +11,10 @@ import com.watchtogether.server.party.domain.repository.InvitePartyRepository;
 import com.watchtogether.server.party.domain.repository.PartyMemberRepository;
 import com.watchtogether.server.party.domain.repository.PartyRepository;
 import com.watchtogether.server.party.domain.type.AlertType;
+import com.watchtogether.server.party.service.Application.CheckPartyApplication;
 import com.watchtogether.server.party.service.PartyService;
 import com.watchtogether.server.users.domain.entitiy.User;
+import com.watchtogether.server.users.domain.repository.TransactionRepository;
 import com.watchtogether.server.users.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -43,6 +45,8 @@ public class PartyServiceImpl implements PartyService {
     private final InvitePartyRepository invitePartyRepository;
     private final PartyMemberRepository partyMemberRepository;
     private final UserRepository userRepository;
+
+    private final TransactionRepository transactionRepository;
     private final EntityManagerFactory emf;
 
     // 파티장이 파티 생성 클릭
@@ -84,6 +88,7 @@ public class PartyServiceImpl implements PartyService {
                     .uuid(invitePartyList.get(i).getReceiverUUID())
                     .partyId(party.getId())
                     .sender(leader)
+                    .ottId(party.getOttId())
                     .alertType(AlertType.INVITE)
                     .build();
             inviteAlertList.add(sendAlertForm);
@@ -128,6 +133,7 @@ public class PartyServiceImpl implements PartyService {
                                 .alertType(CHANGE_PASSWORD)
                                 .sender(party.getLeaderNickname())
                                 .partyId(party.getId())
+                                .ottId(party.getOttId())
                                 .nickName(party.getMembers().get(i).getNickName())
                                 .build();
                         sendAlertFormList.add(sendAlertForm);
@@ -268,11 +274,12 @@ public class PartyServiceImpl implements PartyService {
         InviteParty inviteParty = findUser(form);
         checkPartyFull(inviteParty.getParty().getId());
 
+
         return ResponseEntity.ok().build();
     }
 
     public ResponseEntity<Object> checkPartyFull(Long partyId) {
-
+        // 리더 아이디, 다른멤버 아이디
         Optional<Party> optionalParty = partyRepository.findById(partyId);
 
         if (optionalParty.isPresent()) {
@@ -282,7 +289,9 @@ public class PartyServiceImpl implements PartyService {
                 party.setPayDt(LocalDate.now());
                 List<InviteParty> list = invitePartyRepository.findByParty(party);
                 savePartyMember(party.getId());
+
                 invitePartyRepository.deleteAll(list);
+
                 return ResponseEntity.ok().build();
             } else {
                 return null;
