@@ -19,6 +19,8 @@ public class SendInviteAlertForm {
 
     private Party party;
 
+    private String sender;
+
     private AlertType alertType;
 }
 
