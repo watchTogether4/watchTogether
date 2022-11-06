@@ -1,10 +1,14 @@
-package com.watchtogether.server.OTT.entity;
+package com.watchtogether.server.ott.domain.entity;
 
-import com.watchtogether.server.users.domain.entitiy.BaseEntity;
-import lombok.*;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.envers.AuditOverride;
-
-import javax.persistence.*;
 
 
 @Getter
@@ -13,7 +17,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name="ott")
-public class OttEntity extends BaseEntity{
+public class Ott extends BaseEntity{
     @Id
     @Column(name = "ott_id")
     private Long id;

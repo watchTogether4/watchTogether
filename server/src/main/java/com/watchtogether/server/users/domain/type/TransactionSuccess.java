@@ -11,7 +11,10 @@ public enum TransactionSuccess {
 
     SUCCESS_CHARGE("캐쉬 충전에 성공하였습니다."),
     SUCCESS_DEPOSIT("입금에 성공하였습니다."),
-    SUCCESS_WITHDRAW("출금에 성공하였습니다.");
+    SUCCESS_WITHDRAW("출금에 성공하였습니다."),
+    SUCCESS_PREPAYMENT("선결제에 성공하였습니다."),
+    SUCCESS_CANCEL_PREPAYMENT("선결제 취소에 성공하였습니다."),
+    SUCCESS_TRANSACTION_LIST("사용자 거래 내역 출력에 성공하였습니다.");
 
     private String message;
 }

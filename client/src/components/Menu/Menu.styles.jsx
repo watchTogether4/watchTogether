@@ -17,6 +17,7 @@ const MenuWrapper = styled.ul`
   }
 
   a {
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -29,4 +30,17 @@ const MenuWrapper = styled.ul`
   }
 `;
 
-export { MenuWrapper };
+const Bedge = styled.span`
+  position: absolute;
+  top: 0;
+  width: 1rem;
+  height: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  background-color: ${(props) => props.theme.color.error_300};
+  border-radius: 50%;
+`;
+
+export { MenuWrapper, Bedge };

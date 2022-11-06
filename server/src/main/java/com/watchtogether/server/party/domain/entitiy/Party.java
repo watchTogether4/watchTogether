@@ -1,7 +1,6 @@
 package com.watchtogether.server.party.domain.entitiy;
 
 import com.watchtogether.server.party.domain.model.CreatePartyForm;
-import com.watchtogether.server.users.domain.entitiy.BaseEntity;
 import lombok.*;
 import org.hibernate.envers.AuditOverride;
 
@@ -26,6 +25,8 @@ public class Party extends BaseEntity{
 
     private Long ottId;
 
+    private String leaderNickname;
+
     private String title;
 
     private String body;
@@ -44,6 +45,8 @@ public class Party extends BaseEntity{
 
     private LocalDate payDt;
 
+
+
     @OneToMany(mappedBy = "party")
     private List<PartyMember> members = new ArrayList<>();
 
@@ -57,6 +60,7 @@ public class Party extends BaseEntity{
                 .partyOttPassword(form.getPartyOttPassword())
                 .partyFull(false)
                 .leaderVerify(false)
+                .leaderNickname(form.getLeaderNickName())
                 .invisibleDt(LocalDateTime.now().plusDays(1).plusMinutes(1))
                 .build();
     }
@@ -70,6 +74,7 @@ public class Party extends BaseEntity{
                 .partyOttPassword(form.getPartyOttPassword())
                 .partyFull(false)
                 .leaderVerify(false)
+                .leaderNickname(form.getLeaderNickName())
                 .invisibleDt(LocalDateTime.now())
                 .build();
     }
