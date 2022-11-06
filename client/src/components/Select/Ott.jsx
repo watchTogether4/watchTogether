@@ -16,6 +16,9 @@ function Ott() {
   const { state } = useLocation();
   const role = state.role;
 
+  const leader = () => navigate('/addParty', { state: { role: role, ott: ott } });
+  const follower = () => navigate('/partyList', { state: { ott: ott } });
+
   return (
     <motion.div
       className="selectPage"
@@ -54,7 +57,7 @@ function Ott() {
           ))}
         </OttSection>
         <ButtonSection direction="column" justifyContent="flex-start">
-          <Button onClick={() => navigate('/addParty', { state: { role: role, ott: ott } })}>
+          <Button onClick={(role == true) ? leader : follower}>
             다음
           </Button>
         </ButtonSection>

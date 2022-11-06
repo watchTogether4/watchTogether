@@ -13,11 +13,13 @@ import {
 import SearchModal from './SearchModal';
 import { createParty } from '../../api/Parties';
 import { toast, ToastContainer } from 'react-toastify';
+import { motion } from 'framer-motion';
 
 const AddParty = () => {
   const navigate = useNavigate();
+  const {state} = useLocation();
   const initialValues = {
-    ottId: '',
+    ottId: state.ott,
     title: '',
     body: '',
     partyOttId: '',
@@ -30,15 +32,12 @@ const AddParty = () => {
   const [isVaildate, setIsValidate] = useState(false);
   const [inviteMember, setinviteMember] = useState([]);
   
-  const {state} = useLocation();
-  const ott = state.ott['ott'];
-  initialValues.ottId = ott;
   console.log(state, initialValues.ottId)
 
   const submitForm = () => {
     const accessToken = localStorage.getItem('access-token');
     const invite = inviteMember.length !== 0 ? inviteMember.join() : null;
-    const body = { ...formValues, receiversNickName: invite, };
+    const body = { ...formValues, receiversNickName: invite };
 
     createParty(body, accessToken)
       .then((res) => {
@@ -116,64 +115,72 @@ const AddParty = () => {
   };
 
   return (
-    <Wrapper>
-      <ToastContainer />
-      <GatherForm onSubmit={handleSubmit}>
-        <Description>파티원을 모집하거나, 원하는 지인을 초대할 수 있어요.</Description>
-        {formErrors && <ErrorMessage className="error">{formErrors}</ErrorMessage>}
-        <Label htmlFor="title">모집 제목</Label>
-        <CustomInput
-          type="text"
-          name="title"
-          defalutValue={formValues.title}
-          onChange={handleChange}
-        />
+    <motion.div
+      className="selectPage"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
+      <Wrapper>
+        <ToastContainer />
+        <GatherForm onSubmit={handleSubmit}>
+          <Description>파티원을 모집하거나, 원하는 지인을 초대할 수 있어요.</Description>
+          {formErrors && <ErrorMessage className="error">{formErrors}</ErrorMessage>}
+          <Label htmlFor="title">모집 제목</Label>
+          <CustomInput
+            type="text"
+            name="title"
+            defalutValue={formValues.title}
+            onChange={handleChange}
+          />
 
-        <Label htmlFor="searchMember">파티원 초대하기</Label>
-        <CustomInput
-          type="text"
-          name="searchMember"
-          placeholder="찾으려는 파티원의 닉네임을 입력해주세요."
-          value={inviteMember}
-          onClick={handleClick}
-        />
+          <Label htmlFor="searchMember">파티원 초대하기</Label>
+          <CustomInput
+            type="text"
+            name="searchMember"
+            placeholder="찾으려는 파티원의 닉네임을 입력해주세요."
+            value={inviteMember}
+            onClick={handleClick}
+          />
 
-        <Label htmlFor="ottId">OTT 플랫폼 계정</Label>
-        <CustomInput
-          mb="0"
-          type="text"
-          name="partyOttId"
-          placeholder="ID"
-          defalutValue={formValues.partyOttId}
-          onChange={handleChange}
-        />
-        <CustomInput
-          type="password"
-          name="partyOttPassword"
-          placeholder="Password"
-          defalutValue={formValues.partyOttPassword}
-          onChange={handleChange}
-        />
+          <Label htmlFor="ottId">OTT 플랫폼 계정</Label>
+          <CustomInput
+            mb="0"
+            type="text"
+            name="partyOttId"
+            placeholder="ID"
+            defalutValue={formValues.partyOttId}
+            onChange={handleChange}
+          />
+          <CustomInput
+            type="password"
+            name="partyOttPassword"
+            placeholder="Password"
+            defalutValue={formValues.partyOttPassword}
+            onChange={handleChange}
+          />
 
-        <Label htmlFor="body">모집 글</Label>
-        <Text
-          name="body"
-          placeholder="여기에 입력하세요"
-          defalutValue={formValues.body}
-          onChange={handleChange}
-        />
+          <Label htmlFor="body">모집 글</Label>
+          <Text
+            name="body"
+            placeholder="여기에 입력하세요"
+            defalutValue={formValues.body}
+            onChange={handleChange}
+          />
 
-        <SubmitButton type="submit">등록하기</SubmitButton>
-      </GatherForm>
+          <SubmitButton type="submit">등록하기</SubmitButton>
+        </GatherForm>
 
-      {isOpen && (
-        <SearchModal
-          setinviteMember={setinviteMember}
-          inviteMember={inviteMember}
-          setIsOpen={setIsOpen}
-        />
-      )}
-    </Wrapper>
+        {isOpen && (
+          <SearchModal
+            setinviteMember={setinviteMember}
+            inviteMember={inviteMember}
+            setIsOpen={setIsOpen}
+          />
+        )}
+      </Wrapper>
+    </motion.div>
+
   );
 };
 
