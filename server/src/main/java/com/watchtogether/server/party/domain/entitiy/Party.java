@@ -1,7 +1,6 @@
 package com.watchtogether.server.party.domain.entitiy;
 
 import com.watchtogether.server.party.domain.model.CreatePartyForm;
-import com.watchtogether.server.users.domain.entitiy.BaseEntity;
 import lombok.*;
 import org.hibernate.envers.AuditOverride;
 
