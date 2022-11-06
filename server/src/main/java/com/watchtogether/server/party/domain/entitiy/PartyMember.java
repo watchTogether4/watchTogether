@@ -3,7 +3,7 @@ package com.watchtogether.server.party.domain.entitiy;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.watchtogether.server.party.domain.model.InvitePartyForm;
-import com.watchtogether.server.users.domain.entitiy.BaseEntity;
+
 import lombok.*;
 import org.hibernate.envers.AuditOverride;
 
@@ -23,9 +23,9 @@ public class PartyMember extends BaseEntity{
 
     private String nickName;
 
-    private boolean isLeader;
+    private boolean leader;
 
-    private boolean check;
+    private boolean alertCheck;
 
     @JsonIgnore
     @ManyToOne
@@ -34,9 +34,9 @@ public class PartyMember extends BaseEntity{
     public static PartyMember from(InvitePartyForm form){
         return PartyMember.builder()
                 .nickName(form.getNickname())
-                .isLeader(form.getLeader())
+                .leader(form.getLeader())
                 .party(form.getParty())
-                .check(true)
+                .alertCheck(true)
                 .build();
     }
 }
