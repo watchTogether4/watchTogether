@@ -1,11 +1,16 @@
 package com.watchtogether.server.users.service.impl;
 
 
+import static com.watchtogether.server.exception.type.TransactionErrorCode.INSUFFICIENT_CASH;
+import static com.watchtogether.server.exception.type.UserErrorCode.NOT_FOUND_LEADER;
 import static com.watchtogether.server.exception.type.UserErrorCode.NOT_FOUND_USER;
 import static com.watchtogether.server.exception.type.UserErrorCode.WRONG_PASSWORD_USER;
 import static com.watchtogether.server.users.domain.type.TransactionResultType.ACCEPT;
+import static com.watchtogether.server.users.domain.type.TransactionResultType.WAIT;
 import static com.watchtogether.server.users.domain.type.TransactionType.CHARGE;
+import static com.watchtogether.server.users.domain.type.TransactionType.WITHDRAW;
 
+import com.watchtogether.server.exception.TransactionException;
 import com.watchtogether.server.exception.UserException;
 import com.watchtogether.server.users.domain.dto.TransactionDto;
 import com.watchtogether.server.users.domain.entitiy.Transaction;
@@ -30,6 +35,20 @@ public class TransactionServiceImpl implements TransactionService {
     private final UserRepository userRepository;
     private final TransactionRepository transactionRepository;
     private final PasswordEncoder passwordEncoder;
+
+    @Override
+    public List<TransactionDto> userCashList(String email) {
+
+        User user = userRepository.findById(email)
+            .orElseThrow(() -> new UserException(NOT_FOUND_USER));
+
+        List<Transaction> transactionList = transactionRepository.findByUserOrderByIdDesc(user);
+
+        return transactionList.stream()
+            .map(TransactionDto::fromEntity)
+            .collect(Collectors.toList());
+    }
+
 
     @Override
     @Transactional
@@ -58,15 +77,36 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public List<TransactionDto> userCashList(String email) {
+    public TransactionDto userCashWithdraw(String leaderEmail, String email,
+        int commissionMember, Long fee) {
 
+        // 파티장 아이디 유효성 검사
+        userRepository.findById(leaderEmail)
+            .orElseThrow(() -> new UserException(NOT_FOUND_LEADER));
+
+        // 사용자 아이디 유효성 검사
         User user = userRepository.findById(email)
             .orElseThrow(() -> new UserException(NOT_FOUND_USER));
 
-        List<Transaction> transactionList = transactionRepository.findByUserOrderByIdDesc(user);
+        // 서비스 이용료 총 합 : 전체 요금 / 4 + 파티원 수수료
+        Long totalAmount = fee + commissionMember;
 
-        return transactionList.stream()
-            .map(TransactionDto::fromEntity)
-            .collect(Collectors.toList());
+        if (user.getCash() < totalAmount) {
+            throw new TransactionException(INSUFFICIENT_CASH);
+        }
+
+        user.minusCash(totalAmount);
+
+        return TransactionDto.fromEntity(
+            transactionRepository.save(Transaction.builder()
+                .transactionType(WITHDRAW.getDescription())
+                .transactionResultType(WAIT.getDescription())
+                .user(user)
+                .amount(totalAmount)
+                .balanceSnapshot(user.getCash())
+                .traderEmail(leaderEmail)
+                .transactionDt(LocalDateTime.now())
+                .build()));
     }
+
 }

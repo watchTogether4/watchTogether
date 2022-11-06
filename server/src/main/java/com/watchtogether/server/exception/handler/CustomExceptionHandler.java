@@ -1,9 +1,11 @@
 package com.watchtogether.server.exception.handler;
 
+import com.watchtogether.server.exception.OttException;
 import com.watchtogether.server.exception.PartyException;
 import com.watchtogether.server.exception.TokenException;
 import com.watchtogether.server.exception.TransactionException;
 import com.watchtogether.server.exception.UserException;
+import com.watchtogether.server.exception.response.OttExceptionResponse;
 import com.watchtogether.server.exception.response.PartyExceptionResponse;
 import com.watchtogether.server.exception.response.TokenExceptionResponse;
 import com.watchtogether.server.exception.response.TransactionExceptionResponse;
@@ -55,4 +57,13 @@ public class CustomExceptionHandler {
                 e.getMessage()));
     }
 
+    @ExceptionHandler({OttException.class})
+    public ResponseEntity<OttExceptionResponse> OttException(
+        final OttException e) {
+        log.error("OttException is occurred. ", e);
+
+        return ResponseEntity.badRequest()
+            .body(new OttExceptionResponse(e.getErrorStatus(), e.getOttErrorCode(),
+                e.getMessage()));
+    }
 }
