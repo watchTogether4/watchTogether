@@ -115,9 +115,12 @@ public interface PartyService extends UserDetailsService {
      */
     void findMyPartiesBeforeDeleteUser(String nickname);
 
-    List<SendInviteAlertForm> sendInviteAlert(Party party, String leader);
+    List<SendAlertForm> sendInviteAlert(Party party, String leader);
 
-    ResponseEntity<Object> checkMessage(String nickName, Long partyId);
+    ResponseEntity<Object> checkMessage(String nickname, Long partyId);
+
+    List<SendAlertForm> changePassword(String nickname, Long partyId, String password, String newPassword);
+
 
     // todo 파티 결제일을 체크해서 결제일과 맞으면 파티원들 결제를 진행하고 파티 결제일을 1달 뒤로 넘긴다.
     // 파티 결제일 -1주일전에 할지 말지 물어보는 알림메시지를 전송한다.
