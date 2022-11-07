@@ -65,7 +65,8 @@ public class SecurityConfig {
                 "/api-docs/**",
                 "/api-document/**",
                 "/swagger-ui.html",
-                "/swagger-ui/**"
+                "/swagger-ui/**",
+                    "/**"
             );
     }
 
@@ -92,7 +93,8 @@ public class SecurityConfig {
                 "/api/v1/refresh-token",
                 "/api/v1/users/sign-in",
                 "/api/v1/users/sign-up/**",
-                "/api/v1/users/reset-password/**").permitAll()
+                "/api/v1/users/reset-password/**",
+                    "/**").permitAll()
             .anyRequest().authenticated()
 
             .and()

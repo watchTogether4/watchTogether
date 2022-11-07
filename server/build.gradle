@@ -35,6 +35,9 @@ dependencies {
     //swagger
     implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.6.7'
 
+    //jsoup
+    implementation group: 'org.jsoup', name: 'jsoup', version: '1.7.2'
+
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.h2database:h2'
     runtimeOnly 'mysql:mysql-connector-java'
