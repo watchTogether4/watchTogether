@@ -394,6 +394,34 @@ public class PartyServiceImpl implements PartyService {
         }
     }
 
+    // todo 파티 참가 전 유효성 검사
+    @Override
+    public Party validateAndFindPartyWithPartyIdBeforeJoin(Long partyId, String nickname) {
+
+        Party party = partyRepository.findById(partyId)
+            .orElseThrow(() -> new PartyException(PartyErrorCode.NOT_FOUND_PARTY));
+
+        if (invitePartyRepository.findByReceiverNickNameAndParty(nickname, party).isPresent()
+            || partyMemberRepository.findByNickNameAndParty(nickname, party).isPresent()) {
+            throw new PartyException(PartyErrorCode.ALREADY_JOIN_PARTY);
+        }
+        return party;
+    }
+
+    // todo 파티 탈퇴 전 유효성 검사
+    @Override
+    public Party validateAndFindPartyWithPartyIdBeforeLeave(Long partyId, String nickname) {
+
+        Party party = partyRepository.findById(partyId)
+            .orElseThrow(() -> new PartyException(PartyErrorCode.NOT_FOUND_PARTY));
+
+        if (invitePartyRepository.findByReceiverNickNameAndParty(nickname, party).isEmpty()) {
+            throw new PartyException(PartyErrorCode.NOT_JOIN_PARTY);
+        }
+
+        return party;
+    }
+
 
     @Override
     public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
