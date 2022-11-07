@@ -18,10 +18,15 @@ public class TransactionWithdraw {
 
         @NotBlank(message = "파티장 닉네임을 입력해주세요.")
         @Schema(description = "파티장 닉네임")
-        private String leaderEmail;
+        private String leaderNickname;
 
         @Schema(description = "ott 아이디")
         private Long ottId;
+
+        @Schema(description = "party 아이디")
+        private Long partyId;
+
+
 
     }
 
@@ -31,8 +36,8 @@ public class TransactionWithdraw {
     @Schema(name = "TransactionWithdrawResponse", description = "파티 참가시 선결제 응답")
     public static class Response {
 
-        @Schema(description = "아이디", example = "abc@ikdmd.kg.lr")
-        private String email;
+        @Schema(description = "닉네임", example = "abc@ikdmd.kg.lr")
+        private String nickname;
 
         @Schema(description = "거래 종류")
         private String transactionType;
@@ -47,7 +52,7 @@ public class TransactionWithdraw {
         private Long balanceSnapshot;
 
         @Schema(description = "거래자 이메일")
-        private String traderEmail;
+        private String traderNickname;
 
         @Schema(description = "거래 일시")
         private LocalDateTime transactionDt;
