@@ -1,12 +1,12 @@
 feign:
   okhttp:
     enabled: 'true'
-#spring:
-#  datasource:
-#    driver-class-name: com.mysql.cj.jdbc.Driver
-#    username: root
-#    url: jdbc:mysql://localhost:3306/user?useSSL=FALSE&useUnicode=ture&allowPublicKeyRetrieval=true
-#    password: '1'
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    url: jdbc:mysql://localhost:3306/user?useSSL=FALSE&useUnicode=ture&allowPublicKeyRetrieval=true
+    password: '1'
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher

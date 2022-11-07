@@ -1,7 +1,6 @@
 package com.watchtogether.server.users.service.impl;
 
 
-import static com.watchtogether.server.exception.type.TransactionErrorCode.INVALID_REQUEST;
 import static com.watchtogether.server.exception.type.UserErrorCode.NOT_FOUND_LEADER;
 import static com.watchtogether.server.exception.type.UserErrorCode.NOT_FOUND_NICKNAME;
 import static com.watchtogether.server.exception.type.UserErrorCode.NOT_FOUND_USER;
@@ -13,7 +12,6 @@ import static com.watchtogether.server.users.domain.type.TransactionType.CHARGE;
 import static com.watchtogether.server.users.domain.type.TransactionType.DEPOSIT;
 import static com.watchtogether.server.users.domain.type.TransactionType.WITHDRAW;
 
-import com.watchtogether.server.exception.TransactionException;
 import com.watchtogether.server.exception.UserException;
 import com.watchtogether.server.party.domain.entitiy.PartyMember;
 import com.watchtogether.server.users.domain.dto.TransactionDto;
@@ -69,6 +67,7 @@ public class TransactionServiceImpl implements TransactionService {
 
         return TransactionDto.fromEntity(
             transactionRepository.save(Transaction.builder()
+                .partyId(0L)
                 .transactionType(CHARGE.getDescription())
                 .transactionResultType(ACCEPT.getDescription())
                 .user(user)
@@ -81,7 +80,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public TransactionDto userCashWithdraw(Long partyId, String leaderNickname, String email,
+    public TransactionDto userCashWithdraw(Long partyId, String leaderNickname, String nickname,
         int commissionMember, Long fee) {
 
         // 파티장 닉네임 유효성 검사
@@ -89,7 +88,7 @@ public class TransactionServiceImpl implements TransactionService {
             .orElseThrow(() -> new UserException(NOT_FOUND_LEADER));
 
         // 사용자 아이디 유효성 검사
-        User user = userRepository.findById(email)
+        User user = userRepository.findByNickname(nickname)
             .orElseThrow(() -> new UserException(NOT_FOUND_NICKNAME));
 
         // 서비스 이용료 총 합 : 전체 요금 / 4 + 파티원 수수료
@@ -112,14 +111,15 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public TransactionDto userCashWithdrawCancel(Long partyId, String leaderNickname,
-        String email, int commissionMember, Long fee) {
+        String nickname,
+        int commissionMember, Long fee) {
 
         // 파티장 아이디 유효성 검사
         userRepository.findByNickname(leaderNickname)
             .orElseThrow(() -> new UserException(NOT_FOUND_LEADER));
 
         // 사용자 아이디 유효성 검사
-        User user = userRepository.findById(email)
+        User user = userRepository.findByNickname(nickname)
             .orElseThrow(() -> new UserException(NOT_FOUND_NICKNAME));
 
         // 서비스 이용료 총 합 : 전체 요금 / 4 + 파티원 수수료
@@ -154,15 +154,16 @@ public class TransactionServiceImpl implements TransactionService {
                 User user = userRepository.findByNickname(member.getNickName())
                     .orElseThrow(() -> new UserException(NOT_FOUND_NICKNAME));
 
-                Transaction transaction =
-                    transactionRepository.findByUser(user).filter(
-                        (trans) -> trans.getPartyId().equals(partId)
-                            && trans.getTransactionResultType().equals(WAIT.getDescription())
-                    ).orElseThrow(() -> new TransactionException(INVALID_REQUEST));
+                List<Transaction> transaction =
+                    transactionRepository.findByUserOrderByTransactionDtDesc(user).stream()
+                        .filter(
+                            (ts) -> ts.getPartyId().equals(partId) && ts.getTransactionResultType()
+                                .equals(WAIT.getDescription()))
+                        .collect(Collectors.toList());
 
-                transaction.setTransactionResultType(ACCEPT.getDescription());
+                transaction.get(0).setTransactionResultType(ACCEPT.getDescription());
 
-                transactionRepository.save(transaction);
+                transactionRepository.save(transaction.get(0));
 
                 // 파티장 입금 금액
                 Long totalAmount = fee - commissionLeader / 3;
@@ -181,7 +182,5 @@ public class TransactionServiceImpl implements TransactionService {
 
             }
         }
-
-
     }
 }

@@ -2,7 +2,6 @@ package com.watchtogether.server.users.domain.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
-import javax.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,18 +14,8 @@ public class TransactionWithdraw {
     @Schema(name = "TransactionWithdrawRequest", description = "파티 참가시 선결제 요청")
     public static class Request {
 
-
-        @NotBlank(message = "파티장 닉네임을 입력해주세요.")
-        @Schema(description = "파티장 닉네임")
-        private String leaderNickname;
-
-        @Schema(description = "ott 아이디")
-        private Long ottId;
-
         @Schema(description = "party 아이디")
         private Long partyId;
-
-
 
     }
 
