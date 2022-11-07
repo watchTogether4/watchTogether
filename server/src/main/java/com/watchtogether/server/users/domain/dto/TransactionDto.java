@@ -13,22 +13,22 @@ import lombok.NoArgsConstructor;
 @Builder
 public class TransactionDto {
 
-    private String email;
+    private String nickname;
     private String transactionType;
     private String transactionResultType;
     private Long amount;
     private Long balanceSnapshot;
-    private String traderEmail;
+    private String traderNickname;
     private LocalDateTime transactionDt;
 
     public static TransactionDto fromEntity(Transaction transaction) {
         return TransactionDto.builder()
-            .email(transaction.getUser().getEmail())
+            .nickname(transaction.getUser().getNickname())
             .transactionType(transaction.getTransactionType())
             .transactionResultType(transaction.getTransactionResultType())
             .amount(transaction.getAmount())
             .balanceSnapshot(transaction.getBalanceSnapshot())
-            .traderEmail(transaction.getTraderEmail())
+            .traderNickname(transaction.getTraderNickname())
             .transactionDt(transaction.getTransactionDt())
             .build();
     }

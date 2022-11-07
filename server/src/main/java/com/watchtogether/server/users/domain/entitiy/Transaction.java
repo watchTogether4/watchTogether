@@ -29,6 +29,8 @@ public class Transaction extends BaseEntity {
     @Column(name = "transaction_id")
     private Long id;
 
+    private Long partyId;
+
     private String transactionType;
 
     private String transactionResultType;
@@ -40,7 +42,7 @@ public class Transaction extends BaseEntity {
 
     private Long balanceSnapshot;
 
-    private String traderEmail;
+    private String traderNickname;
 
     private LocalDateTime transactionDt;
 
