@@ -16,7 +16,5 @@ public interface UserRepository extends JpaRepository<User, String> {
 
     Optional<User> findByResetPasswordKey(String code);
 
-    Optional<User> findByNickname(String nickname);
-
     List<User> findAllByNicknameIn(List<String> nicknames);
 }
