@@ -11,12 +11,14 @@ public class AlertDto {
         private Long notificationId;
         private AlertType type;
         private String message;
+        private boolean notificationOpen;
 
 
         public AlertDto(Notification notification) {
                 this.notificationId = notification.getId();
                 this.type = notification.getType();
                 this.message = notification.getMessage();
+                this.notificationOpen = notification.isCheckAlert();
         }
 }
 
