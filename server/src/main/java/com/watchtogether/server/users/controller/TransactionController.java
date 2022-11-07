@@ -32,9 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class TransactionController {
 
     private final TransactionService transactionService;
-
     private final TransactionApplicaion transactionApplicaion;
-
 
     @GetMapping
     @Operation(summary = "사용자 거래 내역 리스트", description = "사용자 거래 내역 리스트를 출력.")
@@ -48,7 +46,6 @@ public class TransactionController {
         );
     }
 
-
     @PostMapping("/charge")
     @Operation(summary = "사용자 캐쉬 충전", description = "일정 금액에 대한 충전 요청.")
     public ResponseEntity<TransactionCharge.Response> cashCharge(
@@ -59,12 +56,12 @@ public class TransactionController {
 
         return ResponseEntity.ok(
             new TransactionCharge.Response(
-                transactionDto.getEmail()
+                transactionDto.getNickname()
                 , transactionDto.getTransactionType()
                 , transactionDto.getTransactionResultType()
                 , transactionDto.getAmount()
                 , transactionDto.getBalanceSnapshot()
-                , transactionDto.getTraderEmail()
+                , transactionDto.getTraderNickname()
                 , transactionDto.getTransactionDt()
                 , SUCCESS_CHARGE.getMessage()
             )
@@ -79,16 +76,17 @@ public class TransactionController {
 
         TransactionDto transactionDto =
             transactionApplicaion.userCashWithdraw(
-                request.getLeaderEmail(), request.getOttId(), user.getEmail());
+                request.getLeaderNickname(), request.getPartyId(), request.getOttId(),
+                user.getEmail());
 
         return ResponseEntity.ok(
             new TransactionWithdraw.Response(
-                transactionDto.getEmail()
+                transactionDto.getNickname()
                 , transactionDto.getTransactionType()
                 , transactionDto.getTransactionResultType()
                 , transactionDto.getAmount()
                 , transactionDto.getBalanceSnapshot()
-                , transactionDto.getTraderEmail()
+                , transactionDto.getTraderNickname()
                 , transactionDto.getTransactionDt()
                 , SUCCESS_PREPAYMENT.getMessage()
             )
@@ -103,19 +101,30 @@ public class TransactionController {
 
         TransactionDto transactionDto =
             transactionApplicaion.userCashWithdrawCancel(
-                request.getLeaderEmail(), request.getOttId(), user.getEmail());
+                request.getLeaderNickname(), request.getPartyId(), request.getOttId(),
+                user.getEmail());
 
         return ResponseEntity.ok(
             new TransactionWithdraw.Response(
-                transactionDto.getEmail()
+                transactionDto.getNickname()
                 , transactionDto.getTransactionType()
                 , transactionDto.getTransactionResultType()
                 , transactionDto.getAmount()
                 , transactionDto.getBalanceSnapshot()
-                , transactionDto.getTraderEmail()
+                , transactionDto.getTraderNickname()
                 , transactionDto.getTransactionDt()
                 , SUCCESS_CANCEL_PREPAYMENT.getMessage()
             )
         );
     }
+
+//    @GetMapping("/test")
+//    @Operation(summary = "test", description = "test.")
+//    public ResponseEntity<?> test() {
+//
+//        TransactionDto transactionDto =
+//            transactionApplicaion.test();
+//
+//        return ResponseEntity.ok(null);
+//    }
 }

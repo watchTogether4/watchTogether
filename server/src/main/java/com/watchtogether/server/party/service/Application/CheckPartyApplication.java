@@ -8,26 +8,27 @@ import com.watchtogether.server.party.domain.model.LeavePartyForm;
 import com.watchtogether.server.party.domain.repository.PartyMemberRepository;
 import com.watchtogether.server.party.domain.repository.PartyRepository;
 import com.watchtogether.server.party.service.impl.PartyServiceImpl;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class CheckPartyApplication {
         private final PartyRepository partyRepository;
-
         private final PartyMemberRepository partyMemberRepository;
-
         private final PartyServiceImpl partyService;
+
+        // todo 결제 부분
+//        private final OttService ottService;
+//        private final TransactionService transactionService;
 
 
 
@@ -54,11 +55,20 @@ public class CheckPartyApplication {
         } else {
             for (Party party : partyList) {
                 // 결제 진행부분 삽입
+                // todo 결제 부분
+//                OttDto ottDto = ottService.searchOtt(party.getOttId());
+//
+//                transactionService.userCashDeposit(
+//                    party.getMembers(),
+//                    party.getLeaderNickname(),
+//                    party.getId(),
+//                    ottDto.getCommissionLeader(),
+//                    ottDto.getFee());
+
 
                 party.setPayDt(party.getPayDt().plusMonths(1));
                 partyRepository.save(party);
                 log.info("오늘 결제한 파티는" + party.getId() + "번 " + party.getTitle() + "입니다");
-
 
                 // 결제 진행되었다고 메시지 전송
 
