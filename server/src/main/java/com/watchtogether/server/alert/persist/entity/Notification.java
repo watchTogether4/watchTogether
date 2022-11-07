@@ -1,7 +1,8 @@
-package com.example.sockettest.alert.persist.entity;
+package com.watchtogether.server.alert.persist.entity;
 
 
-import com.example.sockettest.domain.ChatMessage;
+import com.watchtogether.server.party.domain.entitiy.Party;
+import com.watchtogether.server.party.domain.type.AlertType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,7 +28,7 @@ public class Notification {
     private Party party;
 
     @Column(name = "notification_type")
-    private String type;
+    private AlertType type;
 
     @Column(name = "notification_text")
     private String message;
@@ -44,7 +45,7 @@ public class Notification {
     @Column(name = "notification_invite_uuid")
     private String inviteId;
 
-    public Notification(String email, Party party, String inviteId, String message, String type) {
+    public Notification(String email, Party party, String inviteId, String message, AlertType type) {
         this.email = email;
         this.party = party;
         this.type = type;

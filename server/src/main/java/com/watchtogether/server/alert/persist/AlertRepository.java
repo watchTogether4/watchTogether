@@ -1,6 +1,6 @@
-package com.example.sockettest.alert.persist;
+package com.watchtogether.server.alert.persist;
 
-import com.example.sockettest.alert.persist.entity.Notification;
+import com.watchtogether.server.alert.persist.entity.Notification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

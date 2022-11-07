@@ -1,10 +1,9 @@
-package com.watchtogether.server.party.domain.repository;
+package com.example.sockettest.alert.persist;
 
-import com.watchtogether.server.party.domain.entitiy.Party;
+import com.example.sockettest.alert.persist.entity.Party;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -14,6 +13,4 @@ public interface PartyRepository extends JpaRepository<Party, Long> {
     List<Party> findByPartyFullIsFalseAndInvisibleDtBefore(LocalDateTime now);
 
     Optional<Party> findById(long partyId);
-
-    List<Party> findByPayDt(LocalDate minusWeeks);
 }

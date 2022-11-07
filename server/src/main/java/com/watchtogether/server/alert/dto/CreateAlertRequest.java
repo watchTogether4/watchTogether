@@ -1,6 +1,7 @@
-package com.example.sockettest.alert.dto;
+package com.watchtogether.server.alert.dto;
 
 
+import com.watchtogether.server.party.domain.type.AlertType;
 import lombok.Data;
 
 import java.util.List;
@@ -12,7 +13,7 @@ public class CreateAlertRequest {
         private long partyId;
         private String inviteId;
         private String message;
-        private String type;
+        private AlertType type;
 
 
 
