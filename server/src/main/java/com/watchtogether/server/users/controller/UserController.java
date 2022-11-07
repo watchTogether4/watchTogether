@@ -90,7 +90,7 @@ public class UserController {
         // token 발행
         String accessToken = tokenProvider.generateAccessToken(userDto.getEmail(),
             userDto.getRoles());
-        String refreshToken = tokenProvider.generateRefreshToken(userDto.getRoles());
+        String refreshToken = tokenProvider.generateRefreshToken(userDto.getRoles( ));
 
         // refresh_token 값 , 유효기간 저장
         userService.saveRefreshToken(userDto.getEmail(), refreshToken);
