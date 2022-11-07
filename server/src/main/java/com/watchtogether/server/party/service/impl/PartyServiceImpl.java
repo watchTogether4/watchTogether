@@ -1,41 +1,46 @@
 package com.watchtogether.server.party.service.impl;
 
+import static com.watchtogether.server.exception.type.UserErrorCode.NOT_FOUND_USER;
+import static com.watchtogether.server.party.domain.type.AlertType.CHANGE_PASSWORD;
+
 import com.watchtogether.server.exception.PartyException;
 import com.watchtogether.server.exception.UserException;
 import com.watchtogether.server.exception.type.PartyErrorCode;
+import com.watchtogether.server.ott.domain.dto.OttDto;
+import com.watchtogether.server.ott.service.OttService;
 import com.watchtogether.server.party.domain.entitiy.InviteParty;
 import com.watchtogether.server.party.domain.entitiy.Party;
 import com.watchtogether.server.party.domain.entitiy.PartyMember;
-import com.watchtogether.server.party.domain.model.*;
+import com.watchtogether.server.party.domain.model.AcceptPartyForm;
+import com.watchtogether.server.party.domain.model.CreatePartyForm;
+import com.watchtogether.server.party.domain.model.FindMyPartiesForm;
+import com.watchtogether.server.party.domain.model.InvitePartyForm;
+import com.watchtogether.server.party.domain.model.JoinPartyForm;
+import com.watchtogether.server.party.domain.model.LeavePartyForm;
+import com.watchtogether.server.party.domain.model.SendAlertForm;
 import com.watchtogether.server.party.domain.repository.InvitePartyRepository;
 import com.watchtogether.server.party.domain.repository.PartyMemberRepository;
 import com.watchtogether.server.party.domain.repository.PartyRepository;
 import com.watchtogether.server.party.domain.type.AlertType;
-import com.watchtogether.server.party.service.Application.CheckPartyApplication;
 import com.watchtogether.server.party.service.PartyService;
 import com.watchtogether.server.users.domain.entitiy.User;
-import com.watchtogether.server.users.domain.repository.TransactionRepository;
 import com.watchtogether.server.users.domain.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Query;
+import com.watchtogether.server.users.service.TransactionService;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-
-
-import static com.watchtogether.server.exception.type.UserErrorCode.NOT_FOUND_USER;
-import static com.watchtogether.server.party.domain.type.AlertType.CHANGE_PASSWORD;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Query;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -46,7 +51,8 @@ public class PartyServiceImpl implements PartyService {
     private final PartyMemberRepository partyMemberRepository;
     private final UserRepository userRepository;
 
-    private final TransactionRepository transactionRepository;
+    private final TransactionService transactionService;
+    private final OttService ottService;
     private final EntityManagerFactory emf;
 
     // 파티장이 파티 생성 클릭
@@ -289,6 +295,18 @@ public class PartyServiceImpl implements PartyService {
                 party.setPayDt(LocalDate.now());
                 List<InviteParty> list = invitePartyRepository.findByParty(party);
                 savePartyMember(party.getId());
+
+                // todo
+
+                OttDto ottDto = ottService.searchOtt(party.getOttId());
+
+                transactionService.userCashDeposit(
+                    party.getMembers(),
+                    party.getLeaderNickname(),
+                    party.getId(),
+                    ottDto.getCommissionLeader(),
+                    ottDto.getFee());
+
 
                 invitePartyRepository.deleteAll(list);
 

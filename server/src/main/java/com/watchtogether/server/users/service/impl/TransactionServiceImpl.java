@@ -1,16 +1,21 @@
 package com.watchtogether.server.users.service.impl;
 
 
+import static com.watchtogether.server.exception.type.TransactionErrorCode.INVALID_REQUEST;
 import static com.watchtogether.server.exception.type.UserErrorCode.NOT_FOUND_LEADER;
+import static com.watchtogether.server.exception.type.UserErrorCode.NOT_FOUND_NICKNAME;
 import static com.watchtogether.server.exception.type.UserErrorCode.NOT_FOUND_USER;
 import static com.watchtogether.server.exception.type.UserErrorCode.WRONG_PASSWORD_USER;
 import static com.watchtogether.server.users.domain.type.TransactionResultType.ACCEPT;
 import static com.watchtogether.server.users.domain.type.TransactionResultType.CANCEL;
 import static com.watchtogether.server.users.domain.type.TransactionResultType.WAIT;
 import static com.watchtogether.server.users.domain.type.TransactionType.CHARGE;
+import static com.watchtogether.server.users.domain.type.TransactionType.DEPOSIT;
 import static com.watchtogether.server.users.domain.type.TransactionType.WITHDRAW;
 
+import com.watchtogether.server.exception.TransactionException;
 import com.watchtogether.server.exception.UserException;
+import com.watchtogether.server.party.domain.entitiy.PartyMember;
 import com.watchtogether.server.users.domain.dto.TransactionDto;
 import com.watchtogether.server.users.domain.entitiy.Transaction;
 import com.watchtogether.server.users.domain.entitiy.User;
@@ -69,23 +74,23 @@ public class TransactionServiceImpl implements TransactionService {
                 .user(user)
                 .amount(amount)
                 .balanceSnapshot(user.getCash())
-                .traderEmail("")
+                .traderNickname("")
                 .transactionDt(LocalDateTime.now())
                 .build()));
 
     }
 
     @Override
-    public TransactionDto userCashWithdraw(String leaderEmail, String email,
+    public TransactionDto userCashWithdraw(Long partyId, String leaderNickname, String email,
         int commissionMember, Long fee) {
 
-        // 파티장 아이디 유효성 검사
-        userRepository.findById(leaderEmail)
+        // 파티장 닉네임 유효성 검사
+        userRepository.findByNickname(leaderNickname)
             .orElseThrow(() -> new UserException(NOT_FOUND_LEADER));
 
         // 사용자 아이디 유효성 검사
         User user = userRepository.findById(email)
-            .orElseThrow(() -> new UserException(NOT_FOUND_USER));
+            .orElseThrow(() -> new UserException(NOT_FOUND_NICKNAME));
 
         // 서비스 이용료 총 합 : 전체 요금 / 4 + 파티원 수수료
         Long totalAmount = fee + commissionMember;
@@ -94,27 +99,28 @@ public class TransactionServiceImpl implements TransactionService {
 
         return TransactionDto.fromEntity(
             transactionRepository.save(Transaction.builder()
+                .partyId(partyId)
                 .transactionType(WITHDRAW.getDescription())
                 .transactionResultType(WAIT.getDescription())
                 .user(user)
                 .amount(totalAmount)
                 .balanceSnapshot(user.getCash())
-                .traderEmail(leaderEmail)
+                .traderNickname(leaderNickname)
                 .transactionDt(LocalDateTime.now())
                 .build()));
     }
 
     @Override
-    public TransactionDto userCashWithdrawCancel(String leaderEmail, String email,
-        int commissionMember, Long fee) {
+    public TransactionDto userCashWithdrawCancel(Long partyId, String leaderNickname,
+        String email, int commissionMember, Long fee) {
 
         // 파티장 아이디 유효성 검사
-        userRepository.findById(leaderEmail)
+        userRepository.findByNickname(leaderNickname)
             .orElseThrow(() -> new UserException(NOT_FOUND_LEADER));
 
         // 사용자 아이디 유효성 검사
         User user = userRepository.findById(email)
-            .orElseThrow(() -> new UserException(NOT_FOUND_USER));
+            .orElseThrow(() -> new UserException(NOT_FOUND_NICKNAME));
 
         // 서비스 이용료 총 합 : 전체 요금 / 4 + 파티원 수수료
         Long totalAmount = fee + commissionMember;
@@ -123,14 +129,59 @@ public class TransactionServiceImpl implements TransactionService {
 
         return TransactionDto.fromEntity(
             transactionRepository.save(Transaction.builder()
+                .partyId(partyId)
                 .transactionType(WITHDRAW.getDescription())
                 .transactionResultType(CANCEL.getDescription())
                 .user(user)
                 .amount(totalAmount)
                 .balanceSnapshot(user.getCash())
-                .traderEmail(leaderEmail)
+                .traderNickname(leaderNickname)
                 .transactionDt(LocalDateTime.now())
                 .build()));
     }
 
+    @Override
+    public void userCashDeposit(List<PartyMember> partyMember, String leaderNickName,
+        Long partId, int commissionLeader, Long fee) {
+
+        // 리더 닉네임 유효성 검사
+        User leaderUser = userRepository.findByNickname(leaderNickName)
+            .orElseThrow(() -> new UserException(NOT_FOUND_LEADER));
+
+        // 파티원들의 결제 내역 추가(대기 -> 완료)
+        for (PartyMember member : partyMember) {
+            if (!member.isLeader()) {
+                User user = userRepository.findByNickname(member.getNickName())
+                    .orElseThrow(() -> new UserException(NOT_FOUND_NICKNAME));
+
+                Transaction transaction =
+                    transactionRepository.findByUser(user).filter(
+                        (trans) -> trans.getPartyId().equals(partId)
+                            && trans.getTransactionResultType().equals(WAIT.getDescription())
+                    ).orElseThrow(() -> new TransactionException(INVALID_REQUEST));
+
+                transaction.setTransactionResultType(ACCEPT.getDescription());
+
+                transactionRepository.save(transaction);
+
+                // 파티장 입금 금액
+                Long totalAmount = fee - commissionLeader / 3;
+                leaderUser.plusCash(totalAmount);
+
+                transactionRepository.save(Transaction.builder()
+                    .partyId(partId)
+                    .transactionType(DEPOSIT.getDescription())
+                    .transactionResultType(ACCEPT.getDescription())
+                    .user(leaderUser)
+                    .amount(totalAmount)
+                    .balanceSnapshot(leaderUser.getCash())
+                    .traderNickname(user.getNickname())
+                    .transactionDt(LocalDateTime.now())
+                    .build());
+
+            }
+        }
+
+
+    }
 }

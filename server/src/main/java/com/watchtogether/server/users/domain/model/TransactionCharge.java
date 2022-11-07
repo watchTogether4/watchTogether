@@ -38,8 +38,8 @@ public class TransactionCharge {
     @Schema(name = "SignUpResponse", description = "사용자 회원가입 응답")
     public static class Response {
 
-        @Schema(description = "아이디", example = "abc@ikdmd.kg.lr")
-        private String email;
+        @Schema(description = "닉네임")
+        private String nickname;
 
         @Schema(description = "거래 종류")
         private String transactionType;
@@ -54,7 +54,7 @@ public class TransactionCharge {
         private Long balanceSnapshot;
 
         @Schema(description = "거래자 닉네임")
-        private String traderEmail;
+        private String traderNickname;
 
         @Schema(description = "거래 일시")
         private LocalDateTime transactionDt;
