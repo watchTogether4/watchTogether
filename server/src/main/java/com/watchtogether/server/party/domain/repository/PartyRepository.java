@@ -14,4 +14,6 @@ public interface PartyRepository extends JpaRepository<Party, Long> {
     List<Party> findByPartyFullIsFalseAndInvisibleDtBefore(LocalDateTime now);
 
     Optional<Party> findById(long partyId);
+
+    List<Party> findByPayDt(LocalDate minusWeeks);
 }
