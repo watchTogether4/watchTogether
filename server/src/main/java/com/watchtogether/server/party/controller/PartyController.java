@@ -1,6 +1,7 @@
 package com.watchtogether.server.party.controller;
 
 import com.watchtogether.server.party.domain.model.*;
+import com.watchtogether.server.party.service.Application.CheckPartyApplication;
 import com.watchtogether.server.party.service.impl.PartyServiceImpl;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 public class PartyController {
     private final PartyServiceImpl partyServiceimpl;
 
+    private final CheckPartyApplication checkPartyApplication;
+
 
     @PostMapping("/create")
     public ResponseEntity<?> createParty(@RequestBody CreatePartyForm form){
@@ -23,15 +26,15 @@ public class PartyController {
 
     @PostMapping("/accept")
     public ResponseEntity<?> acceptParty(@RequestBody AcceptPartyForm form){
-       return ResponseEntity.ok(partyServiceimpl.acceptParty(form));
+        return ResponseEntity.ok(checkPartyApplication.acceptParty(form));
     }
 
     @PostMapping("/join")
     public ResponseEntity<?> joinParty(@RequestBody JoinPartyForm form){
-        return ResponseEntity.ok(partyServiceimpl.joinPartyAndCheckFull(form));
+        return ResponseEntity.ok(checkPartyApplication.joinPartyAndCheckFull(form));
     }
 
-    @GetMapping("/find-myParties")
+    @PostMapping("/find-myParties")
     public ResponseEntity<?> myParties(@RequestBody FindMyPartiesForm form){
         return ResponseEntity.ok(partyServiceimpl.findMyParties(form));
     }

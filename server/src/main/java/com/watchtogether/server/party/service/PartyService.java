@@ -38,15 +38,6 @@ public interface PartyService extends UserDetailsService {
 
 
     /**
-     * 파티의 참가인원수 체크
-     *
-     * @param form
-     * @return
-     */
-    ResponseEntity<Object> addPartyMember(AcceptPartyForm form);
-
-
-    /**
      * findAddPartyMember함수의 리턴값을 바탕으로 파티멤버테이블에 저장
      *
      * @param partyId
