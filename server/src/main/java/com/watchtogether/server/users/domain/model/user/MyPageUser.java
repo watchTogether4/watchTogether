@@ -1,4 +1,4 @@
-package com.watchtogether.server.users.domain.model;
+package com.watchtogether.server.users.domain.model.user;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;

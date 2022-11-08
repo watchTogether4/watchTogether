@@ -7,9 +7,9 @@ import static com.watchtogether.server.users.domain.type.TransactionSuccess.SUCC
 
 import com.watchtogether.server.users.domain.dto.TransactionDto;
 import com.watchtogether.server.users.domain.entitiy.User;
-import com.watchtogether.server.users.domain.model.TransactionCharge;
-import com.watchtogether.server.users.domain.model.TransactionList;
-import com.watchtogether.server.users.domain.model.TransactionWithdraw;
+import com.watchtogether.server.users.domain.model.transaction.TransactionCharge;
+import com.watchtogether.server.users.domain.model.transaction.TransactionList;
+import com.watchtogether.server.users.domain.model.transaction.TransactionWithdraw;
 import com.watchtogether.server.users.service.Application.TransactionApplicaion;
 import com.watchtogether.server.users.service.TransactionService;
 import io.swagger.v3.oas.annotations.Operation;

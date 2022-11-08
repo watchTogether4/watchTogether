@@ -10,4 +10,7 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     List<Transaction> findByUserOrderByIdDesc(User user);
 
     List<Transaction> findByUserOrderByTransactionDtDesc(User user);
+
+    void deleteAllByUser(User user);
+
 }

@@ -182,4 +182,15 @@ public class TransactionServiceImpl implements TransactionService {
             }
         }
     }
+
+    @Override
+    @Transactional
+    public void deleteTransaction(String email) {
+
+        User user = userRepository.findById(email)
+            .orElseThrow(() -> new UserException(NOT_FOUND_USER));
+
+        transactionRepository.deleteAllByUser(user);
+
+    }
 }
