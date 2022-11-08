@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 @RequiredArgsConstructor
 public enum PartyErrorCode {
     NOT_FOUND_USER(HttpStatus.BAD_REQUEST.value(), "NOT_FOUND_USER", "일치하는 사용자가 없습니다."),
+    NOT_FOUND_USER_IN_INVITE_PARTY(HttpStatus.BAD_REQUEST.value(), "NOT_FOUND_USER_IN_INVITE_PARTY", "대기자 명단에서 해당 유저를 찾을수 없습니다."),
+    NOT_FOUND_USER_IN_PARTY_MEMBER(HttpStatus.BAD_REQUEST.value(), "NOT_FOUND_USER_IN_PARTY_MEMBER", "파티완료 명단에서 해당 유저를 찾을수 없습니다."),
     NOT_FOUND_PARTY(HttpStatus.BAD_REQUEST.value(), "NOT_FOUND_PARTY", "일치하는 파티가 없습니다."),
 
     PARTY_IS_FULL(HttpStatus.BAD_REQUEST.value(), "PARTY_IS_FULL", "파티인원이 이미 4명입니다."),

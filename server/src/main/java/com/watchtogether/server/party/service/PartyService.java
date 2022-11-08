@@ -92,19 +92,11 @@ public interface PartyService extends UserDetailsService {
     List<Party> showPartyList ();
 
     /**
-     * 파티 탈퇴
+     * 파티 탈퇴(파티가 완성되기전 (4명이 모이기전 대기상태일 때))
      *
      * @return
      */
     ResponseEntity<Object> leaveParty(LeavePartyForm form);
-
-
-
-    /**
-     * 파티제거(모든 사용자가 나왔을 때)
-     *
-     * @return
-     */
 
 
     // todo 파티 탈퇴 전 자신이 속한 파티 존재 여부 확인
@@ -117,9 +109,9 @@ public interface PartyService extends UserDetailsService {
 
     List<SendAlertForm> sendInviteAlert(Party party, String leader);
 
-    ResponseEntity<Object> checkMessage(String nickname, Long partyId);
+    ResponseEntity<Object> checkInviteMessage(CheckInviteMessageForm form);
 
-    List<SendAlertForm> changePassword(String nickname, Long partyId, String password, String newPassword);
+    List<SendAlertForm> changePassword(ChangePasswordForm form);
 
     /**
      * 파티 참가 전 partyId로 해당 Party 객체정보 가져오기
@@ -135,10 +127,17 @@ public interface PartyService extends UserDetailsService {
      */
     Party validateAndFindPartyWithPartyIdBeforeLeave(Long partyId, String nickname);
 
-    // todo 파티 결제일을 체크해서 결제일과 맞으면 파티원들 결제를 진행하고 파티 결제일을 1달 뒤로 넘긴다.
-    // 파티 결제일 -1주일전에 할지 말지 물어보는 알림메시지를 전송한다.
+
+    /**
+     * 파티제거(파티장이 나왔을때)
+     *
+     * @return
+     */
+    ResponseEntity<Object> deleteParty(Long partyId);
+
+
     // 알림 메시지는 3일안에 받지 않으면 자동으로 파티 나가기가 되고 그 파티는 모집이 다시 시작된다.
-    // todo 알림 메시지 클릭시 partymember의 check 칼럼을 true 로 바꿔주는 api 작성필요
+
     // 파티장이 나갈경우 파티는 자동으로 해체된다.
     // 메시지를 받지 않으면(파티 탈퇴) 방 사람들에게 모두 메시지가 전송이 된다.
     // 리더에게는 추가로 비밀번호를 바꾸라는 메시지를 전송한다.

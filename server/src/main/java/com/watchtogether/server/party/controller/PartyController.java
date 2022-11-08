@@ -45,14 +45,14 @@ public class PartyController {
     public ResponseEntity<?> leaveParty(@RequestBody LeavePartyForm form){
         return ResponseEntity.ok(partyServiceimpl.leaveParty(form));
     }
-    @PostMapping("/checkMessage")
-    public ResponseEntity<?> checkMessage(String userNickname, Long partyId){
-        return ResponseEntity.ok(partyServiceimpl.checkMessage(userNickname, partyId));
+    @PostMapping("/checkInviteMessage")
+    public ResponseEntity<?> checkInviteMessage(CheckInviteMessageForm form){
+        return ResponseEntity.ok(partyServiceimpl.checkInviteMessage(form));
     }
 
     @PostMapping("/changePassword")
-    public ResponseEntity<?> changePassword(String nickname, Long partyId, String password, String newPassword){
-        return ResponseEntity.ok(partyServiceimpl.changePassword(nickname, partyId, password, newPassword));
+    public ResponseEntity<?> changePassword(ChangePasswordForm form){
+        return ResponseEntity.ok(partyServiceimpl.changePassword(form));
     }
 
 }

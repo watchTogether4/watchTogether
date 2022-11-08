@@ -29,11 +29,9 @@ public class AlertService {
     private final PartyRepository partyRepository;
 
 
-    // TODO: 2022/11/06 동준님 이거 쓰시면 됩니다.  
     public void createAlert(List<String> nickNames, long partyId, String inviteId,
                             String message, AlertType type) {
 
-        // TODO: 2022/11/06  실제 로직
         List<User> users = userRepository.findAllByNicknameIn(nickNames);
         Party party = partyRepository.findById(partyId).orElseThrow(() -> new RuntimeException("파티를 찾을 수 없습니다."));
 
