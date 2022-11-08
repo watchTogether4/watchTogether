@@ -1,18 +1,19 @@
 import React, { useState } from 'react';
-import { MessageContainer, MessageList, Message, MessageType, MessageButton } from './Alarm.styles';
-import Modal from './../Modal/Modal';
-import alerts from '../../mocks/alerts';
+import { useLocation } from 'react-router-dom';
+import { MessageContainer, MessageList, Message, MessageType } from './Alarm.styles';
 import Pagination from './Pagination';
 import MessageModal from './MessageModal';
 
 const Alarm = () => {
+  const { state } = useLocation();
+
   const [data, setData] = useState({});
   const [isOpen, setIsOpen] = useState(false);
-  const [limit, setLimit] = useState(5);
   const [page, setPage] = useState(1);
+  const limit = 5;
   const offset = (page - 1) * limit;
 
-  const total = alerts.length;
+  const total = state.data.length;
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -26,16 +27,17 @@ const Alarm = () => {
   return (
     <MessageContainer handleSubmit={handleSubmit}>
       <MessageList>
-        {alerts.slice(offset, offset + limit).map((data) => (
-          <Message onClick={() => handleClick(data)}>
-            <MessageType>{data.type}</MessageType>
-            <p>{data.message}</p>
-          </Message>
-        ))}
+        {state.data &&
+          state.data.slice(offset, offset + limit).map((data) => (
+            <Message onClick={() => handleClick(data)}>
+              <MessageType>{data.type}</MessageType>
+              <p>{data.message}</p>
+            </Message>
+          ))}
       </MessageList>
 
       <div>
-        <Pagination total={alerts.length} limit={limit} page={page} setPage={setPage} />
+        <Pagination total={total} limit={limit} page={page} setPage={setPage} />
       </div>
 
       {isOpen && <MessageModal data={data} modal={setIsOpen} />}

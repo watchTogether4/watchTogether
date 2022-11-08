@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate, Outlet, useLocation } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate, Outlet } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import { setRefreshToken, getCookieToken } from './../utils/Cookie';
 import { getInfo } from './../api/Users';
 import { info } from './../store/User';
@@ -9,11 +9,9 @@ import { info } from './../store/User';
 const PrivateRoutes = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const location = useLocation();
 
   const accessToken = localStorage.getItem('access-token');
   const refreshToken = getCookieToken();
-  const [data, setData] = useState();
 
   const body = {
     accessToken,
