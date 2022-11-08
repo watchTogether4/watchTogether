@@ -74,4 +74,11 @@ public interface TransactionService {
         int commissionLeader,
         Long fee
     );
+
+    /**
+     * 사용자 거래 내역 삭제
+     *
+     * @param email 사용자 이메일
+     */
+    void deleteTransaction(String email);
 }

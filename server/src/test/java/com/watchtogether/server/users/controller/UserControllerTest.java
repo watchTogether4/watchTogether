@@ -21,8 +21,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.watchtogether.server.exception.UserException;
 import com.watchtogether.server.users.domain.dto.UserDto;
-import com.watchtogether.server.users.domain.model.SignInUser;
-import com.watchtogether.server.users.domain.model.SignUpUser;
+import com.watchtogether.server.users.domain.model.user.SignInUser;
+import com.watchtogether.server.users.domain.model.user.SignUpUser;
 import com.watchtogether.server.users.domain.type.UserStatus;
 import com.watchtogether.server.users.service.UserService;
 import java.time.LocalDate;

@@ -1,4 +1,4 @@
-package com.watchtogether.server.users.domain.model;
+package com.watchtogether.server.users.domain.model.token;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import javax.validation.constraints.NotBlank;
