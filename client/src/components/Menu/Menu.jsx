@@ -41,7 +41,7 @@ const Menu = ({ page }) => {
         <FaRegEnvelope size={22} color={page === 'alarm' ? '#006FFD' : '#71727A'} />
         쪽지함
       </li>
-      <li onClick={() => handleClick('//mypage')}>
+      <li onClick={() => handleClick('/mypage')}>
         <FaUserAlt size={22} color={page === 'mypage' ? '#006FFD' : '#71727A'} />
         마이 페이지
       </li>
