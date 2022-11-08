@@ -44,6 +44,9 @@ const AddParty = () => {
           position: 'top-center',
           autoClose: 1500,
         });
+        setTimeout(() => {
+          navigate('/partyList');
+        }, 1500);
       })
       .catch((error) => {
         toast.error(error.response.data.message, {
