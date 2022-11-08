@@ -31,8 +31,8 @@ public class AlertController {
     }
 
     @GetMapping("/list")
-    List<AlertDto> getAlertList(@RequestBody GetAlertListRequest request) {
-        return alertService.getAlertList(request.getEmail());
+    List<AlertDto> getAlertList(@RequestParam String email) {
+        return alertService.getAlertList(email);
     }
 }
 
