@@ -20,8 +20,8 @@ public class ChatController {
     }
 
     @GetMapping
-    public List<DialogDto> getDialog(@RequestBody GetDialogRequest request) {
-        return chatService.getDialog(request.getRoomId());
+    public List<DialogDto> getDialog(@RequestParam String roomId) {
+        return chatService.getDialog(roomId);
     }
 
     @DeleteMapping
