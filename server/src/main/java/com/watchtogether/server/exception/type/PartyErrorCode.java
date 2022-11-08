@@ -13,6 +13,7 @@ public enum PartyErrorCode {
     PARTY_IS_FULL(HttpStatus.BAD_REQUEST.value(), "PARTY_IS_FULL", "파티인원이 이미 4명입니다."),
     EXPIRE_CODE(HttpStatus.BAD_REQUEST.value(), "EXPIRE_CODE", "인증시간이 만료되었습니다."),
     ALREADY_JOIN_PARTY(HttpStatus.BAD_REQUEST.value(),"ALREADY_JOIN_PARTY", "이미 해당파티에 가입되었습니다."),
+    NOT_JOIN_PARTY(HttpStatus.BAD_REQUEST.value(),"NOT_JOIN_PARTY", "해당파티에 가입되어있지않습니다"),
     NOT_LEADER(HttpStatus.BAD_REQUEST.value(),"NOT_LEADER", "파티장이 아닙니다."),
     WRONG_PASSWORD_OTT(HttpStatus.BAD_REQUEST.value(), "WRONG_PASSWORD_USER","패스워드가 일치하지 않습니다."),
     SAME_PASSWORD_OTT(HttpStatus.BAD_REQUEST.value(), "SAME_PASSWORD_OTT","패스워드가 같습니다."),

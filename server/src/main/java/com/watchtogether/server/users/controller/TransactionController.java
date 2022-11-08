@@ -76,8 +76,8 @@ public class TransactionController {
 
         TransactionDto transactionDto =
             transactionApplicaion.userCashWithdraw(
-                request.getLeaderNickname(), request.getPartyId(), request.getOttId(),
-                user.getEmail());
+                request.getPartyId(),
+                user.getNickname());
 
         return ResponseEntity.ok(
             new TransactionWithdraw.Response(
@@ -101,8 +101,8 @@ public class TransactionController {
 
         TransactionDto transactionDto =
             transactionApplicaion.userCashWithdrawCancel(
-                request.getLeaderNickname(), request.getPartyId(), request.getOttId(),
-                user.getEmail());
+                 request.getPartyId(),
+                user.getNickname());
 
         return ResponseEntity.ok(
             new TransactionWithdraw.Response(

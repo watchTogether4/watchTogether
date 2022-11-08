@@ -121,6 +121,19 @@ public interface PartyService extends UserDetailsService {
 
     List<SendAlertForm> changePassword(String nickname, Long partyId, String password, String newPassword);
 
+    /**
+     * 파티 참가 전 partyId로 해당 Party 객체정보 가져오기
+     * @param   partyId
+     * @return  Party 객체 정보
+     */
+    Party validateAndFindPartyWithPartyIdBeforeJoin(Long partyId, String nickname);
+
+    /**
+     * 파티 참가 전 partyId로 해당 Party 객체정보 가져오기
+     * @param   partyId
+     * @return  Party 객체 정보
+     */
+    Party validateAndFindPartyWithPartyIdBeforeLeave(Long partyId, String nickname);
 
     // todo 파티 결제일을 체크해서 결제일과 맞으면 파티원들 결제를 진행하고 파티 결제일을 1달 뒤로 넘긴다.
     // 파티 결제일 -1주일전에 할지 말지 물어보는 알림메시지를 전송한다.
