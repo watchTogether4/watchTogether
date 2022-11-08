@@ -3,12 +3,9 @@ package com.watchtogether.server.users.service.Application;
 import com.watchtogether.server.ott.domain.dto.OttDto;
 import com.watchtogether.server.ott.service.OttService;
 import com.watchtogether.server.party.domain.entitiy.Party;
-import com.watchtogether.server.party.domain.repository.PartyRepository;
 import com.watchtogether.server.party.service.PartyService;
 import com.watchtogether.server.users.domain.dto.TransactionDto;
 import com.watchtogether.server.users.service.TransactionService;
-import java.time.LocalDate;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +16,6 @@ public class TransactionApplicaion {
     private final TransactionService transactionService;
     private final OttService ottService;
     private final PartyService partyService;
-    private final PartyRepository partyRepository;
 
 
     public TransactionDto userCashWithdraw(Long partyId, String nickname) {

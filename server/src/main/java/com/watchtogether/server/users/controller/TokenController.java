@@ -4,8 +4,8 @@ import static com.watchtogether.server.users.domain.type.UserSuccess.SUCCESS_REF
 import static com.watchtogether.server.users.domain.type.UserSuccess.SUCCESS_SIGN_OUT;
 
 import com.watchtogether.server.users.domain.dto.TokenDto;
-import com.watchtogether.server.users.domain.model.SignOutUser;
-import com.watchtogether.server.users.domain.model.Token;
+import com.watchtogether.server.users.domain.model.user.SignOutUser;
+import com.watchtogether.server.users.domain.model.token.Token;
 import com.watchtogether.server.users.service.JwtService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

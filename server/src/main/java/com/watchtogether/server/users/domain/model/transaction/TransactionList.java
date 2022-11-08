@@ -1,4 +1,4 @@
-package com.watchtogether.server.users.domain.model;
+package com.watchtogether.server.users.domain.model.transaction;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
