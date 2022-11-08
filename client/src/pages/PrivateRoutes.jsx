@@ -1,16 +1,19 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, Outlet, useLocation } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { setRefreshToken, getCookieToken } from './../utils/Cookie';
 import { getInfo } from './../api/Users';
+import { info } from './../store/User';
 
 const PrivateRoutes = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const location = useLocation();
 
   const accessToken = localStorage.getItem('access-token');
   const refreshToken = getCookieToken();
+  const [data, setData] = useState();
 
   const body = {
     accessToken,
@@ -19,7 +22,14 @@ const PrivateRoutes = () => {
 
   useEffect(() => {
     try {
-      getInfo(accessToken).then((res) => console.log(res.data));
+      getInfo(accessToken)
+        .then((res) => {
+          dispatch(info(res.data));
+        })
+        .catch((error) => {
+          console.log(error.response.data.message);
+          navigate('/signIn');
+        });
     } catch (error) {
       axios({
         url: '/api/v1/refresh-token',
@@ -31,7 +41,6 @@ const PrivateRoutes = () => {
         data: JSON.stringify(body),
       })
         .then((response) => {
-          console.log(response.data);
           setRefreshToken(response.data.refreshToken);
           localStorage.setItem('access-token', response.data.accessToken);
           navigate('/partyList');
