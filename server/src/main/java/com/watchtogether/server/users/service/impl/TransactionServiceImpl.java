@@ -73,7 +73,6 @@ public class TransactionServiceImpl implements TransactionService {
                 .user(user)
                 .amount(amount)
                 .balanceSnapshot(user.getCash())
-                .traderNickname("")
                 .transactionDt(LocalDateTime.now())
                 .build()));
 

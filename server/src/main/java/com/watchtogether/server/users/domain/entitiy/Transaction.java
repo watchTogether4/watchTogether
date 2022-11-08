@@ -7,11 +7,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.envers.AuditOverride;
 
 
@@ -29,21 +31,27 @@ public class Transaction extends BaseEntity {
     @Column(name = "transaction_id")
     private Long id;
 
-    private Long partyId;
-
-    private String transactionType;
-
-    private String transactionResultType;
-
     @ManyToOne
     private User user;
 
+    @NotNull
+    private Long partyId;
+
+    @NotNull
+    private String transactionType;
+
+    @NotNull
+    private String transactionResultType;
+
+    @NotNull
     private Long amount;
 
+    @NotNull
     private Long balanceSnapshot;
 
     private String traderNickname;
 
+    @NotNull
     private LocalDateTime transactionDt;
 
 }
