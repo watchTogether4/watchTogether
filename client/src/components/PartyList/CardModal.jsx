@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useQuery } from 'react-query';
+import React from 'react';
+import { useNavigate } from 'react-router-dom'; 
 import { toast, ToastContainer } from 'react-toastify';
 import { ButtonContainer, SubmitButton, CancleButton } from '../../styles/Common';
 import { Title, Description } from '../Modal/Modal.styles';
@@ -7,43 +7,41 @@ import { CardOtt, CardText, DescContainer, Desc1, Desc2 } from './CardModal.styl
 import Modal from '../Modal/Modal';
 import { showPartyList } from '../../api/Parties';
 
-const CardModal = ({ cardNo, modal, ottUrl }) => {
-  const accessToken = localStorage.getItem('access-token');
-  const getBoardList = () => {
-    return showPartyList(accessToken).then((res) => res.data);
+const CardModal = ({ modal, ottUrl, title, people, body, ottId, partyId, leaderNickname }) => {
+  const navigate = useNavigate();
+  const alarmNagivate = () => {toast('결제 페이지로 이동합니다!', {
+    autoClose: 3000,
+    position: 'top-center',
+  })
+  setTimeout(() => {
+    navigate('/payment', { state: { title: title, people: people, body: body, ottId: ottId, partyId: partyId, leaderNickname: leaderNickname } });
+  }, 3000);
   };
-  const { data } = useQuery('getBoardList', getBoardList);
   const image = ottUrl ? ottUrl[0].image : '';
-
   const handleClick = () => {
     modal(false);
   };
-
-  console.log(data[cardNo-1]);
-  
   return (
     <>
       <ToastContainer />
-        {data && (
-          <Modal>
-            <Title>{data[cardNo-1].title}</Title>
+        <Modal>
+            <Title>{title}</Title>
             <DescContainer direction="column" justifyContent="flex-start">
               <Desc1 direction="row">
                 <CardOtt src={image}/>
-                <CardText>모집 인원 : {data[cardNo-1].people} / 4</CardText>
+                <CardText>모집 인원 : {people} / 4</CardText>
               </Desc1>
               <Desc2>
-                <Description>{data[cardNo-1].body}</Description>
+                <Description>{body}</Description>
               </Desc2>
             </DescContainer>
             <ButtonContainer>
               <CancleButton type='button' onClick={handleClick}>
                 취소하기 
               </CancleButton>
-              <SubmitButton type='submit'>신청하기</SubmitButton>
+              <SubmitButton type='button' onClick={() => {alarmNagivate()}}>신청하기</SubmitButton>
             </ButtonContainer>
           </Modal>
-        )}
     </>
   )
 };

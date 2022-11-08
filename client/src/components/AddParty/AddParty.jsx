@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useQuery } from 'react-query';
 import { useSelector } from 'react-redux';
 import { toast, ToastContainer } from 'react-toastify';
 import { motion } from 'framer-motion';
@@ -16,6 +17,7 @@ import {
 import SearchModal from './SearchModal';
 import { createParty } from '../../api/Parties';
 import { postAlert } from '../../api/Alert';
+import { getInfo } from '../../api/Users';
 
 const AddParty = () => {
   const { value } = useSelector((state) => state.user);
@@ -75,6 +77,16 @@ const AddParty = () => {
     });
 
     console.log(member);
+  };
+
+  const accessToken = localStorage.getItem('access-token');
+  const getUserInfo = () => {
+    return getInfo(accessToken).then((res) => res.data);
+  };
+  const { data } = useQuery('getInfo', getUserInfo);
+
+  if (data) {
+    formValues.leaderNickName = data.nickname;
   };
 
   const submitForm = () => {

@@ -14,6 +14,7 @@ import UserInfo from './pages/UserInfoPage';
 import Reset from './pages/ResetPage';
 import PrivateRoutes from './pages/PrivateRoutes';
 import OttPage from './pages/OttPage';
+import Payment from './pages/PaymentPage';
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
             <Route path="/mypage/user" element={<UserInfo />} />
 
             <Route path="/message" element={<Alarm />} />
+            <Route path="/payment" element={<Payment />} />
           </Route>
           <Route path="/code=:code" element={<Reset />} />
 
