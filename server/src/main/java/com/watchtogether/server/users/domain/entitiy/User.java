@@ -15,11 +15,14 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.envers.AuditOverride;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -31,6 +34,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@DynamicInsert
 @AuditOverride(forClass = BaseEntity.class)
 @Entity(name = "users")
 public class User extends BaseEntity implements UserDetails {
@@ -39,16 +43,19 @@ public class User extends BaseEntity implements UserDetails {
     private String email;
 
     @Column(unique = true)
+    @NotNull
     private String nickname;
 
+    @NotNull
     private String password;
 
-    @Column(nullable = false, columnDefinition = "INT DEFAULT 0")
+    @ColumnDefault("'0'")
     private Long cash;
 
+    @NotNull
     private LocalDate birth;
 
-    @Column(nullable = false, columnDefinition = "BIT DEFAULT 0")
+    @ColumnDefault("0")
     private boolean emailVerify;
 
     private String emailVerifyCode;
@@ -56,8 +63,10 @@ public class User extends BaseEntity implements UserDetails {
     private LocalDateTime emailVerifyExpiredDt;
 
     @Enumerated(EnumType.STRING)
+    @NotNull
     private UserStatus status;
 
+    @NotNull
     private String roles;
 
     private LocalDateTime lastLoginDt;
