@@ -23,7 +23,6 @@ const AlertModal = ({ modal, data }) => {
 
   const withdrawal = () => {
     const accessToken = localStorage.getItem('access-token');
-    // 서버 데이터 전송 함수
 
     withdrawalUser(data, accessToken)
       .then((res) => {

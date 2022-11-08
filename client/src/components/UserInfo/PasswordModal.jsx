@@ -33,7 +33,7 @@ const PasswordModal = ({ modal }) => {
         .required('새 비밀번호를 입력하세요!')
         .matches(
           /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?])[^\s]*$/,
-          '영어, 숫자, 공백을 제외한 특수문자를 모두 포함해야 합니다!',
+          '비밀번호는 영어, 숫자, 특수문자를 모두 포함해야 합니다.',
         )
         .notOneOf(
           [Yup.ref('currentPassword')],
@@ -53,9 +53,11 @@ const PasswordModal = ({ modal }) => {
     },
   });
 
+  const accessToken = localStorage.getItem('access-token');
   const validateCurrent = (currentPassword) => {
     const body = { password: currentPassword };
-    isCurrentPassword(body)
+
+    isCurrentPassword(body, accessToken)
       .then((res) => {
         if (message !== '') setMessage('');
         setIsValidate(true);
@@ -67,7 +69,7 @@ const PasswordModal = ({ modal }) => {
 
   const validateNew = (newPassword) => {
     const body = { password: newPassword };
-    putNewPassword(body)
+    putNewPassword(body, accessToken)
       .then((res) => {
         console.log('success');
 

@@ -17,7 +17,7 @@ const icons = [
     id: 3,
     name: '웨이브',
     image:
-      'https://user-images.githubusercontent.com/101559564/196022016-2d77cc4d-8dbd-449e-84ff-46f4614ae779.png',
+      'https://user-images.githubusercontent.com/101559564/196022012-e18eb05e-c79b-4666-b3b5-730cae708be6.png',
     price: 13900,
   },
   {
@@ -31,7 +31,7 @@ const icons = [
     id: 5,
     name: '왓챠',
     image:
-      'https://user-images.githubusercontent.com/101559564/196022012-e18eb05e-c79b-4666-b3b5-730cae708be6.png',
+      'https://user-images.githubusercontent.com/101559564/196022016-2d77cc4d-8dbd-449e-84ff-46f4614ae779.png',
     price: 12900,
   },
 ];

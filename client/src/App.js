@@ -34,8 +34,8 @@ function App() {
             <Route path="/mypage/user" element={<UserInfo />} />
 
             <Route path="/message" element={<Alarm />} />
-            <Route path="/code=:code" element={<Reset />} />
           </Route>
+          <Route path="/code=:code" element={<Reset />} />
 
           {/* <Route path="/mypage/myparty" element={<MyParty />} />
             <Route path="/mypage/myparty/:id" element={<MyPartyDetail />} />

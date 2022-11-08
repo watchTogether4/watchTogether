@@ -42,7 +42,7 @@ function Login() {
           autoClose: 1000,
         });
         setTimeout(() => {
-          navigate('/select');
+          navigate('/partyList');
         }, 1000);
       })
       .catch((error) => {

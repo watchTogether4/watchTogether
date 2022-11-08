@@ -26,10 +26,10 @@ const ResetPage = () => {
       password: Yup.string()
         .min(8, '비밀번호는 최소 8자리 이상입니다!')
         .max(16, '비밀번호는 최대 16자리입니다!')
-        .required('비밀번호를 입력하세요!')
+        .required('비밀번호를 입력해주세요!')
         .matches(
           /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?])[^\s]*$/,
-          '영어, 숫자, 공백을 제외한 특수문자를 모두 포함해야 합니다!',
+          '비밀번호는 영어,숫자,특수문자를 모두 포함해야 합니다.',
         ),
       passwordConfirm: Yup.string()
         .oneOf([Yup.ref('password'), null], '비밀번호가 일치하지 않습니다!')
@@ -66,6 +66,10 @@ const ResetPage = () => {
     },
   });
 
+  const handleClick = (e) => {
+    e.preventDefault();
+    navigate('/signIn');
+  };
   useEffect(() => {
     checkCode(code)
       .then((res) => {
@@ -103,7 +107,9 @@ const ResetPage = () => {
           {message && <ErrorMessage>{message}</ErrorMessage>}
 
           <ButtonContainer>
-            <CancleButton type="button">취소하가</CancleButton>
+            <CancleButton type="button" onClick={handleClick}>
+              취소하가
+            </CancleButton>
             <SubmitButton type="submit">변경하기</SubmitButton>
           </ButtonContainer>
         </Modal>

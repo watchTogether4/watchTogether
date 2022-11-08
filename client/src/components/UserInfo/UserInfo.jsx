@@ -31,6 +31,10 @@ const UserInfo = () => {
             </Profile>
             <InfoList>
               <li>
+                <span>닉네임</span>
+                <span>{data.nickname}</span>
+              </li>
+              <li>
                 <span>이메일</span>
                 <span>{data.email}</span>
               </li>
@@ -39,10 +43,6 @@ const UserInfo = () => {
                 <Button type="button" onClick={handleClick} data-name="changePassword">
                   변경하기
                 </Button>
-              </li>
-              <li>
-                <span>닉네임</span>
-                <span>{data.nickname}</span>
               </li>
               <li>
                 <span>생년월일</span>
