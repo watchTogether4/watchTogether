@@ -11,13 +11,7 @@ import com.watchtogether.server.ott.service.OttService;
 import com.watchtogether.server.party.domain.entitiy.InviteParty;
 import com.watchtogether.server.party.domain.entitiy.Party;
 import com.watchtogether.server.party.domain.entitiy.PartyMember;
-import com.watchtogether.server.party.domain.model.AcceptPartyForm;
-import com.watchtogether.server.party.domain.model.CreatePartyForm;
-import com.watchtogether.server.party.domain.model.FindMyPartiesForm;
-import com.watchtogether.server.party.domain.model.InvitePartyForm;
-import com.watchtogether.server.party.domain.model.JoinPartyForm;
-import com.watchtogether.server.party.domain.model.LeavePartyForm;
-import com.watchtogether.server.party.domain.model.SendAlertForm;
+import com.watchtogether.server.party.domain.model.*;
 import com.watchtogether.server.party.domain.repository.InvitePartyRepository;
 import com.watchtogether.server.party.domain.repository.PartyMemberRepository;
 import com.watchtogether.server.party.domain.repository.PartyRepository;
@@ -72,8 +66,6 @@ public class PartyServiceImpl implements PartyService {
                         .limitDt(limitDt)
                         .build();
                 invitePartyRepository.save(InviteParty.from(invitePartyForm));
-                // 알림 -> id -> 알림테이블에 저장
-                // 초대 한 사람이 있다면 초대테이블에 저장
             }
         } else {
 
@@ -81,7 +73,6 @@ public class PartyServiceImpl implements PartyService {
             buildLeaderForm(form, limitDt, party);
         }
         return partyRepository.save(party);
-        // todo 초대시 알림기능!
     }
 
     @Override
@@ -103,12 +94,12 @@ public class PartyServiceImpl implements PartyService {
     }
 
     @Override
-    public ResponseEntity<Object> checkMessage(String nickName, Long partyId) {
-        Optional<Party> party = partyRepository.findById(partyId);
+    public ResponseEntity<Object> checkInviteMessage(CheckInviteMessageForm form) {
+        Optional<Party> party = partyRepository.findById(form.getPartyId());
         if (party.isEmpty()) {
             throw new PartyException(PartyErrorCode.NOT_FOUND_PARTY);
         } else {
-            Optional<PartyMember> partyMember = partyMemberRepository.findByNickNameAndParty(nickName, party.get());
+            Optional<PartyMember> partyMember = partyMemberRepository.findByNickNameAndParty(form.getNickname(), party.get());
             if (partyMember.isPresent()) {
                 partyMember.get().setAlertCheck(true);
                 partyMemberRepository.save(partyMember.get());
@@ -120,19 +111,19 @@ public class PartyServiceImpl implements PartyService {
     }
 
     @Override
-    public List<SendAlertForm> changePassword(String nickname, Long partyId, String password, String newPassword) {
+    public List<SendAlertForm> changePassword(ChangePasswordForm form) {
 
-        Optional<Party> optionalParty = partyRepository.findById(partyId);
+        Optional<Party> optionalParty = partyRepository.findById(form.getPartyId());
 
         if (optionalParty.isPresent()){
             Party party = optionalParty.get();
-            if (Objects.equals(party.getLeaderNickname(), nickname)){
-                if (Objects.equals(party.getPartyOttPassword(), password)){
-                    if (party.getPartyOttPassword().equals(newPassword)){
+            if (Objects.equals(party.getLeaderNickname(), form.getNickname())){
+                if (Objects.equals(party.getPartyOttPassword(), form.getPassword())){
+                    if (party.getPartyOttPassword().equals(form.getNewPassword())){
                         throw new PartyException(PartyErrorCode.SAME_PASSWORD_OTT);
                     }
                     List<SendAlertForm> sendAlertFormList = new ArrayList<>();
-                    party.setPartyOttPassword(newPassword);
+                    party.setPartyOttPassword(form.getNewPassword());
                     partyRepository.save(party);
                     for (int i = 0; i < party.getMembers().size(); i++) {
                         SendAlertForm sendAlertForm = SendAlertForm.builder()
@@ -230,29 +221,51 @@ public class PartyServiceImpl implements PartyService {
 
     @Override
     public ResponseEntity<Object> leaveParty(LeavePartyForm form) {
-        Optional<Party> optionalParty = partyRepository.findById(form.getPartyId());
-        Optional<PartyMember> optionalPartyMember =
-                partyMemberRepository.findByNickNameAndParty(form.getNickName(), optionalParty.get());
-        optionalPartyMember.ifPresent(partyMemberRepository::delete);
+        Party party = partyRepository.findById(form.getPartyId())
+                .orElseThrow(()-> new PartyException(PartyErrorCode.NOT_FOUND_PARTY));
+
+        InviteParty inviteParty = invitePartyRepository.
+                findByReceiverNickNameAndPartyAndAcceptIsTrue(form.getNickName(), party)
+                .orElseThrow(()->new PartyException(PartyErrorCode.NOT_FOUND_USER_IN_INVITE_PARTY));
+        invitePartyRepository.delete(inviteParty);
 
 
-        Optional<InviteParty> optionalInviteParty =
-                invitePartyRepository.
-                        findByReceiverNickNameAndPartyAndAcceptIsTrue(
-                                form.getNickName(), optionalParty.get());
-        optionalInviteParty.ifPresent(invitePartyRepository::delete);
+        party.setPartyFull(false);
+        party.setPeople(party.getPeople() - 1);
+        partyRepository.save(party);
 
-
-        optionalParty.get().setPartyFull(false);
-        optionalParty.get().setPeople(optionalParty.get().getPeople() - 1);
-        partyRepository.save(optionalParty.get());
-
-        // todo 파티 멤버 테이블에서 자신뿐만 아니라
-        // todo 한달 주기로 오늘 메시지로 갱신할지 말지 결정하는
-        // todo 이후 메시지 전송필요
         return ResponseEntity.ok().build();
     }
 
+    // TODO: 2022-11-08  leaveParty는 파티가 대기 상태일때 나가는 것이고 따로 파티갱신 메시지를 받지 않았을 경우 나가는 메서드 작성 필요!!
+    public LeavePartyResponseForm IgnoreContinueMessage(LeavePartyForm form) {
+        Party party = partyRepository.findById(form.getPartyId())
+                .orElseThrow(()-> new PartyException(PartyErrorCode.NOT_FOUND_PARTY));
+
+        PartyMember partyMember = partyMemberRepository.findByNickNameAndParty(form.getNickName(), party)
+                .orElseThrow(()-> new PartyException(PartyErrorCode.NOT_FOUND_USER_IN_PARTY_MEMBER));
+        partyMemberRepository.delete(partyMember);
+
+        party.setPartyFull(false);
+        party.setPeople(party.getPeople() - 1);
+        partyRepository.save(party);
+
+        if (!partyMember.isLeader()){
+            partyMemberRepository.delete(partyMember);
+            return LeavePartyResponseForm.builder()
+                    .partyId(party.getId())
+                    .nickname(form.getNickName())
+                    .leader(false)
+                    .build();
+        }else {
+            return LeavePartyResponseForm.builder()
+                    .partyId(party.getId())
+                    .nickname(form.getNickName())
+                    .leader(true)
+                    .build();
+        }
+
+    }
     @Override
     @Transactional
     public Party addMember(AcceptPartyForm form) {
@@ -296,7 +309,7 @@ public class PartyServiceImpl implements PartyService {
                 List<InviteParty> list = invitePartyRepository.findByParty(party);
                 savePartyMember(party.getId());
 
-                // todo
+
 
                 OttDto ottDto = ottService.searchOtt(party.getOttId());
 
@@ -318,7 +331,6 @@ public class PartyServiceImpl implements PartyService {
         throw new PartyException(PartyErrorCode.NOT_FOUND_PARTY);
 
     }
-
 
     @Override
     public ResponseEntity<Object> savePartyMember(Long partyId) {
@@ -420,6 +432,14 @@ public class PartyServiceImpl implements PartyService {
         }
 
         return party;
+    }
+
+    @Override
+    public ResponseEntity<Object> deleteParty(Long partyId) {
+        Party party = partyRepository.findById(partyId)
+                .orElseThrow(()-> new PartyException(PartyErrorCode.NOT_FOUND_PARTY));
+        partyRepository.delete(party);
+        return ResponseEntity.ok().build();
     }
 
 
