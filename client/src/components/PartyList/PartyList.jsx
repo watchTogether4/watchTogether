@@ -24,7 +24,6 @@ function PartyList() {
   // 파티 리스트가 [{}, {}] 형태로 data에 쌓임
   const { data } = useQuery('getBoardList', getBoardList);
 
-  console.log(data);
 
   return (
     <>

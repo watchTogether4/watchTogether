@@ -20,7 +20,7 @@ export function Card({ ottId, ottUrl, title, people, body, partyId, leaderNickna
         </CardDesc>
         <IoIosArrowForward size={30} />
       </CardWrapper>
-      {isClicked && <CardModal cmodal={setIsClicked} ottUrl={ottUrl} title={title} people={people} body={body} ottId={ottId} partyId={partyId} leaderNickname={leaderNickname}/>}
+      {isClicked && <CardModal modal={setIsClicked} ottUrl={ottUrl} title={title} people={people} body={body} ottId={ottId} partyId={partyId} leaderNickname={leaderNickname}/>}
     </>
   );
 }

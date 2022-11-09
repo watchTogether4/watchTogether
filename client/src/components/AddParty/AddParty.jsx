@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import { useSelector } from 'react-redux';
 import { toast, ToastContainer } from 'react-toastify';
-import { motion } from 'framer-motion';
+import { animate, motion } from 'framer-motion';
 import {
   Wrapper,
   Description,
@@ -18,6 +18,8 @@ import SearchModal from './SearchModal';
 import { createParty } from '../../api/Parties';
 import { postAlert } from '../../api/Alert';
 import { getInfo } from '../../api/Users';
+import {postAuth} from '../../api/OttAuth'
+import otts from '../../mocks/platform'
 
 const AddParty = () => {
   const { value } = useSelector((state) => state.user);
@@ -93,18 +95,26 @@ const AddParty = () => {
     const accessToken = localStorage.getItem('access-token');
     const invite = inviteMember.length !== 0 ? inviteMember.join() : null;
     const createData = { ...formValues, receiversNickName: invite };
+    const filterType = otts.filter((a) => a.id === state.ott);
     const authData = {
       id: formValues.partyOttId,
       password: formValues.partyOttPassword,
-      ottType: 'NETFLIX',
+      ottType: filterType[0].type,
     };
 
-    createForm(createData, accessToken);
-    // getOttAuth(authData, accessToken)
-    //   .then((res) => {
-    //     console.log(res.data);
-    //   })
-    //   .catch((error) => console.log(error));
+    postAuth(authData, accessToken)
+      .then((res) => {
+        console.log(res.data);
+        if(res.data.loginResult === '1') {
+          createForm(createData, accessToken);
+        } else {
+          toast.error(<h1>일치하는 플랫폼 계정이 없습니다.</h1>, {
+            position: 'top-center',
+            autoClose: 1000,
+          });
+        }
+        })
+    
   };
 
   const validate = (values) => {
