@@ -26,7 +26,7 @@ const FindPassword = ({ modal }) => {
           toast.success(
             <>
               <h1>비밀번호 초기화 메일 전송 완료</h1>
-              <p>메일을 확인하여 코드를 입력해주세요.</p>
+              <p>메일을 확인해주세요.</p>
             </>,
             {
               position: 'top-center',

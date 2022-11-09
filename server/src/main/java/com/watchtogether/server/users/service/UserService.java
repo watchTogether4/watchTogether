@@ -1,6 +1,7 @@
 package com.watchtogether.server.users.service;
 
 import com.watchtogether.server.users.domain.dto.UserDto;
+import com.watchtogether.server.users.domain.entitiy.User;
 import java.time.LocalDate;
 import org.springframework.security.core.userdetails.UserDetailsService;
 

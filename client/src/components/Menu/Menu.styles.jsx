@@ -14,18 +14,13 @@ const MenuWrapper = styled.ul`
   li {
     width: 25%;
     height: 100%;
-  }
-
-  a {
     position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    width: 100%;
-    height: 100%;
     padding: 0.5rem;
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     color: ${(props) => props.theme.color.dark_100};
   }
 `;

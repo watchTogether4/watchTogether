@@ -15,16 +15,20 @@ import static com.watchtogether.server.users.domain.type.UserSuccess.SUCCESS_VER
 import com.watchtogether.server.components.jwt.TokenProvider;
 import com.watchtogether.server.users.domain.dto.UserDto;
 import com.watchtogether.server.users.domain.entitiy.User;
-import com.watchtogether.server.users.domain.model.AuthResetPassword;
-import com.watchtogether.server.users.domain.model.ChangePassword;
-import com.watchtogether.server.users.domain.model.CheckPassword;
-import com.watchtogether.server.users.domain.model.MyPageUser;
-import com.watchtogether.server.users.domain.model.ResetNewPassword;
-import com.watchtogether.server.users.domain.model.ResetPassword;
-import com.watchtogether.server.users.domain.model.SearchUser;
-import com.watchtogether.server.users.domain.model.SignInUser;
-import com.watchtogether.server.users.domain.model.SignUpUser;
-import com.watchtogether.server.users.domain.model.VerifyEmail;
+import com.watchtogether.server.users.domain.model.user.AuthResetPassword;
+import com.watchtogether.server.users.domain.model.user.ChangePassword;
+import com.watchtogether.server.users.domain.model.user.CheckPassword;
+import com.watchtogether.server.users.domain.model.user.DeleteUser;
+import com.watchtogether.server.users.domain.model.user.DeleteUser.Response;
+import com.watchtogether.server.users.domain.model.user.MyPageUser;
+import com.watchtogether.server.users.domain.model.user.ResetNewPassword;
+import com.watchtogether.server.users.domain.model.user.ResetPassword;
+import com.watchtogether.server.users.domain.model.user.SearchUser;
+import com.watchtogether.server.users.domain.model.user.SignInUser;
+import com.watchtogether.server.users.domain.model.user.SignUpUser;
+import com.watchtogether.server.users.domain.model.user.VerifyEmail;
+import com.watchtogether.server.users.domain.type.UserSuccess;
+import com.watchtogether.server.users.service.Application.DeleteUserApplication;
 import com.watchtogether.server.users.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -33,6 +37,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -49,6 +54,7 @@ public class UserController {
 
     private final UserService userService;
     private final TokenProvider tokenProvider;
+    private final DeleteUserApplication deleteUserApplication;
 
     @PostMapping("/sign-up")
     @Operation(summary = "사용자 회원가입 신청", description = "회원가입 정보를 받고 해당 이메일로 인증 메일 전송.")
@@ -90,7 +96,7 @@ public class UserController {
         // token 발행
         String accessToken = tokenProvider.generateAccessToken(userDto.getEmail(),
             userDto.getRoles());
-        String refreshToken = tokenProvider.generateRefreshToken(userDto.getRoles( ));
+        String refreshToken = tokenProvider.generateRefreshToken(userDto.getRoles());
 
         // refresh_token 값 , 유효기간 저장
         userService.saveRefreshToken(userDto.getEmail(), refreshToken);
@@ -101,6 +107,18 @@ public class UserController {
                 accessToken,
                 refreshToken,
                 SUCCESS_SIGNIN.getMessage()));
+    }
+
+    @DeleteMapping
+    @Operation(summary = "사용자 회원 탈퇴 요청", description = "사용자는 회원 탈퇴 요청을 보낸다.")
+    public ResponseEntity<Response> deleteUser(
+        @Validated @RequestBody DeleteUser.Request request) {
+
+        deleteUserApplication.deleteUser(request.getEmail(), request.getPassword());
+
+        return ResponseEntity.ok(
+            new DeleteUser.Response(
+                UserSuccess.SUCCESS_DELETE_USER.getMessage()));
     }
 
     @GetMapping("/my-page")

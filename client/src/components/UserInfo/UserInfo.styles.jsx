@@ -44,10 +44,20 @@ const Button = styled.button`
   border-radius: 10px;
 `;
 
+const ChargeButton = styled.button`
+  padding: 0.5rem;
+  font-size: 0.9rem;
+  color: ${(props) => props.theme.color.white};
+  background-color: ${(props) => props.theme.color.highlight_500};
+  border-radius: 10px;
+  margin-left: auto;
+  margin-bottom: 1rem;
+`;
+
 const Withdrawal = styled.button`
   font-size: 0.9rem;
   color: ${(props) => props.theme.color.error_300};
   background-color: transparent;
 `;
 
-export { Wrapper, Profile, InfoList, Button, Withdrawal };
+export { Wrapper, Profile, InfoList, Button, Withdrawal, ChargeButton, };

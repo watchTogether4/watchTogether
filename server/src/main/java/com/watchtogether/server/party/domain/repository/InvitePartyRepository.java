@@ -18,4 +18,6 @@ public interface InvitePartyRepository  extends JpaRepository<InviteParty, Long>
 
 
     Optional<InviteParty> findByReceiverNickNameAndParty(String nick, Party party);
+
+    Optional<InviteParty> findByReceiverNickNameAndPartyAndAcceptIsFalse(String nick, Party party);
 }

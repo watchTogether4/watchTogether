@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useQuery } from 'react-query';
+import { useSelector } from 'react-redux';
+import { toast, ToastContainer } from 'react-toastify';
+import { animate, motion } from 'framer-motion';
 import {
   Wrapper,
   Description,
@@ -12,36 +16,34 @@ import {
 } from './AddParty.styles';
 import SearchModal from './SearchModal';
 import { createParty } from '../../api/Parties';
-import { toast, ToastContainer } from 'react-toastify';
-import { motion } from 'framer-motion';
+import { postAlert } from '../../api/Alert';
+import { getInfo } from '../../api/Users';
+import {postAuth} from '../../api/OttAuth'
+import otts from '../../mocks/platform'
 
 const AddParty = () => {
+  const { value } = useSelector((state) => state.user);
   const navigate = useNavigate();
-  const {state} = useLocation();
+  const { state } = useLocation();
   const initialValues = {
     ottId: state.ott,
     title: '',
     body: '',
     partyOttId: '',
     partyOttPassword: '',
-    leaderNickName: '',
+    leaderNickName: value.nickname,
   };
   const [formValues, setFormValues] = useState(initialValues);
   const [formErrors, setFormErrors] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const [isVaildate, setIsValidate] = useState(false);
   const [inviteMember, setinviteMember] = useState([]);
-  
-  console.log(state, initialValues.ottId)
 
-  const submitForm = () => {
-    const accessToken = localStorage.getItem('access-token');
-    const invite = inviteMember.length !== 0 ? inviteMember.join() : null;
-    const body = { ...formValues, receiversNickName: invite };
-
+  const createForm = (body, accessToken) => {
     createParty(body, accessToken)
       .then((res) => {
         console.log(res.data);
+        res.data && sendAlert(res.data, accessToken);
         toast.success(<h1>모집 글이 등록되었습니다</h1>, {
           position: 'top-center',
           autoClose: 1500,
@@ -56,6 +58,63 @@ const AddParty = () => {
           autoClose: 1000,
         });
       });
+  };
+
+  const sendAlert = (body, token) => {
+    let member = {};
+    // eslint-disable-next-line array-callback-return
+    body.map((data) => {
+      member = {
+        nickName: [data.nickName],
+        inviteId: data.uuid,
+        type: data.alertType,
+        partyId: data.partyId,
+        message: `${data.sender} 님께서 ${data.nickName} 님을 파티에 초대하셨습니다.`,
+      };
+
+      console.log(member);
+      postAlert(member, token)
+        .then((res) => console.log(res))
+        .catch((error) => console.log(error.response.data.message));
+    });
+
+    console.log(member);
+  };
+
+  const accessToken = localStorage.getItem('access-token');
+  const getUserInfo = () => {
+    return getInfo(accessToken).then((res) => res.data);
+  };
+  const { data } = useQuery('getInfo', getUserInfo);
+
+  if (data) {
+    formValues.leaderNickName = data.nickname;
+  };
+
+  const submitForm = () => {
+    const accessToken = localStorage.getItem('access-token');
+    const invite = inviteMember.length !== 0 ? inviteMember.join() : null;
+    const createData = { ...formValues, receiversNickName: invite };
+    const filterType = otts.filter((a) => a.id === state.ott);
+    const authData = {
+      id: formValues.partyOttId,
+      password: formValues.partyOttPassword,
+      ottType: filterType[0].type,
+    };
+
+    postAuth(authData, accessToken)
+      .then((res) => {
+        console.log(res.data);
+        if(res.data.loginResult === '1') {
+          createForm(createData, accessToken);
+        } else {
+          toast.error(<h1>일치하는 플랫폼 계정이 없습니다.</h1>, {
+            position: 'top-center',
+            autoClose: 1000,
+          });
+        }
+        })
+    
   };
 
   const validate = (values) => {
@@ -180,7 +239,6 @@ const AddParty = () => {
         )}
       </Wrapper>
     </motion.div>
-
   );
 };
 
