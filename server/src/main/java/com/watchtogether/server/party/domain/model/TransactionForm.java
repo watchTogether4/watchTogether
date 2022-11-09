@@ -14,5 +14,7 @@ public class TransactionForm {
 
     private Party party;
 
+    private String nickname;
+
 }
 

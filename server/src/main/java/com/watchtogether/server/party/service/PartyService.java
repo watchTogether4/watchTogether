@@ -20,15 +20,6 @@ public interface PartyService extends UserDetailsService {
 
 
     /**
-     * 파티 참가인원수 증가(addMember) 및 파티의 참가인원수 체크(addPartyMember) 후 파티 수락
-     *
-     * @param form
-     * @return
-     */
-    ResponseEntity<Object> acceptParty(AcceptPartyForm form);
-
-
-    /**
      * 파티 참가인원수 증가
      *
      * @param form

@@ -174,26 +174,32 @@ public class CheckPartyApplication {
     }
     public ResponseEntity<Object> acceptParty(AcceptPartyForm form) {
 
-        partyService.addMember(form);
+
         InviteParty inviteParty = partyService.findUser(form);
-        TransactionForm transactionForm = partyService.checkPartyFull(inviteParty.getParty().getId());
+        TransactionForm transactionForm = TransactionForm.builder()
+                .party(inviteParty.getParty())
+                .nickname(form.getNick())
+                .build();
         if (transactionForm != null){
 
-            transaction(transactionForm.getParty());
+            transaction1(transactionForm);
             sendAlert(transactionForm.getParty(), TRANSACTION);
         }
+        partyService.addMember(form);
+        partyService.checkPartyFull(inviteParty.getParty().getId());
+
         return ResponseEntity.ok().build();
     }
 
     public ResponseEntity<Object> joinPartyAndCheckFull(JoinPartyForm form) {
-        partyService.joinParty(form);
 
+        partyService.joinParty(form);
         TransactionForm transactionForm = partyService.checkPartyFull(form.getPartyId());
         if (transactionForm != null){
+
             transaction(transactionForm.getParty());
             sendAlert(transactionForm.getParty(), TRANSACTION);
         }
-
         return ResponseEntity.ok().build();
     }
     private void transaction(Party transactionForm) {
@@ -202,6 +208,15 @@ public class CheckPartyApplication {
                 transactionForm.getMembers(),
                 transactionForm.getLeaderNickname(),
                 transactionForm.getId(),
+                ottDto.getCommissionLeader(),
+                ottDto.getFee());
+    }
+    private void transaction1(TransactionForm form) {
+        OttDto ottDto = ottService.searchOtt(form.getParty().getOttId());
+        transactionService.userCashWithdraw(
+                form.getParty().getId(),
+                form.getParty().getLeaderNickname(),
+                form.getNickname(),
                 ottDto.getCommissionLeader(),
                 ottDto.getFee());
     }
