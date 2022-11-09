@@ -1,9 +1,9 @@
-package com.watchtogether.server.ottAuth.components;
+package com.watchtogether.server.ott.components;
 
 import org.springframework.stereotype.Component;
 
-@Component(value = "APPLETV")
-public class AppleTvAuth implements OttAuthComponent{
+@Component(value = "TVING")
+public class TvingAuth implements OttAuthComponent{
 
     private static final String LOGIN_URL = "https://www.disneyplus.com/ko-kr/login";
 
