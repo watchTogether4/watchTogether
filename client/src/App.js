@@ -16,6 +16,7 @@ import PrivateRoutes from './pages/PrivateRoutes';
 import OttPage from './pages/OttPage';
 import Payment from './pages/PaymentPage';
 import Charge from './pages/ChargePage';
+import MyParty from './pages/MyPartyPage';
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
             <Route path="/addParty" element={<AddParty />} />
 
             <Route path="/mypage" element={<MyPage />} />
+            <Route path="/mypage/myparty" element={<MyParty />} />
             <Route path="/mypage/user" element={<UserInfo />} />
 
             <Route path="/message" element={<Alarm />} />

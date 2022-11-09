@@ -73,12 +73,15 @@ export const joinParty = (body, token) =>
 /**
  * 내 파티 목록 출력하기
  */  
- export const findMyParties = (token) =>
-  axios({
-    url: `${BASE_URL}/findMyParties`,
-    method: 'GET',
+ export const findMyParties = (body, token) => {
+  console.log(body);
+  return axios({
+    url: `${BASE_URL}/find-myParties`,
+    method: 'POST',
     headers: {
-      'Content-Type': 'application/json',
+      'Content-Type': 'application/json;charset=UTF-8',
       Authorization: `Bearer ${token}`,
     },
+    data: JSON.stringify(body),
   });
+};

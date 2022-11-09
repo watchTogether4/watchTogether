@@ -8,8 +8,9 @@ import { getInfo } from './../../api/Users';
 import PasswordConfirm from './PasswordConfirm';
 
 function Chat() {
+  const accessToken = localStorage.getItem('access-token');
   const getUserInfo = () => {
-    return getInfo().then((res) => res.data);
+    return getInfo(accessToken).then((res) => res.data);
   };
   const { data, isLoading } = useQuery('getInfo', getUserInfo);
 
@@ -28,20 +29,22 @@ function Chat() {
   return (
     <>
       <Profile data={data} />
-      <InfoList direction="column" alignItems="flex-start">
-        <List justifyContent="space-between" onClick={() => setIsOpen(true)}>
-          내 정보
-          <IoIosArrowForward />
-        </List>
-        <List justifyContent="space-between" onClick={() => handleClick()}>
-          내 파티
-          <IoIosArrowForward />
-        </List>
-        <List justifyContent="space-between" onClick={() => handleClick()}>
-          결제 내역
-          <IoIosArrowForward />
-        </List>
-      </InfoList>
+      {data && (
+        <InfoList direction="column" alignItems="flex-start">
+          <List justifyContent="space-between" onClick={() => setIsOpen(true)}>
+            내 정보
+            <IoIosArrowForward />
+          </List>
+          <List justifyContent="space-between" onClick={() => navigate('./myparty', {state: { nickname: data.nickname }})}>
+            내 파티
+            <IoIosArrowForward />
+          </List>
+          <List justifyContent="space-between" onClick={() => handleClick()}>
+            결제 내역
+            <IoIosArrowForward />
+          </List>
+        </InfoList>
+      )}
 
       {isOpen && <PasswordConfirm modal={setIsOpen} handleSubmit={handleSubmit} data={data} />}
     </>

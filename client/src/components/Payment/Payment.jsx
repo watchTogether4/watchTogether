@@ -82,7 +82,7 @@ function Payment() {
   const afterCashFormat = afterCash.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
   const body = {nickName: nickName, partyId: partyId}
-  const body2 = {leaderNickname: leaderNickname, ottId: platform, partyId: partyId}
+  const body2 = {partyId: partyId}
 
   return (
     <>
