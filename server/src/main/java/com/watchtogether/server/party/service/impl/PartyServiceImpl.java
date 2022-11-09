@@ -20,6 +20,7 @@ import com.watchtogether.server.party.service.PartyService;
 import com.watchtogether.server.users.domain.entitiy.User;
 import com.watchtogether.server.users.domain.repository.UserRepository;
 import com.watchtogether.server.users.service.TransactionService;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -115,11 +117,11 @@ public class PartyServiceImpl implements PartyService {
 
         Optional<Party> optionalParty = partyRepository.findById(form.getPartyId());
 
-        if (optionalParty.isPresent()){
+        if (optionalParty.isPresent()) {
             Party party = optionalParty.get();
-            if (Objects.equals(party.getLeaderNickname(), form.getNickname())){
-                if (Objects.equals(party.getPartyOttPassword(), form.getPassword())){
-                    if (party.getPartyOttPassword().equals(form.getNewPassword())){
+            if (Objects.equals(party.getLeaderNickname(), form.getNickname())) {
+                if (Objects.equals(party.getPartyOttPassword(), form.getPassword())) {
+                    if (party.getPartyOttPassword().equals(form.getNewPassword())) {
                         throw new PartyException(PartyErrorCode.SAME_PASSWORD_OTT);
                     }
                     List<SendAlertForm> sendAlertFormList = new ArrayList<>();
@@ -137,20 +139,19 @@ public class PartyServiceImpl implements PartyService {
                     }
 
                     return sendAlertFormList;
-                }else {
+                } else {
                     throw new PartyException(PartyErrorCode.WRONG_PASSWORD_OTT);
                 }
-            }else {
+            } else {
                 throw new PartyException(PartyErrorCode.NOT_LEADER);
             }
 
-        }else {
+        } else {
             throw new PartyException(PartyErrorCode.NOT_FOUND_PARTY);
         }
 
         // todo 이후 메시지 전송api호출필요
     }
-
 
 
     public List<SendAlertForm> createPartyAndSendInviteAlert(CreatePartyForm form) {
@@ -173,34 +174,22 @@ public class PartyServiceImpl implements PartyService {
         invitePartyRepository.save(InviteParty.leaderFrom(leaderForm));
     }
 
-    //파티 초대링크 눌렀을때
-    public ResponseEntity<Object> acceptParty(AcceptPartyForm form) {
-
-        addMember(form);
-        addPartyMember(form);
-        return ResponseEntity.ok().build();
-    }
-
-    public ResponseEntity<Object> joinPartyAndCheckFull(JoinPartyForm form) {
-        joinParty(form);
-        checkPartyFull(form.getPartyId());
-        return ResponseEntity.ok().build();
-    }
 
     @Override
     public ResponseEntity<Object> joinParty(JoinPartyForm form) {
-        LocalDateTime limitDt = LocalDateTime.now().plusDays(1);
         Optional<Party> optionalParty = partyRepository.findById(form.getPartyId());
         if (optionalParty.isPresent()) {
             if (invitePartyRepository.findByReceiverNickNameAndParty(form.getNickName(), optionalParty.get()).isPresent()
                     || partyMemberRepository.findByNickNameAndParty(form.getNickName(), optionalParty.get()).isPresent()) {
                 throw new PartyException(PartyErrorCode.ALREADY_JOIN_PARTY);
             }
+            if (optionalParty.get().isPartyFull()) {
+                throw new PartyException(PartyErrorCode.PARTY_IS_FULL);
+            }
             Party party = optionalParty.get();
             InvitePartyForm invitePartyForm = InvitePartyForm.builder()
                     .party(optionalParty.get())
                     .nickname(form.getNickName())
-                    .limitDt(limitDt)
                     .build();
             invitePartyRepository.save(InviteParty.joinPartyFrom(invitePartyForm));
             party.setPeople(party.getPeople() + 1);
@@ -222,11 +211,13 @@ public class PartyServiceImpl implements PartyService {
     @Override
     public ResponseEntity<Object> leaveParty(LeavePartyForm form) {
         Party party = partyRepository.findById(form.getPartyId())
-                .orElseThrow(()-> new PartyException(PartyErrorCode.NOT_FOUND_PARTY));
+                .orElseThrow(() -> new PartyException(PartyErrorCode.NOT_FOUND_PARTY));
 
         InviteParty inviteParty = invitePartyRepository.
                 findByReceiverNickNameAndPartyAndAcceptIsTrue(form.getNickName(), party)
-                .orElseThrow(()->new PartyException(PartyErrorCode.NOT_FOUND_USER_IN_INVITE_PARTY));
+                .orElseThrow(() -> new PartyException(PartyErrorCode.NOT_FOUND_USER_IN_INVITE_PARTY));
+        // TODO: 2022-11-08 리더일때 경우 추가 필요
+
         invitePartyRepository.delete(inviteParty);
 
 
@@ -237,27 +228,26 @@ public class PartyServiceImpl implements PartyService {
         return ResponseEntity.ok().build();
     }
 
-    // TODO: 2022-11-08  leaveParty는 파티가 대기 상태일때 나가는 것이고 따로 파티갱신 메시지를 받지 않았을 경우 나가는 메서드 작성 필요!!
     public LeavePartyResponseForm IgnoreContinueMessage(LeavePartyForm form) {
         Party party = partyRepository.findById(form.getPartyId())
-                .orElseThrow(()-> new PartyException(PartyErrorCode.NOT_FOUND_PARTY));
+                .orElseThrow(() -> new PartyException(PartyErrorCode.NOT_FOUND_PARTY));
 
         PartyMember partyMember = partyMemberRepository.findByNickNameAndParty(form.getNickName(), party)
-                .orElseThrow(()-> new PartyException(PartyErrorCode.NOT_FOUND_USER_IN_PARTY_MEMBER));
+                .orElseThrow(() -> new PartyException(PartyErrorCode.NOT_FOUND_USER_IN_PARTY_MEMBER));
         partyMemberRepository.delete(partyMember);
 
         party.setPartyFull(false);
         party.setPeople(party.getPeople() - 1);
         partyRepository.save(party);
 
-        if (!partyMember.isLeader()){
+        if (!partyMember.isLeader()) {
             partyMemberRepository.delete(partyMember);
             return LeavePartyResponseForm.builder()
                     .partyId(party.getId())
                     .nickname(form.getNickName())
                     .leader(false)
                     .build();
-        }else {
+        } else {
             return LeavePartyResponseForm.builder()
                     .partyId(party.getId())
                     .nickname(form.getNickName())
@@ -266,11 +256,12 @@ public class PartyServiceImpl implements PartyService {
         }
 
     }
+
     @Override
     @Transactional
     public Party addMember(AcceptPartyForm form) {
-
         InviteParty inviteParty = findUser(form);
+        //validateAndFindPartyWithPartyIdBeforeJoin(inviteParty.getParty().getId(), form.getNick());
         Optional<Party> optionalParty = partyRepository.findById(inviteParty.getParty().getId());
         if (optionalParty.isPresent()) {
             inviteParty.setAccept(true);
@@ -288,16 +279,8 @@ public class PartyServiceImpl implements PartyService {
 
     }
 
-    @Override
-    public ResponseEntity<Object> addPartyMember(AcceptPartyForm form) {
-        InviteParty inviteParty = findUser(form);
-        checkPartyFull(inviteParty.getParty().getId());
 
-
-        return ResponseEntity.ok().build();
-    }
-
-    public ResponseEntity<Object> checkPartyFull(Long partyId) {
+    public TransactionForm checkPartyFull(Long partyId) {
         // 리더 아이디, 다른멤버 아이디
         Optional<Party> optionalParty = partyRepository.findById(partyId);
 
@@ -305,25 +288,19 @@ public class PartyServiceImpl implements PartyService {
             Party party = optionalParty.get();
             if (party.getPeople() == 4) {
                 party.setPartyFull(true);
-                party.setPayDt(LocalDate.now());
+                party.setPayDt(LocalDate.now().plusMonths(1));
+                partyRepository.save(party);
                 List<InviteParty> list = invitePartyRepository.findByParty(party);
                 savePartyMember(party.getId());
-
-
-
-                OttDto ottDto = ottService.searchOtt(party.getOttId());
-
-                transactionService.userCashDeposit(
-                    party.getMembers(),
-                    party.getLeaderNickname(),
-                    party.getId(),
-                    ottDto.getCommissionLeader(),
-                    ottDto.getFee());
-
-
+                party.setPayDt(party.getPayDt().plusMonths(1));
+                partyRepository.save(party);
                 invitePartyRepository.deleteAll(list);
 
-                return ResponseEntity.ok().build();
+                return TransactionForm.builder()
+                        .party(party)
+                        .build();
+
+
             } else {
                 return null;
             }
@@ -411,10 +388,25 @@ public class PartyServiceImpl implements PartyService {
     public Party validateAndFindPartyWithPartyIdBeforeJoin(Long partyId, String nickname) {
 
         Party party = partyRepository.findById(partyId)
-            .orElseThrow(() -> new PartyException(PartyErrorCode.NOT_FOUND_PARTY));
+                .orElseThrow(() -> new PartyException(PartyErrorCode.NOT_FOUND_PARTY));
+
+
+        Optional<InviteParty> optionalInviteParty =
+                invitePartyRepository.findByReceiverNickNameAndPartyAndAcceptIsFalse(nickname, party);
+        if (optionalInviteParty.isPresent()) {
+            System.out.println((optionalInviteParty.get().getCreatedDt().plusDays(1)));
+            System.out.println( LocalDateTime.now());
+            if (optionalInviteParty.get().getCreatedDt().plusDays(1).isBefore(
+                    LocalDateTime.now())) {
+                invitePartyRepository.delete(optionalInviteParty.get());
+                return party;
+            }
+        }
+
+
 
         if (invitePartyRepository.findByReceiverNickNameAndParty(nickname, party).isPresent()
-            || partyMemberRepository.findByNickNameAndParty(nickname, party).isPresent()) {
+                || partyMemberRepository.findByNickNameAndParty(nickname, party).isPresent()) {
             throw new PartyException(PartyErrorCode.ALREADY_JOIN_PARTY);
         }
         return party;
@@ -425,7 +417,7 @@ public class PartyServiceImpl implements PartyService {
     public Party validateAndFindPartyWithPartyIdBeforeLeave(Long partyId, String nickname) {
 
         Party party = partyRepository.findById(partyId)
-            .orElseThrow(() -> new PartyException(PartyErrorCode.NOT_FOUND_PARTY));
+                .orElseThrow(() -> new PartyException(PartyErrorCode.NOT_FOUND_PARTY));
 
         if (invitePartyRepository.findByReceiverNickNameAndParty(nickname, party).isEmpty()) {
             throw new PartyException(PartyErrorCode.NOT_JOIN_PARTY);
@@ -437,7 +429,7 @@ public class PartyServiceImpl implements PartyService {
     @Override
     public ResponseEntity<Object> deleteParty(Long partyId) {
         Party party = partyRepository.findById(partyId)
-                .orElseThrow(()-> new PartyException(PartyErrorCode.NOT_FOUND_PARTY));
+                .orElseThrow(() -> new PartyException(PartyErrorCode.NOT_FOUND_PARTY));
         partyRepository.delete(party);
         return ResponseEntity.ok().build();
     }

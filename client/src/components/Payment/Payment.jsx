@@ -70,7 +70,7 @@ function Payment() {
   let nickName = '';
   if (data) {
     cash = data.cash;
-    nickName = data.nickName;
+    nickName = data.nickname;
   };
 
   const platform = state.ottId;

@@ -42,10 +42,8 @@ public class InviteParty extends BaseEntity{
                 .replaceAll("-", "").substring(0, 15);
         return InviteParty.builder()
                 .receiverNickName(form.getNickname())
-                .receiverUUID(uuid)
                 .accept(true)
                 .leader(true)
-                .limitDt(form.getLimitDt())
                 .party(form.getParty())
                 .build();
     }
@@ -67,7 +65,6 @@ public class InviteParty extends BaseEntity{
                 .replaceAll("-", "").substring(0, 15);
         return InviteParty.builder()
                 .receiverNickName(form.getNickname())
-                .receiverUUID(uuid)
                 .accept(true)
                 .leader(false)
                 .party(form.getParty())
