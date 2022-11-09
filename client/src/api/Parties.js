@@ -54,3 +54,31 @@ export const showPartyList = (token) =>
       Authorization: `Bearer ${token}`,
     },
   });
+
+/**
+ * 파티 참여하기
+ */  
+export const joinParty = (body, token) => 
+  axios({
+    url: `${BASE_URL}/join`,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json;charset=UTF-8',
+      Authorization: `Bearer ${token}`,
+    },
+    data: JSON.stringify(body),
+  });
+
+
+/**
+ * 내 파티 목록 출력하기
+ */  
+ export const findMyParties = (token) =>
+  axios({
+    url: `${BASE_URL}/findMyParties`,
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  });

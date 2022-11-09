@@ -3,7 +3,7 @@ import { CardWrapper, CardOtt, CardDesc, CardTitle, CardPerson } from './Card.st
 import { IoIosArrowForward } from 'react-icons/io';
 import CardModal from './CardModal';
 
-export function Card({ cardNo, ottUrl, title, people }) {
+export function Card({ ottId, ottUrl, title, people, body, partyId, leaderNickname }) {
   const image = ottUrl ? ottUrl[0].image : '';
   const [isClicked, setIsClicked] = useState(false);
   const handleClick = (e) => {
@@ -20,7 +20,7 @@ export function Card({ cardNo, ottUrl, title, people }) {
         </CardDesc>
         <IoIosArrowForward size={30} />
       </CardWrapper>
-      {isClicked && <CardModal cardNo={cardNo} modal={setIsClicked} ottUrl={ottUrl}/>}
+      {isClicked && <CardModal cmodal={setIsClicked} ottUrl={ottUrl} title={title} people={people} body={body} ottId={ottId} partyId={partyId} leaderNickname={leaderNickname}/>}
     </>
   );
 }
