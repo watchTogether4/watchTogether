@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import Avvvatars from 'avvvatars-react';
 
-import { Wrapper, Profile, InfoList, Button, Withdrawal } from './UserInfo.styles';
+import { Wrapper, Profile, InfoList, Button, Withdrawal, ChargeButton, } from './UserInfo.styles';
 import AlertModal from './AlertModal';
 import PasswordModal from './PasswordModal';
-import { useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const UserInfo = () => {
+  const navigate = useNavigate();
   const { state } = useLocation();
   const { data, password } = state;
   const body = { email: data.email, password: password };
@@ -50,8 +51,11 @@ const UserInfo = () => {
               </li>
               <li>
                 <span>캐시 잔액</span>
-                <span>{data.cash}</span>
+                <span>{data.cash.toLocaleString('ko-KR',)} 원</span>
               </li>
+              <ChargeButton type="button" onClick={()=>{navigate('/charge')}}>
+                캐시 충전하기
+              </ChargeButton>
             </InfoList>
           </div>
         )}

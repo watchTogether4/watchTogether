@@ -15,6 +15,7 @@ import Reset from './pages/ResetPage';
 import PrivateRoutes from './pages/PrivateRoutes';
 import OttPage from './pages/OttPage';
 import Payment from './pages/PaymentPage';
+import Charge from './pages/ChargePage';
 
 function App() {
   return (
@@ -36,13 +37,13 @@ function App() {
 
             <Route path="/message" element={<Alarm />} />
             <Route path="/payment" element={<Payment />} />
+            <Route path="/charge" element={<Charge />} />
           </Route>
           <Route path="/code=:code" element={<Reset />} />
 
           {/* <Route path="/mypage/myparty" element={<MyParty />} />
             <Route path="/mypage/myparty/:id" element={<MyPartyDetail />} />
             <Route path="/mypage/myparty/:id/chat" element={<Chat />} />
-            <Route path="/select" element={<Select />} />
             */}
         </Routes>
       </AnimatePresence>

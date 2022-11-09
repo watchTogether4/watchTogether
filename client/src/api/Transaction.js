@@ -27,3 +27,18 @@ export const withdraw = (body, token) =>
     },
     data: JSON.stringify(body),
   });
+
+/**
+ * 충전하기
+ */
+export const charge = (body, token) =>
+  axios({
+    url: `${BASE_URL}/charge`,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json;charset=UTF-8',
+      Authorization: `Bearer ${token}`,
+    },
+    data: JSON.stringify(body),
+  });
+
