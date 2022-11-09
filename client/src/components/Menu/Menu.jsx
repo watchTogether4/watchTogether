@@ -30,7 +30,7 @@ const Menu = ({ page }) => {
     <MenuWrapper>
       <li onClick={() => handleClick('/select')}>
         <FaPen size={22} color={page === 'select' ? '#006FFD' : '#71727A'} />
-        파티 등록
+        파티 모집
       </li>
       <li onClick={() => handleClick('/partyList')}>
         <FaSearch size={22} color={page === 'partyList' ? '#006FFD' : '#71727A'} />
