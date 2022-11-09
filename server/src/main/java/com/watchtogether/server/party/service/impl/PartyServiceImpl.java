@@ -6,7 +6,6 @@ import static com.watchtogether.server.party.domain.type.AlertType.CHANGE_PASSWO
 import com.watchtogether.server.exception.PartyException;
 import com.watchtogether.server.exception.UserException;
 import com.watchtogether.server.exception.type.PartyErrorCode;
-import com.watchtogether.server.ott.domain.dto.OttDto;
 import com.watchtogether.server.ott.service.OttService;
 import com.watchtogether.server.party.domain.entitiy.InviteParty;
 import com.watchtogether.server.party.domain.entitiy.Party;
