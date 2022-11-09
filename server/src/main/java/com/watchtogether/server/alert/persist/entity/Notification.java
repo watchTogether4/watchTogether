@@ -51,7 +51,9 @@ public class Notification {
         this.type = type;
         this.message = message;
         this.createdDt = LocalDateTime.now();
-        this.expiredDt = LocalDateTime.now().plusDays(3);
+        if(type.equals("INVITE")) {
+            this.expiredDt = LocalDateTime.now().plusDays(1);
+        } else this.expiredDt = LocalDateTime.now().plusDays(3);
         this.checkAlert = false;
         this.inviteId = inviteId;
     }
