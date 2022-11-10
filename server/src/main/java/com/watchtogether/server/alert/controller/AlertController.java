@@ -7,6 +7,7 @@ import com.watchtogether.server.alert.dto.CheckAlertRequest;
 import com.watchtogether.server.alert.dto.CreateAlertRequest;
 import com.watchtogether.server.alert.dto.GetAlertListRequest;
 import com.watchtogether.server.alert.service.AlertService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +15,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@Tag(name = "Alert(AlertController)", description = "Alert API")
 @RequestMapping("/api/v1/alert")
 public class AlertController {
 
