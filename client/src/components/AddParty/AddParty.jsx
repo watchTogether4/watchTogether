@@ -18,8 +18,8 @@ import SearchModal from './SearchModal';
 import { createParty } from '../../api/Parties';
 import { postAlert } from '../../api/Alert';
 import { getInfo } from '../../api/Users';
-import {postAuth} from '../../api/OttAuth'
-import otts from '../../mocks/platform'
+import { postAuth } from '../../api/OttAuth';
+import otts from '../../mocks/platform';
 
 const AddParty = () => {
   const { value } = useSelector((state) => state.user);
@@ -89,7 +89,7 @@ const AddParty = () => {
 
   if (data) {
     formValues.leaderNickName = data.nickname;
-  };
+  }
 
   const submitForm = () => {
     const accessToken = localStorage.getItem('access-token');
@@ -102,19 +102,17 @@ const AddParty = () => {
       ottType: filterType[0].type,
     };
 
-    postAuth(authData, accessToken)
-      .then((res) => {
-        console.log(res.data);
-        if(res.data.loginResult === '1') {
-          createForm(createData, accessToken);
-        } else {
-          toast.error(<h1>일치하는 플랫폼 계정이 없습니다.</h1>, {
-            position: 'top-center',
-            autoClose: 1000,
-          });
-        }
-        })
-    
+    postAuth(authData, accessToken).then((res) => {
+      console.log(res.data);
+      if (res.data.loginResult === '1') {
+        createForm(createData, accessToken);
+      } else {
+        toast.error(<h1>일치하는 플랫폼 계정이 없습니다.</h1>, {
+          position: 'top-center',
+          autoClose: 1000,
+        });
+      }
+    });
   };
 
   const validate = (values) => {
