@@ -58,7 +58,7 @@ export const showPartyList = (token) =>
 /**
  * 파티 참여하기
  */
-export const joinParty = (body, token) =>
+export const joinParty = (body, token) => 
   axios({
     url: `${BASE_URL}/join`,
     method: 'POST',
@@ -68,7 +68,6 @@ export const joinParty = (body, token) =>
     },
     data: JSON.stringify(body),
   });
-<<<<<<< HEAD
 
 
 /**
@@ -86,5 +85,3 @@ export const joinParty = (body, token) =>
     data: JSON.stringify(body),
   });
 };
-=======
->>>>>>> ba2993d74aa3ac4d9c31efca452692bf4ad79fc0

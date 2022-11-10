@@ -9,6 +9,7 @@ const CardWrapper = styled.div`
   border-radius: 1rem;
   align-items: center;
   border: 1px solid ${(props) => props.theme.color.light_300};
+  margin: 0.5rem;
 `;
 
 const CardDesc = styled.div`
