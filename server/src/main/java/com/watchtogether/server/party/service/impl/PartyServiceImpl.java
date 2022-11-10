@@ -55,6 +55,9 @@ public class PartyServiceImpl implements PartyService {
     public Party createParty(CreatePartyForm form) {
         LocalDateTime limitDt = LocalDateTime.now().plusDays(1);
         Party party;
+        if (form.getOttId() == null){
+            throw new PartyException(PartyErrorCode.NOT_FOUND_OTT_ID);
+        }
         if (form.getReceiversNickName() != null) {
             party = Party.from(form);
             buildLeaderForm(form, limitDt, party);
