@@ -56,7 +56,7 @@ public interface PartyService extends UserDetailsService {
 
 
     List<String> myPartyMembers(List<Optional<Party>> list);
-    List<Optional<Party>> findMyParties(FindMyPartiesForm form);
+    List<List<Optional<Party>>> findMyParties(FindMyPartiesForm form);
 
     /**
      * 파티참가
