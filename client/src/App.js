@@ -22,6 +22,7 @@ import Payment from './pages/PaymentPage';
 import Charge from './pages/ChargePage';
 import PaymentList from './pages/PaymentListPage';
 import MyParty from './pages/MyPartyPage';
+import MyPartyDetail from './pages/MyPartyDetailPage';
 
 function App() {
   return (
@@ -41,6 +42,7 @@ function App() {
             <Route path="/mypage" element={<MyPage />} />
             <Route path="/mypage/myparty" element={<MyParty />} />
             <Route path="/mypage/user" element={<UserInfo />} />
+            <Route path="/mypage/myparty/:id" element={<MyPartyDetail />} />
             <Route path="/myparty/:id/chat" element={<Chat />} />
             <Route path="/mypage/paymentlist" element={<PaymentList />} />
 
@@ -49,11 +51,7 @@ function App() {
             <Route path="/charge" element={<Charge />} />
           </Route>
           <Route path="/code=:code" element={<Reset />} />
-
-          {/* <Route path="/mypage/myparty" element={<MyParty />} />
-            <Route path="/mypage/myparty/:id" element={<MyPartyDetail />} />
-            <Route path="/mypage/myparty/:id/chat" element={<Chat />} />
-            */}
+          
         </Routes>
       </AnimatePresence>
     </BrowserRouter>

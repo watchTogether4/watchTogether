@@ -16,10 +16,8 @@ function Payment() {
   const getUserInfo = () => {
     return getInfo(accessToken).then((res) => res.data);
   };
-  const [isPayed, setIsPayed] = useState(false);
 
   const joinUserParty = () => {
-    if(isPayed === true) {
       joinParty(body, accessToken)
       .then((res) => {
         console.log(res.data);
@@ -38,14 +36,13 @@ function Payment() {
           autoClose: 1000,
         });
       });
-    }
-  };
+    };
 
   const Payment = () => {
     withdraw(body2, accessToken)
       .then((res) => {
         console.log(res.data);
-        setIsPayed(true);
+        joinUserParty();
       })
       .catch((error) => {
         console.log(error)
@@ -130,7 +127,7 @@ function Payment() {
             </InfoList>
           </Border>
           <ButtonSection>
-            <Button type='button' onClick={() => {Payment(); joinUserParty()}}>신청하기</Button>
+            <Button type='button' onClick={() => {Payment()}}>신청하기</Button>
           </ButtonSection>
         </div>
       )}

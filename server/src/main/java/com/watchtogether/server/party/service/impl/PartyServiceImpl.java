@@ -31,6 +31,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -39,6 +40,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PartyServiceImpl implements PartyService {
 
     private final PartyRepository partyRepository;
@@ -260,7 +262,6 @@ public class PartyServiceImpl implements PartyService {
     }
 
     @Override
-    @Transactional
     public Party addMember(AcceptPartyForm form) {
         InviteParty inviteParty = findUser(form);
         //validateAndFindPartyWithPartyIdBeforeJoin(inviteParty.getParty().getId(), form.getNick());
@@ -294,15 +295,11 @@ public class PartyServiceImpl implements PartyService {
                 partyRepository.save(party);
                 List<InviteParty> list = invitePartyRepository.findByParty(party);
                 savePartyMember(party.getId());
-                party.setPayDt(party.getPayDt().plusMonths(1));
-                partyRepository.save(party);
                 invitePartyRepository.deleteAll(list);
 
                 return TransactionForm.builder()
                         .party(party)
                         .build();
-
-
             } else {
                 return null;
             }
@@ -362,17 +359,33 @@ public class PartyServiceImpl implements PartyService {
     }
 
     @Override
-    public List<Optional<Party>> findMyParties(FindMyPartiesForm form) {
-        List<Optional<Party>> myPartyList = new ArrayList<>();
+    public List<List<Optional<Party>>> findMyParties(FindMyPartiesForm form) {
+        List<List<Optional<Party>>> myPartyList = new ArrayList<>();
+        List<Optional<Party>> myPartyList1 = new ArrayList<>();
+        List<Optional<Party>> myPartyList2 = new ArrayList<>();
+
+
         List<PartyMember> myPartyListId = partyMemberRepository.findByNickName(form.getNickName());
         if (!myPartyListId.isEmpty()) {
             for (PartyMember partyMember : myPartyListId) {
                 Optional<Party> party = partyRepository.findById(partyMember.getParty().getId());
-                myPartyList.add(party);
+                myPartyList1.add(party);
             }
-            return myPartyList;
+            myPartyList.add(0,myPartyList1);
+        }else {
+            myPartyList.add(0, null);
         }
-        throw new PartyException(PartyErrorCode.NOT_FOUND_PARTY);
+        List<InviteParty> myInvitePartyListId = invitePartyRepository.findByReceiverNickName(form.getNickName());
+        if (!myInvitePartyListId.isEmpty()) {
+            for (InviteParty inviteParty : myInvitePartyListId) {
+                Optional<Party> party = partyRepository.findById(inviteParty.getParty().getId());
+                myPartyList2.add(party);
+            }
+            myPartyList.add(1,myPartyList2);
+        }else {
+            myPartyList.add(1, null);
+        }
+        return myPartyList;
     }
 
     // todo 파티 탈퇴 전 자신이 속한 파티 존재 여부 확인
@@ -433,6 +446,34 @@ public class PartyServiceImpl implements PartyService {
         Party party = partyRepository.findById(partyId)
                 .orElseThrow(() -> new PartyException(PartyErrorCode.NOT_FOUND_PARTY));
         partyRepository.delete(party);
+        return ResponseEntity.ok().build();
+    }
+    public ResponseEntity<Object> deleteInviteParty(Party party){
+        List<InviteParty> list = invitePartyRepository.findByParty(party);
+        if (!list.isEmpty()){
+            invitePartyRepository.deleteAll(list);
+        }else {
+            throw new PartyException(PartyErrorCode.NOT_FOUND_PARTY_IN_INVITE_PARTY);
+        }
+        return ResponseEntity.ok().build();
+    }
+    public ResponseEntity<Object> deletePartyMember(Party party){
+        List<PartyMember> list = partyMemberRepository.findByParty(party);
+        if (!list.isEmpty()){
+            partyMemberRepository.deleteAll(list);
+        }else {
+            throw new PartyException(PartyErrorCode.NOT_FOUND_PARTY_IN_PARTY_MEMBER);
+        }
+        return ResponseEntity.ok().build();
+    }
+    public ResponseEntity<Object> deleteInviteParty(LocalDateTime now){
+        List<InviteParty> list = invitePartyRepository.findByAcceptIsFalseAndLimitDtAfter(now);
+        if (!list.isEmpty()){
+            invitePartyRepository.deleteAll(list);
+        }else {
+            log.info("삭제할 데이터를 찾지 못했습니다");
+
+        }
         return ResponseEntity.ok().build();
     }
 
