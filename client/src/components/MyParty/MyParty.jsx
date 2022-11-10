@@ -34,10 +34,8 @@ function MyParty() {
           <Board>
             {data2.list.map((myParty) => (
             <Card
-            title={myParty.title}
-            body={myParty.body}
-            state={myParty.state}
-            member={myParty.member}
+              key = {myParty.partyId}
+              data = {myParty}
             />
             ))}
           </Board>
