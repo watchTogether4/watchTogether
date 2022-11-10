@@ -39,7 +39,7 @@ function Chat() {
             내 파티
             <IoIosArrowForward />
           </List>
-          <List justifyContent="space-between" onClick={() => handleClick()}>
+          <List justifyContent="space-between" onClick={() => navigate('./paymentlist')}>
             결제 내역
             <IoIosArrowForward />
           </List>
