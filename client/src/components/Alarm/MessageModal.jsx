@@ -21,7 +21,10 @@ const MessageModal = ({ data, modal }) => {
       .then((res) => {
         acceptParty(body2, accessToken)
           .then((res) => {
-            console.log(res.data);
+            toast.error(<h1>성공</h1>, {
+              position: 'top-center',
+              autoClose: 1000,
+            });
           })
           .catch((error) => {
             console.log(error.response.data.message);
@@ -32,7 +35,12 @@ const MessageModal = ({ data, modal }) => {
           });
         modal(false);
       })
-      .catch((error) => console.log(error));
+      .catch((error) => {
+        toast.error(error.response.data.message, {
+          position: 'top-center',
+          autoClose: 1000,
+        });
+      });
   };
 
   // 취소
@@ -48,7 +56,9 @@ const MessageModal = ({ data, modal }) => {
         <Title onClick={() => modal(false)}>{data.type}</Title>
         <AlertText>{data.message}</AlertText>
         <ButtonContainer>
-          <CancleButton onClick={handleClickCancle}>{data.type === 'INVITE' ? '거절 하기' : '확인'}</CancleButton>
+          <CancleButton onClick={handleClickCancle}>
+            {data.type === 'INVITE' ? '거절 하기' : '확인'}
+          </CancleButton>
           <SubmitButton onClick={handleClick}>
             {data.type === 'INVITE' ? '수락 하기' : '확인'}
           </SubmitButton>
