@@ -1,7 +1,7 @@
-package com.watchtogether.server.ottAuth.service;
+package com.watchtogether.server.ott.service;
 
-import com.watchtogether.server.ottAuth.components.OttAuthComponent;
-import com.watchtogether.server.ottAuth.domain.LoginResult;
+import com.watchtogether.server.ott.components.OttAuthComponent;
+import com.watchtogether.server.ott.domain.dto.LoginResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

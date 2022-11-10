@@ -41,12 +41,6 @@ public class AlertService {
         }
         alertRepository.saveAll(notifications);
 
-//        Party party = partyRepository.findById(partyId).orElseThrow(() -> new RuntimeException("파티를 찾을 수 없습니다."));
-//        List<Notification> notifications = new ArrayList<>();
-//        for (String nickName : nickNames) {
-//            notifications.add(new Notification(nickName, party, inviteId, message, type));
-//        }
-//        alertRepository.saveAll(notifications);
     }
 
     @Transactional

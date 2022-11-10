@@ -1,4 +1,4 @@
-package com.watchtogether.server.ottAuth.components;
+package com.watchtogether.server.ott.components;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;

@@ -12,6 +12,7 @@ public class AlertDto {
         private AlertType type;
         private String message;
         private boolean notificationOpen;
+        private String uuid;
 
 
         public AlertDto(Notification notification) {
@@ -19,6 +20,7 @@ public class AlertDto {
                 this.type = notification.getType();
                 this.message = notification.getMessage();
                 this.notificationOpen = notification.isCheckAlert();
+                this.uuid = notification.getInviteId();
         }
 }
 

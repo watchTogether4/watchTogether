@@ -1,4 +1,4 @@
-package com.watchtogether.server.ottAuth.domain;
+package com.watchtogether.server.ott.domain.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
