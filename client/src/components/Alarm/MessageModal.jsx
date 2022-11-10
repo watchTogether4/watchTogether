@@ -48,7 +48,7 @@ const MessageModal = ({ data, modal }) => {
         <Title onClick={() => modal(false)}>{data.type}</Title>
         <AlertText>{data.message}</AlertText>
         <ButtonContainer>
-          <CancleButton onClick={handleClickCancle}>취소</CancleButton>
+          <CancleButton onClick={handleClickCancle}>{data.type === 'INVITE' ? '거절 하기' : '확인'}</CancleButton>
           <SubmitButton onClick={handleClick}>
             {data.type === 'INVITE' ? '수락 하기' : '확인'}
           </SubmitButton>
