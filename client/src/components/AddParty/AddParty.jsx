@@ -64,12 +64,14 @@ const AddParty = () => {
     let member = {};
     // eslint-disable-next-line array-callback-return
     body.map((data) => {
+      const ottFilter = otts.filter((a) => a.id === state.ott);
+      const ottType = ottFilter[0].name;
       member = {
         nickName: [data.nickName],
         inviteId: data.uuid,
         type: data.alertType,
         partyId: data.partyId,
-        message: `${data.sender} 님께서 ${data.nickName} 님을 파티에 초대하셨습니다.`,
+        message: `${data.sender} 님께서 ${data.nickName} 님을 ${ottType} 파티에 초대하셨습니다.`,
       };
 
       console.log(member);
