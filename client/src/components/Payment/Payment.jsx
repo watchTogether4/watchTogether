@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { useNavigate, useLocation } from 'react-router-dom'; 
 import { useQuery } from 'react-query';
 import otts from '../../mocks/platform';
@@ -16,48 +16,45 @@ function Payment() {
   const getUserInfo = () => {
     return getInfo(accessToken).then((res) => res.data);
   };
+  const [isPayed, setIsPayed] = useState(false);
 
   const joinUserParty = () => {
-    axios
-    .all([joinParty(body, accessToken), withdraw(body2, accessToken)])
-    .then(axios.spread((res1, res2) => {
-      console.log('success');
-      toast.success(<h1>성공적으로 신청 되었습니다.</h1>,
-        {position: 'top-center', autoClose: 3000, });
-      setTimeout(() => {
-        navigate('/myPage');
-      }, 3000);
-    })
-    )
-    .catch((error) => {
-      console.log(error)
-      console.error()
-      toast.error(error.response.data.message, {
-        position: 'top-center',
+    if(isPayed === true) {
+      joinParty(body, accessToken)
+      .then((res) => {
+        console.log(res.data);
+        toast.success(<h1>성공적으로 신청되었습니다.</h1>, {
+          position: 'top-center',
+          autoClose: 1500,
+        });
+        setTimeout(() => {
+          navigate('/partyList');
+        }, 1500);
+      })
+      .catch((error) => {
+        console.log(error)
+        toast.error(error.response.data.message, {
+          position: 'top-center',
+          autoClose: 1000,
+        });
       });
-    });
+    }
   };
 
-  // const joinUserParty = () => {
-  //   withdraw(body2, accessToken)
-  //     .then((res) => {
-  //       console.log(res.data);
-  //       toast.success(<h1>모집 글이 등록되었습니다</h1>, {
-  //         position: 'top-center',
-  //         autoClose: 1500,
-  //       });
-  //       setTimeout(() => {
-  //         navigate('/partyList');
-  //       }, 1500);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error)
-  //       toast.error(error.response.data.message, {
-  //         position: 'top-center',
-  //         autoClose: 1000,
-  //       });
-  //     });
-  // };
+  const Payment = () => {
+    withdraw(body2, accessToken)
+      .then((res) => {
+        console.log(res.data);
+        setIsPayed(true);
+      })
+      .catch((error) => {
+        console.log(error)
+        toast.error(error.response.data.message, {
+          position: 'top-center',
+          autoClose: 1000,
+        });
+      });
+  };
 
 
   const { state } = useLocation();
@@ -76,13 +73,13 @@ function Payment() {
   const platform = state.ottId;
   const platformPrice = otts[platform-1].price / 4;
   const platformPriceFormat = platformPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-  const totalPrice = (otts[platform-1].price / 4 + 500);
+  const totalPrice = (otts[platform-1].price / 4 + 900);
   const totalPriceFormat = totalPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   const afterCash = cash - totalPrice;
   const afterCashFormat = afterCash.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
   const body = {nickName: nickName, partyId: partyId}
-  const body2 = {leaderNickname: leaderNickname, ottId: platform, partyId: partyId}
+  const body2 = {partyId: partyId}
 
   return (
     <>
@@ -116,7 +113,7 @@ function Payment() {
                 </li>
                 <li>
                 <span>월 파티원 이용료</span>
-                <span>500 원</span>
+                <span>900 원</span>
                 </li>
                 <li>
                 <span>결제 금액</span>
@@ -133,7 +130,7 @@ function Payment() {
             </InfoList>
           </Border>
           <ButtonSection>
-            <Button type='button' onClick={() => {joinUserParty(body)}}>신청하기</Button>
+            <Button type='button' onClick={() => {Payment(); joinUserParty()}}>신청하기</Button>
           </ButtonSection>
         </div>
       )}
