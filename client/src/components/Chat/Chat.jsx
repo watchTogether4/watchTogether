@@ -12,12 +12,10 @@ import {
   ChatInput,
   SubmitButton,
 } from './Chat.styles';
-import chat from '../../mocks/chatTest';
 
 const Chat = () => {
   const scrollRef = useRef();
   const params = useParams();
-  console.log(params.id);
   const { value } = useSelector((state) => state.user);
   const accessToken = localStorage.getItem('access-token');
 
@@ -26,10 +24,6 @@ const Chat = () => {
   const serverMessagesList = [];
   const [messageText, setMessageText] = useState('');
   const [serverMessages, setServerMessages] = useState([]);
-
-  const body = {
-    nickName: value.nickname,
-  };
 
   const socket = useRef(null);
 
@@ -67,23 +61,17 @@ const Chat = () => {
   };
 
   useEffect(() => {
-    scrollRef.current.scrollIntoView({ behavior: 'smooth', block: 'end', inline: 'nearest' });
-  }, []);
-
-  useEffect(() => {
-    axios({
-      baseURL: 'http://localhost:8080',
-      url: '/api/v1/chat',
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      data: JSON.stringify({ roomId: String(params.id) }),
-    }).then((res) => console.log(res));
+    const message = {
+      type: 'ENTER',
+      roomId: String(params.id),
+      sender: value.nickname,
+      message: messageText,
+    };
     // 서버 연결
     socket.current = new WebSocket('ws://localhost:8080/ws/chat');
     socket.current.onopen = () => {
       console.log('Connected to the server');
+      socket.current.send(JSON.stringify(message));
     };
 
     socket.current.onclose = () => {
@@ -91,22 +79,26 @@ const Chat = () => {
       setTimeout(connect(socket.current), 300);
     };
 
-    socket.current.onmessage = (e) => {
-      let parse = JSON.parse(e.data);
-      serverMessagesList.push(parse);
-      setServerMessages([...serverMessagesList]);
-    };
-
-    socket.current.onerror = (e) => {
-      setServerState(e.message);
+    socket.current.onerror = (event) => {
+      setServerState(event.message);
     };
   }, []);
 
+  useEffect(() => {
+    socket.current.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      setServerMessages((cur) => [...cur, { sender: data.sender, message: data.message }]);
+    };
+  }, [onmessage]);
+
+  useEffect(() => {
+    scrollRef.current.scrollIntoView({ behavior: 'smooth', block: 'end', inline: 'nearest' });
+  }, [serverMessages]);
   return (
     <Wrapper>
       <ChatContainer>
         <ChatAlert>누가 들어옴 </ChatAlert>
-        {chat?.map((a) => (
+        {serverMessages?.map((a) => (
           <ChatBubble user={a.sender === value.nickname ? true : false}>
             <div>
               <span>{a.sender}</span>
