@@ -1,8 +1,8 @@
-package com.watchtogether.server.ottAuth.controller;
+package com.watchtogether.server.ott.controller;
 
-import com.watchtogether.server.ottAuth.domain.LoginResult;
-import com.watchtogether.server.ottAuth.domain.OttAuthRequest;
-import com.watchtogether.server.ottAuth.service.OttAuthService;
+import com.watchtogether.server.ott.domain.dto.LoginResult;
+import com.watchtogether.server.ott.domain.dto.OttAuthRequest;
+import com.watchtogether.server.ott.service.OttAuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
