@@ -68,3 +68,23 @@ export const joinParty = (body, token) =>
     },
     data: JSON.stringify(body),
   });
+<<<<<<< HEAD
+
+
+/**
+ * 내 파티 목록 출력하기
+ */  
+ export const findMyParties = (body, token) => {
+  console.log(body);
+  return axios({
+    url: `${BASE_URL}/find-myParties`,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json;charset=UTF-8',
+      Authorization: `Bearer ${token}`,
+    },
+    data: JSON.stringify(body),
+  });
+};
+=======
+>>>>>>> ba2993d74aa3ac4d9c31efca452692bf4ad79fc0

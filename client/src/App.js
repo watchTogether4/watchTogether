@@ -20,6 +20,8 @@ import PrivateRoutes from './pages/PrivateRoutes';
 import OttPage from './pages/OttPage';
 import Payment from './pages/PaymentPage';
 import Charge from './pages/ChargePage';
+import PaymentList from './pages/PaymentListPage';
+import MyParty from './pages/MyPartyPage';
 
 function App() {
   return (
@@ -37,8 +39,10 @@ function App() {
             <Route path="/addParty" element={<AddParty />} />
 
             <Route path="/mypage" element={<MyPage />} />
+            <Route path="/mypage/myparty" element={<MyParty />} />
             <Route path="/mypage/user" element={<UserInfo />} />
             <Route path="/myparty/:id/chat" element={<Chat />} />
+            <Route path="/mypage/paymentlist" element={<PaymentList />} />
 
             <Route path="/message" element={<Alarm />} />
             <Route path="/payment" element={<Payment />} />

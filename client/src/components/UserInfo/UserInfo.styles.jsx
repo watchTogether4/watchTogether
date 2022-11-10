@@ -34,6 +34,7 @@ const InfoList = styled.ul`
     display: flex;
     justify-content: space-between;
     align-items: center;
+    display: ${props=>(props.trader === null) ? 'none' : '' };
   }
 `;
 

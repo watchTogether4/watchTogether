@@ -87,8 +87,8 @@ const Button = styled.button`
 
 const SmallButton = styled.button`
   width: 100%;
-  padding: 0rem 0.5rem;
-  height: 1.2rem;
+  padding: 0rem 0.75rem;
+  height: 1.5rem;
   font-size: 0.8rem;
   color: ${(props) => props.theme.color.white};
   background-color: ${(props) => props.theme.color.highlight_500};

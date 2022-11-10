@@ -68,7 +68,7 @@ const Leader = styled.div`
   background-color: #F8F9FE;
   background-blend-mode: multiply;
   box-shadow: 0 5px 10px -7px rgba(0,0,0,1);
-  border: 2px solid ${props=>props.role ? props.theme.color.highlight_500: '#ffffff' };
+  border: 2px solid ${props=>props.role ? props.theme.color.highlight_500: '#ffffff'};
 
   &:hover{
     border: 2px solid ${(props) => props.theme.color.highlight_500};

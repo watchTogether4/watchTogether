@@ -42,3 +42,16 @@ export const charge = (body, token) =>
     data: JSON.stringify(body),
   });
 
+
+/**
+ * 결제 내역 목록 출력하기
+ */
+ export const transactions = (token) =>
+ axios({
+   url: `${BASE_URL}`,
+   method: 'GET',
+   headers: {
+     'Content-Type': 'application/json',
+     Authorization: `Bearer ${token}`,
+   },
+ });
