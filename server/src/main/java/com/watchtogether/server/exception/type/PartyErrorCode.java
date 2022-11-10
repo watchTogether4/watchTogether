@@ -9,6 +9,9 @@ import org.springframework.http.HttpStatus;
 public enum PartyErrorCode {
     NOT_FOUND_USER(HttpStatus.BAD_REQUEST.value(), "NOT_FOUND_USER", "일치하는 사용자가 없습니다."),
     NOT_FOUND_USER_IN_INVITE_PARTY(HttpStatus.BAD_REQUEST.value(), "NOT_FOUND_USER_IN_INVITE_PARTY", "대기자 명단에서 해당 유저를 찾을수 없습니다."),
+    NOT_FOUND_PARTY_IN_INVITE_PARTY(HttpStatus.BAD_REQUEST.value(), "NOT_FOUND_PARTY_IN_INVITE_PARTY", "대기자 명단에서 해당 파티를 찾을수 없습니다."),
+    NOT_FOUND_DATA_IN_INVITE_PARTY(HttpStatus.BAD_REQUEST.value(), "NOT_FOUND_DATA_IN_INVITE_PARTY", "대기자 명단에서 해당 데이터를 찾을수 없습니다."),
+    NOT_FOUND_PARTY_IN_PARTY_MEMBER(HttpStatus.BAD_REQUEST.value(), "NOT_FOUND_PARTY_IN_PARTY_MEMBER", "파티멤버 명단에서 해당 유저를 찾을수 없습니다."),
     NOT_FOUND_USER_IN_PARTY_MEMBER(HttpStatus.BAD_REQUEST.value(), "NOT_FOUND_USER_IN_PARTY_MEMBER", "파티완료 명단에서 해당 유저를 찾을수 없습니다."),
     NOT_FOUND_PARTY(HttpStatus.BAD_REQUEST.value(), "NOT_FOUND_PARTY", "일치하는 파티가 없습니다."),
     NOT_FOUND_OTT_ID(HttpStatus.BAD_REQUEST.value(), "NOT_FOUND_OTT_ID", "일치하는 OTT_ID가 없습니다."),
