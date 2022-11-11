@@ -1,42 +1,51 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 import { findMyParties } from './../../api/Parties';
 import { getInfo } from './../../api/Users';
-import { Wrapper, Board} from './MyParty.styles';
+import { Wrapper, Board } from './MyParty.styles';
 import { Card } from './Card';
 
 function MyParty() {
+  let nickName = '';
   const accessToken = localStorage.getItem('access-token');
-  const myParties = () => {
-    return findMyParties(body, accessToken).then((res) => res.data);
-  };
+  const [myParty, setMyParty] = useState();
+  const [waiting, setWaiting] = useState();
   const getUserInfo = () => {
     return getInfo(accessToken).then((res) => res.data);
   };
 
   const { data } = useQuery('getInfo', getUserInfo);
-  const { data2 } = useQuery('findMyParties', myParties);
 
-  let nickName = '';
   if (data) {
     nickName = data.nickname;
-  };
-  const navigate = useNavigate();
-  const body = {nickName: nickName};
-  console.log(data)
-  console.log(data2)
+  }
+
+  const body = { nickName: nickName };
+
+  useEffect(() => {
+    findMyParties(body, accessToken).then((res) => {
+      setMyParty(res.data[0]); // 완성된 파티
+      setWaiting(res.data[1]); // 대기중인 파티
+    });
+  }, [data]);
 
   return (
     <>
       <Wrapper>
-        {data2 && (
+        {waiting && (
           <Board>
-            {data2.list.map((myParty) => (
-            <Card
-              key = {myParty.partyId}
-              data = {myParty}
-            />
+            <h2>대기 중 파티</h2>
+            {waiting.map((party) => (
+              <Card key={party.id} data={party} nickName={nickName} />
+            ))}
+          </Board>
+        )}
+        {myParty && (
+          <Board>
+            <h2>내 파티</h2>
+            {myParty.map((party) => (
+              <Card key={party.id} data={party} nickName={nickName} />
             ))}
           </Board>
         )}

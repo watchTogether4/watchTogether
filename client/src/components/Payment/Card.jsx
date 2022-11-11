@@ -1,8 +1,11 @@
 import React from 'react';
 import { CardWrapper, CardDesc, InfoList, Visible } from './Card.styles';
+import 'moment/locale/ko';
 
 export function Card({ trader, dt, result, type }) {
   const traderIsNull = trader;
+  const moment = require("moment");
+  const date = moment(dt.toString()).format('YY년 MM월 DD일, HH시 mm분 ss초');
   console.log(traderIsNull);
 
   return (
@@ -12,7 +15,7 @@ export function Card({ trader, dt, result, type }) {
           <InfoList>
             <li>
               <span>결제일: </span>
-              <span>{dt}</span>
+              <span>{date}</span>
             </li>
             <li>
               <span>결제 결과: </span>
