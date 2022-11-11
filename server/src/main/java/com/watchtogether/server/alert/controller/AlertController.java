@@ -2,10 +2,7 @@ package com.watchtogether.server.alert.controller;
 
 
 
-import com.watchtogether.server.alert.dto.AlertDto;
-import com.watchtogether.server.alert.dto.CheckAlertRequest;
-import com.watchtogether.server.alert.dto.CreateAlertRequest;
-import com.watchtogether.server.alert.dto.GetAlertListRequest;
+import com.watchtogether.server.alert.dto.*;
 import com.watchtogether.server.alert.service.AlertService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +32,11 @@ public class AlertController {
     @GetMapping("/list")
     List<AlertDto> getAlertList(@RequestParam String email) {
         return alertService.getAlertList(email);
+    }
+
+    @DeleteMapping
+    void deleteAlert(@RequestBody DeleteAlertRequest request) {
+        alertService.deleteAlert(request.getNotificationId());
     }
 }
 
