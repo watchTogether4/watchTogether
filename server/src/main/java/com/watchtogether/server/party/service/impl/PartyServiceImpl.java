@@ -291,7 +291,7 @@ public class PartyServiceImpl implements PartyService {
             Party party = optionalParty.get();
             if (party.getPeople() == 4) {
                 party.setPartyFull(true);
-                party.setPayDt(LocalDate.now().plusMonths(1));
+                party.setPayDt(LocalDateTime.now().plusMonths(1));
                 partyRepository.save(party);
                 List<InviteParty> list = invitePartyRepository.findByParty(party);
                 savePartyMember(party.getId());
