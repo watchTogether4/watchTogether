@@ -31,10 +31,10 @@ public interface PartyService extends UserDetailsService {
     /**
      * findAddPartyMember함수의 리턴값을 바탕으로 파티멤버테이블에 저장
      *
-     * @param partyId
+     * @param
      * @return
      */
-    ResponseEntity<Object> savePartyMember(Long partyId);
+    ResponseEntity<Object> savePartyMember(List<InviteParty> memberList);
 
 
     /**
