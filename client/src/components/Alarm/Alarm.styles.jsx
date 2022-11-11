@@ -19,10 +19,12 @@ const Message = styled.div`
   width: 100%;
   padding: 1rem;
   margin-bottom: 1rem;
-  border: 1px solid blue;
+  border: 2px solid
+    ${(props) => (props.read ? props.theme.color.white : props.theme.color.highlight_500)};
   border-radius: 1rem;
   overflow: hidden;
-
+  background-color: ${(props) =>
+    props.read ? props.theme.color.light_200 : props.theme.color.white};
   p {
     text-overflow: ellipsis;
     white-space: nowrap;

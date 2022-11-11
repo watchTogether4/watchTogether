@@ -24,12 +24,13 @@ const Alarm = () => {
     setData({ ...data });
   };
 
+  console.log(state.data);
   return (
     <MessageContainer handleSubmit={handleSubmit}>
       <MessageList>
         {state.data &&
           state.data.slice(offset, offset + limit).map((data) => (
-            <Message onClick={() => handleClick(data)}>
+            <Message read={data.notificationOpen} onClick={() => handleClick(data)}>
               <MessageType>{data.type}</MessageType>
               <p>{data.message}</p>
             </Message>
