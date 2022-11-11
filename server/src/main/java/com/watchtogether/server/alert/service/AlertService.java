@@ -67,4 +67,8 @@ public class AlertService {
 
         alertRepository.deleteAllInBatch(notifications);
     }
+
+    public void deleteAlert(long notificationId) {
+        alertRepository.deleteById(notificationId);
+    }
 }
