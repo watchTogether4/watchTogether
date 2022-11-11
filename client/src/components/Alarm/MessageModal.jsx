@@ -10,29 +10,40 @@ import { acceptParty } from '../../api/Parties';
 const MessageModal = ({ data, modal }) => {
   const { value } = useSelector((state) => state.user);
   const accessToken = localStorage.getItem('access-token');
+  const body = { notificationId: data.notificationId };
+  const body2 = { nick: value.nickname, uuid: data.uuid };
 
-  const handleClick = (e) => {
-    e.preventDefault();
-    // type = invite 일경우 서버 데이터 전송
-    // 공통 : 읽음처리 , 모달 off
-    const body = { notificationId: data.notificationId };
-    const body2 = { nick: value.nickname, uuid: data.uuid };
+  const postAlert = () => {
     putAlert(body, accessToken)
       .then((res) => {
-        acceptParty(body2, accessToken)
-          .then((res) => {
-            console.log(res.data);
-          })
-          .catch((error) => {
-            console.log(error.response.data.message);
-            toast.error(error.response.data.message, {
-              position: 'top-center',
-              autoClose: 1000,
-            });
-          });
-        modal(false);
+        console.log(res.data);
+        acceptMember();
       })
       .catch((error) => console.log(error));
+  };
+
+  const acceptMember = () => {
+    acceptParty(body2, accessToken)
+      .then((res) => {
+        toast.success(<h1>파티에 가입되었습니다.</h1>, {
+          position: 'top-center',
+          autoClose: 1000,
+        });
+        setTimeout(() => {
+          modal(false);
+        }, 1500);
+      })
+      .catch((error) => {
+        console.log(error.response.data.message);
+        toast.error(error.response.data.message, {
+          position: 'top-center',
+          autoClose: 1000,
+        });
+      });
+  };
+  const handleClick = (e) => {
+    e.preventDefault();
+    postAlert();
   };
 
   // 취소
@@ -48,7 +59,9 @@ const MessageModal = ({ data, modal }) => {
         <Title onClick={() => modal(false)}>{data.type}</Title>
         <AlertText>{data.message}</AlertText>
         <ButtonContainer>
-          <CancleButton onClick={handleClickCancle}>{data.type === 'INVITE' ? '거절 하기' : '확인'}</CancleButton>
+          <CancleButton onClick={handleClickCancle}>
+            {data.type === 'INVITE' ? '거절 하기' : '확인'}
+          </CancleButton>
           <SubmitButton onClick={handleClick}>
             {data.type === 'INVITE' ? '수락 하기' : '확인'}
           </SubmitButton>
