@@ -73,7 +73,7 @@ function MyPartyDetail() {
       </Wrapper>
 
       {isLeave && <AlertModal modal={setIsLeave} data={leaveData} leaderNickname={leaderNickname} id={id} />}
-      {isChange && <PasswordModal modal={setIsChange} nickName={nickName} partyOttId={partyOttId} partyOttPassword={partyOttPassword} />}
+      {isChange && <PasswordModal modal={setIsChange} nickName={nickName} partyId={id} partyOttPassword={partyOttPassword} />}
     </>
   );
 }
