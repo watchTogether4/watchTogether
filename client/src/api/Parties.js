@@ -101,3 +101,19 @@ export const joinParty = (body, token) =>
     data: JSON.stringify(body),
   });
 };
+
+/**
+ * 계정 비밀번호 변경하기
+ * @param {{nickName : string, partyId : 0, password: string, newPassword: string}} body
+ */
+ export const changePassword = (body, token) => {
+  return axios({
+    url: `${BASE_URL}/changePassword`,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json;charset=UTF-8',
+      Authorization: `Bearer ${token}`,
+    },
+    data: JSON.stringify(body),
+  });
+};
