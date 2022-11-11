@@ -28,7 +28,7 @@ public class PartyMember extends BaseEntity{
     private boolean alertCheck;
 
     @JsonIgnore
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "party_id")
     private Party party;
     public static PartyMember from(InvitePartyForm form){
