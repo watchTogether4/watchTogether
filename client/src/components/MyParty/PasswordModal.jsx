@@ -10,7 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Modal from '../Modal/Modal';
 import { changePassword } from '../../api/Parties';
 
-const PasswordModal = ({ modal, partyOttId, partyOttPassword, nickName }) => {
+const PasswordModal = ({ modal, partyId, partyOttPassword, nickName }) => {
 
   const { values, handleChange, handleSubmit } = useFormik({
     initialValues: {
@@ -38,7 +38,7 @@ const PasswordModal = ({ modal, partyOttId, partyOttPassword, nickName }) => {
 
   const accessToken = localStorage.getItem('access-token');
   const changePartyPassword = (newPassword) => {
-    const body = { nickName : nickName, partyId : partyOttId, password: partyOttPassword, newPassword: newPassword };
+    const body = { nickName : nickName, partyId : partyId, password: partyOttPassword, newPassword: newPassword };
     console.log(body)
     changePassword(body, accessToken)
       .then((res) => {
