@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import AlertModal from './AlertModal';
+import PasswordModal from './PasswordModal';
 import { Wrapper, Board, Withdrawal, InfoList } from './MyPartyDetail.styles';
 import 'moment/locale/ko';
 import otts from '../../mocks/platform';
 
 function MyPartyDetail() {
   const [isLeave, setIsLeave] = useState(false);
+  const [isChange, setIsChange] = useState(false);
   const { state } = useLocation();
   const moment = require("moment");
   const { id, title, body, members, ottId, createdDt, people, leaderNickname } = state.data;
@@ -21,7 +23,7 @@ function MyPartyDetail() {
   const handleClick = (e) => {
     e.preventDefault();
     const name = e.target.dataset.name;
-    // if (name === 'changePassword') setIsChange(true);
+    if (name === 'change') setIsChange(true);
     if (name === 'leave') setIsLeave(true);
   };
   
@@ -67,10 +69,11 @@ function MyPartyDetail() {
           </InfoList>
         </Board>
         <Withdrawal type="button" onClick={handleClick} data-name="leave">파티 나가기</Withdrawal>
-        <Withdrawal>OTT 비밀번호 변경하기</Withdrawal>
+        <Withdrawal type="button" onClick={handleClick} data-name="change">OTT 비밀번호 변경하기</Withdrawal>
       </Wrapper>
 
-      {isLeave && <AlertModal modal={setIsLeave} data={leaveData} leaderNickname={leaderNickname} />}
+      {isLeave && <AlertModal modal={setIsLeave} data={leaveData} leaderNickname={leaderNickname} id={id} />}
+      {isChange && <PasswordModal modal={setIsChange} nickName={nickName} partyOttId={partyOttId} partyOttPassword={partyOttPassword} />}
     </>
   );
 }
