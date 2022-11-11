@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CheckInviteMessageForm {
+public class CheckContinueMessageForm {
 
     private String nickname;
     private Long partyId;

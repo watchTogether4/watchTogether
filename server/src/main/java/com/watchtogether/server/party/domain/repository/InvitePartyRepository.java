@@ -17,7 +17,7 @@ public interface InvitePartyRepository  extends JpaRepository<InviteParty, Long>
 
     List<InviteParty> findByParty(Party party);
 
-    List<InviteParty> findByAcceptIsFalseAndLimitDtAfter(LocalDateTime now);
+    List<InviteParty> findByAcceptIsFalseAndLimitDtBefore(LocalDateTime now);
 
     List<InviteParty> findByPartyAndLeaderIsFalse(Party party);
 

@@ -91,8 +91,6 @@ public interface PartyService extends UserDetailsService {
 
     List<SendAlertForm> sendInviteAlert(Party party, String leader);
 
-    ResponseEntity<Object> checkInviteMessage(CheckInviteMessageForm form);
-
     List<SendAlertForm> changePassword(ChangePasswordForm form);
 
     /**

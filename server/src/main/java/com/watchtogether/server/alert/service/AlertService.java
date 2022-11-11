@@ -4,12 +4,16 @@ package com.watchtogether.server.alert.service;
 import com.watchtogether.server.alert.dto.AlertDto;
 import com.watchtogether.server.alert.persist.AlertRepository;
 import com.watchtogether.server.alert.persist.entity.Notification;
+import com.watchtogether.server.exception.PartyException;
+import com.watchtogether.server.exception.type.PartyErrorCode;
 import com.watchtogether.server.party.domain.entitiy.Party;
+import com.watchtogether.server.party.domain.entitiy.PartyMember;
 import com.watchtogether.server.party.domain.repository.PartyRepository;
 import com.watchtogether.server.party.domain.type.AlertType;
 import com.watchtogether.server.users.domain.entitiy.User;
 import com.watchtogether.server.users.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,6 +61,14 @@ public class AlertService {
         return notifications.stream()
                 .map(m -> new AlertDto(m))
                 .collect(Collectors.toList());
+    }
+
+    public ResponseEntity<Object> deleteAlert(Party party){
+        List<Notification> list = alertRepository.findByParty(party);
+        if (!list.isEmpty()){
+            alertRepository.deleteAll(list);
+        }
+        return ResponseEntity.ok().build();
     }
 
     @Transactional
