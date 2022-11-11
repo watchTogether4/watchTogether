@@ -101,7 +101,7 @@ public class TransactionController {
 
         TransactionDto transactionDto =
             transactionApplicaion.userCashWithdrawCancel(
-                 request.getPartyId(),
+                request.getPartyId(),
                 user.getNickname());
 
         return ResponseEntity.ok(
@@ -117,14 +117,4 @@ public class TransactionController {
             )
         );
     }
-
-//    @GetMapping("/test")
-//    @Operation(summary = "test", description = "test.")
-//    public ResponseEntity<?> test() {
-//
-//        TransactionDto transactionDto =
-//            transactionApplicaion.test();
-//
-//        return ResponseEntity.ok(null);
-//    }
 }
