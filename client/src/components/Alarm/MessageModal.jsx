@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { toast, ToastContainer } from 'react-toastify';
 import Modal from './../Modal/Modal';
@@ -12,6 +12,8 @@ const MessageModal = ({ data, modal }) => {
   const accessToken = localStorage.getItem('access-token');
   const body = { notificationId: data.notificationId };
   const body2 = { nick: value.nickname, uuid: data.uuid };
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const postAlert = () => {
     putAlert(body, accessToken)
@@ -31,6 +33,7 @@ const MessageModal = ({ data, modal }) => {
         });
         setTimeout(() => {
           modal(false);
+          setIsLoading(false);
         }, 1500);
       })
       .catch((error) => {
@@ -39,11 +42,15 @@ const MessageModal = ({ data, modal }) => {
           position: 'top-center',
           autoClose: 1000,
         });
+        setIsLoading(false);
       });
   };
   const handleClick = (e) => {
     e.preventDefault();
-    postAlert();
+    if (isLoading === false) {
+      setIsLoading(true);
+      postAlert();
+    }
   };
 
   // 취소

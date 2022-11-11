@@ -43,7 +43,7 @@ public class Party extends BaseEntity{
 
     private boolean leaderVerify;
 
-    private LocalDate payDt;
+    private LocalDateTime payDt;
 
 
 

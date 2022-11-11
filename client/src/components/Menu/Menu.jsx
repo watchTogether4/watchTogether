@@ -20,8 +20,8 @@ const Menu = ({ page }) => {
     // 메뉴바가 렌더링 될 때 마다 읽지 않은 메시지가 있는지 확인 -> bedge 갯수 수정
     getAlert(value.email, accessToken)
       .then((res) => {
-        setData([...res.data]);
         setBedge(res.data.filter((a) => a.notificationOpen === false).length);
+        setData(() => [...res.data]);
       })
       .catch((error) => console.log(error));
   }, []);
