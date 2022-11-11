@@ -34,8 +34,24 @@ const InfoList = styled.ul`
   }
 `;
 
+
+const Highlight = styled.p`
+  color: ${(props) => props.theme.color.highlight_500};
+  font-weight: 600;
+`;
+
+const HighlightTwo = styled.p`
+  color: ${(props) => props.theme.color.success_300};
+  font-weight: 600;
+`;
+
+const HighlightRed = styled.p`
+  color: ${(props) => props.theme.color.warning_300};
+  font-weight: 600;
+`;
+
 const Visible = styled.span`
   display: ${ props => (props.trader == null) ? 'none': '' };
 `;
 
-export { CardWrapper, CardDesc, InfoList, Visible };
+export { CardWrapper, CardDesc, InfoList, Visible, Highlight, HighlightTwo, HighlightRed };
