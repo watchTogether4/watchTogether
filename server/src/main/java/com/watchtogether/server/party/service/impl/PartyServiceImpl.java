@@ -197,7 +197,8 @@ public class PartyServiceImpl implements PartyService {
                     .build();
             invitePartyRepository.save(InviteParty.joinPartyFrom(invitePartyForm));
             party.setPeople(party.getPeople() + 1);
-            return ResponseEntity.ok(partyRepository.save(party));
+            partyRepository.save(party);
+            return ResponseEntity.ok().build();
         }
 
         throw new PartyException(PartyErrorCode.NOT_FOUND_PARTY);
@@ -294,7 +295,7 @@ public class PartyServiceImpl implements PartyService {
                 party.setPayDt(LocalDateTime.now().plusMonths(1));
                 partyRepository.save(party);
                 List<InviteParty> list = invitePartyRepository.findByParty(party);
-                savePartyMember(party.getId());
+                savePartyMember(list);
                 invitePartyRepository.deleteAll(list);
 
                 return TransactionForm.builder()
@@ -309,15 +310,17 @@ public class PartyServiceImpl implements PartyService {
     }
 
     @Override
-    public ResponseEntity<Object> savePartyMember(Long partyId) {
-        List<Object[]> list = findAddPartyMember(partyId);
+    public ResponseEntity<Object> savePartyMember(List<InviteParty> memberList) {
         LocalDateTime limitDt = LocalDateTime.now().plusDays(1);
-        for (Object[] object : list) {
+
+        for (int i = 0; i < memberList.size(); i++) {
+            InviteParty inviteParty = memberList.get(i);
+
             InvitePartyForm invitePartyForm = InvitePartyForm.builder()
-                    .nickname((String) object[0])
-                    .leader((Boolean) object[1])
-                    .party((Party) object[2])
                     .limitDt(limitDt)
+                    .nickname(inviteParty.getReceiverNickName())
+                    .leader(inviteParty.isLeader())
+                    .party(inviteParty.getParty())
                     .build();
             partyMemberRepository.save(PartyMember.from(invitePartyForm));
         }
