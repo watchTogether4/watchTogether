@@ -13,4 +13,6 @@ public interface PartyMemberRepository extends JpaRepository<PartyMember, Long> 
     List<PartyMember> findByNickName(String nickname);
 
     Optional<PartyMember> findByNickNameAndParty(String nickName, Party party);
+
+    List<PartyMember> findByParty(Party party);
 }
