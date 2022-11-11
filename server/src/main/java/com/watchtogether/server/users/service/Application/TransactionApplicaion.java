@@ -50,23 +50,4 @@ public class TransactionApplicaion {
             ottDto.getFee());
 
     }
-
-//    public TransactionDto test() {
-//
-//        List<Party> partyList = partyRepository.findByPayDt(LocalDate.now());
-//        for (Party party : partyList) {
-//            // 결제 진행부분 삽입
-//
-//            OttDto ottDto = ottService.searchOtt(party.getOttId());
-//
-//            transactionService.userCashDeposit(
-//                party.getMembers(),
-//                party.getLeaderNickname(),
-//                party.getId(),
-//                ottDto.getCommissionLeader(),
-//                ottDto.getFee());
-//        }
-//
-//        return null;
-//    }
 }

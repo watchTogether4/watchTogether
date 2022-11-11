@@ -19,14 +19,13 @@ public class OttDto {
     private Long fee;
     private String imagePath;
 
-    public static OttDto fromEntity(Ott ott){
+    public static OttDto fromEntity(Ott ott) {
         return OttDto.builder()
             .id(ott.getId())
             .name(ott.getName())
             .commissionLeader(ott.getCommissionLeader())
             .commissionMember(ott.getCommissionMember())
             .fee(ott.getFee())
-            .imagePath(ott.getImagePath())
             .build();
     }
 }
