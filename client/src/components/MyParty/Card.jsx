@@ -1,73 +1,24 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CardWrapper, CardDesc, InfoList, } from './Card.styles';
+import { CardWrapper, CardDesc, InfoList } from './Card.styles';
 import { IoIosArrowForward } from 'react-icons/io';
-export function Card({ data }) {
-  const {myParty} = data;
-  const { title, partyId, body, amount, startDt, endDt, ott, member } = myParty;
-  const navigate = useNavigate();
+import otts from '../../mocks/platform';
 
+export function Card({ data }) {
+  console.log(data);
+
+  const { id, title, ottId } = data;
+  const navigate = useNavigate();
+  const ottUrl = otts.filter((a) => a.id === ottId); // 로고 가져오려고 썼어요
+
+  // 사용자가 버튼을 클릭하면 id가 28이라고 가정할 때, mypage/myparty/28 로 이동하게 되고, id 28에 대한 데이터가 state로 담겨요!
   return (
     <>
-      <CardWrapper type='button' onClick = { () => navigate('./{$partyId}', { state: {data: myParty} })}>
+      <CardWrapper type="button" onClick={() => navigate(`./${id}`, { state: { data: data } })}>
         <CardDesc>
           <InfoList>
-            <li>
-              <span>
-                파티명: 
-              </span>
-              <span>
-                {title}
-              </span>
-            </li>
-            <li>
-              <span>
-                파티 소개: 
-              </span>
-              <span>
-                {body}
-              </span>
-            </li>
-            <li>
-              <span>
-                amount: 
-              </span>
-              <span>
-                {amount}
-              </span>
-            </li>
-            <li>
-              <span>
-                파티 생성일: 
-              </span>
-              <span>
-                {startDt}
-              </span>
-            </li>
-            <li>
-              <span>
-                파티 종료일: 
-              </span>
-              <span>
-                {endDt}
-              </span>
-            </li>
-            <li>
-              <span>
-                OTT 플랫폼: 
-              </span>
-              <span>
-                {ott}
-              </span>
-            </li>
-            <li>
-              <span>
-                구성 멤버: 
-              </span>
-              <span>
-                {member}
-              </span>
-            </li>
+            <img src={ottUrl[0].image} alt="" width="50px" height="50px" />
+            <h2>{title}</h2>
           </InfoList>
         </CardDesc>
         <IoIosArrowForward size={30} />

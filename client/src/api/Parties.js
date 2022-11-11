@@ -85,3 +85,19 @@ export const joinParty = (body, token) =>
     data: JSON.stringify(body),
   });
 };
+
+/**
+ * 파티 나가기
+ * @param {{nickName : string, partyId: 0}} body
+ */
+ export const leave = (body, token) => {
+  return axios({
+    url: `${BASE_URL}/`,
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json;charset=UTF-8',
+      Authorization: `Bearer ${token}`,
+    },
+    data: JSON.stringify(body),
+  });
+};
