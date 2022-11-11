@@ -72,7 +72,7 @@ function MyPartyDetail() {
         <Withdrawal type="button" onClick={handleClick} data-name="change">OTT 비밀번호 변경하기</Withdrawal>
       </Wrapper>
 
-      {isLeave && <AlertModal modal={setIsLeave} data={leaveData} leaderNickname={leaderNickname} />}
+      {isLeave && <AlertModal modal={setIsLeave} data={leaveData} leaderNickname={leaderNickname} id={id} />}
       {isChange && <PasswordModal modal={setIsChange} nickName={nickName} partyOttId={partyOttId} partyOttPassword={partyOttPassword} />}
     </>
   );

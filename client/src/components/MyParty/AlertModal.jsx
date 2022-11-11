@@ -7,8 +7,10 @@ import { AlertTitle, AlertText } from '../Modal/Modal.styles';
 
 import Modal from '../Modal/Modal';
 import { leave } from '../../api/Parties';
+import { cancel } from '../../api/Transaction';
 
-const AlertModal = ({ modal, data, leaderNickname }) => {
+const AlertModal = ({ modal, data, leaderNickname, id }) => {
+  const accessToken = localStorage.getItem('access-token');
   const navigate = useNavigate();
   const handleClick = (e) => {
     const name = e.target.dataset.name;
@@ -21,14 +23,28 @@ const AlertModal = ({ modal, data, leaderNickname }) => {
         }, 2000);
       }
       else {
+        cancelTransaction();
         leaveParty();
       }
     }
   };
 
-  const leaveParty = () => {
-    const accessToken = localStorage.getItem('access-token');
+  console.log(data);
 
+  const data2 = id;
+
+  const cancelTransaction = () => {
+    cancel(data2, accessToken)
+      .then((res) => {
+        console.log(res.data)
+      })
+      .catch((error) => {
+        console.log(error);
+        console.log(error.response.data.message);
+      });
+    };
+
+  const leaveParty = () => {
     leave(data, accessToken)
       .then((res) => {
         console.log(res.data);

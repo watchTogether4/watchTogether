@@ -42,6 +42,20 @@ export const charge = (body, token) =>
     data: JSON.stringify(body),
   });
 
+/**
+ * 충전하기
+ */
+export const cancel = (body, token) =>
+  axios({
+    url: `${BASE_URL}/withdraw/cancel`,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json;charset=UTF-8',
+      Authorization: `Bearer ${token}`,
+    },
+    data: JSON.stringify(body),
+  });
+
 
 /**
  * 결제 내역 목록 출력하기
@@ -55,3 +69,5 @@ export const charge = (body, token) =>
      Authorization: `Bearer ${token}`,
    },
  });
+
+
