@@ -92,8 +92,8 @@ export const joinParty = (body, token) =>
  */
  export const leave = (body, token) => {
   return axios({
-    url: `${BASE_URL}/`,
-    method: 'DELETE',
+    url: `${BASE_URL}/leave`,
+    method: 'POST',
     headers: {
       'Content-Type': 'application/json;charset=UTF-8',
       Authorization: `Bearer ${token}`,

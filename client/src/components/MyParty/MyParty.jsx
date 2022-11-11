@@ -37,7 +37,7 @@ function MyParty() {
           <Board>
             <h2>대기 중 파티</h2>
             {waiting.map((party) => (
-              <Card key={party.id} data={party} />
+              <Card key={party.id} data={party} nickName={nickName} />
             ))}
           </Board>
         )}
@@ -45,7 +45,7 @@ function MyParty() {
           <Board>
             <h2>내 파티</h2>
             {myParty.map((party) => (
-              <Card key={party.id} data={party} />
+              <Card key={party.id} data={party} nickName={nickName} />
             ))}
           </Board>
         )}
