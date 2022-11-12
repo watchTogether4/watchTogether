@@ -1,8 +1,5 @@
 package com.watchtogether.server.party.service.impl;
 
-import static com.watchtogether.server.exception.type.UserErrorCode.NOT_FOUND_USER;
-import static com.watchtogether.server.party.domain.type.AlertType.CHANGE_PASSWORD;
-
 import com.watchtogether.server.exception.PartyException;
 import com.watchtogether.server.exception.UserException;
 import com.watchtogether.server.exception.type.PartyErrorCode;
@@ -19,23 +16,25 @@ import com.watchtogether.server.party.service.PartyService;
 import com.watchtogether.server.users.domain.entitiy.User;
 import com.watchtogether.server.users.domain.repository.UserRepository;
 import com.watchtogether.server.users.service.TransactionService;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Query;
-
-import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Query;
+import javax.transaction.Transactional;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+
+import static com.watchtogether.server.exception.type.UserErrorCode.NOT_FOUND_USER;
+import static com.watchtogether.server.party.domain.type.AlertType.CHANGE_PASSWORD;
 
 @Service
 @RequiredArgsConstructor
@@ -49,6 +48,7 @@ public class PartyServiceImpl implements PartyService {
 
     private final TransactionService transactionService;
     private final OttService ottService;
+
     private final EntityManagerFactory emf;
 
     // 파티장이 파티 생성 클릭
