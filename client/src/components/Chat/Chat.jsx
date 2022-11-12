@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { string } from 'prop-types';
+
 import React, { useState, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
@@ -68,7 +68,7 @@ const Chat = () => {
       message: messageText,
     };
     // 서버 연결
-    socket.current = new WebSocket('ws://localhost:8080/ws/chat');
+    socket.current = new WebSocket('ws://3.38.9.104:8080/ws/chat');
     socket.current.onopen = () => {
       console.log('Connected to the server');
       socket.current.send(JSON.stringify(message));
@@ -82,22 +82,19 @@ const Chat = () => {
     socket.current.onerror = (event) => {
       setServerState(event.message);
     };
-  }, []);
-
-  useEffect(() => {
     socket.current.onmessage = (event) => {
       const data = JSON.parse(event.data);
       setServerMessages((cur) => [...cur, { sender: data.sender, message: data.message }]);
     };
-  }, [onmessage]);
+  }, []);
 
   useEffect(() => {
     scrollRef.current.scrollIntoView({ behavior: 'smooth', block: 'end', inline: 'nearest' });
   }, [serverMessages]);
+
   return (
     <Wrapper>
       <ChatContainer>
-        <ChatAlert>누가 들어옴 </ChatAlert>
         {serverMessages?.map((a) => (
           <ChatBubble user={a.sender === value.nickname ? true : false}>
             <div>
