@@ -106,7 +106,7 @@ public interface UserService extends UserDetailsService {
      * @param password 패스워드
      * @return
      */
-    UserDto checkUserAndCash(String email, String password);
+    UserDto checkUser(String email, String password);
 
     /**
      * 사용자 회원 탈퇴
@@ -114,6 +114,5 @@ public interface UserService extends UserDetailsService {
      * @param email
      */
     void deleteUser(String email);
-
 
 }
