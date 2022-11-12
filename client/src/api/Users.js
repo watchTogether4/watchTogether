@@ -61,6 +61,9 @@ export const getInfo = (token) => {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json;charset=UTF-8',
+      'Cache-control': 'no-store',
+      Pragma: 'no-store',
+      Expires: '0',
       Authorization: `Bearer ${token}`,
     },
   });
