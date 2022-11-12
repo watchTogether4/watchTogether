@@ -16,4 +16,8 @@ public interface AlertRepository extends JpaRepository<Notification, Long> {
 
     List<Notification> findByParty(Party party);
 
+    void deleteAllByEmail(String email);
+
+    void deleteAllByParty(Party party);
+
 }
