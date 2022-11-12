@@ -27,5 +27,9 @@ public interface InvitePartyRepository  extends JpaRepository<InviteParty, Long>
 
     Optional<InviteParty> findByReceiverNickNameAndPartyAndAcceptIsFalse(String nick, Party party);
 
+    void deleteAllByReceiverNickName(String nickname);
+
+    void deleteAllByParty(Party party);
+
 
 }
