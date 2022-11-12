@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CardWrapper, CardDesc, InfoList } from './Card.styles';
+import { CardWrapper, CardDesc, InfoList, Highlight, } from './Card.styles';
 import { IoIosArrowForward } from 'react-icons/io';
 import otts from '../../mocks/platform';
 
@@ -18,7 +18,7 @@ export function Card({ data, nickName }) {
         <CardDesc>
           <InfoList>
             <img src={ottUrl[0].image} alt="" width="50px" height="50px" />
-            <h2>{title}</h2>
+            <Highlight>{title}</Highlight>
           </InfoList>
         </CardDesc>
         <IoIosArrowForward size={30} />
