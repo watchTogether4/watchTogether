@@ -5,7 +5,7 @@ import Chat from '../components/Chat/Chat';
 const ChatPage = () => {
   return (
     <>
-      <Header title="그룹 채팅방" path="/myparty"></Header>
+      <Header title="그룹 채팅방" path="/mypage/myparty"></Header>
       <Chat />
     </>
   );
