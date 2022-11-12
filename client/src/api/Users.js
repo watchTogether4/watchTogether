@@ -1,14 +1,14 @@
 import axios from 'axios';
 
 const BASE_URL = '/api/v1/users';
-
+const PROXY = window.location.hostname === 'localhost' ? '' : '/proxy';
 /**
  * 로그인 - POST
  * @param { {email: string, password: string} } data
  */
 export const loginUser = async (data) => {
   return axios({
-    url: `${BASE_URL}/sign-in`,
+    url: `${PROXY}/${BASE_URL}/sign-in`,
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     data: JSON.stringify(data),
@@ -57,7 +57,7 @@ export const searchUser = (name, token) => {
  */
 export const getInfo = (token) => {
   return axios({
-    url: `${BASE_URL}/my-page`,
+    url: `${PROXY}/${BASE_URL}/my-page`,
     method: 'GET',
     headers: {
       'Content-Type': 'application/json;charset=UTF-8',
