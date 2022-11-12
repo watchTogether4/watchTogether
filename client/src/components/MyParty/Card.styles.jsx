@@ -9,7 +9,7 @@ const CardWrapper = styled.div`
   background-color: #fff;
   border-radius: 1rem;
   align-items: center;
-  border: 1px solid ${(props) => props.theme.color.light_300};
+  border: 2px solid ${(props) => props.theme.color.highlight_300};
 `;
 
 const CardDesc = styled.div`
@@ -19,7 +19,7 @@ const CardDesc = styled.div`
 
 const InfoList = styled.ul`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   width: 100%;
 
@@ -35,4 +35,12 @@ const InfoList = styled.ul`
   }
 `;
 
-export { CardWrapper, CardDesc, InfoList, };
+const Highlight = styled.p`
+  color: ${(props) => props.theme.color.black};
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 0.5rem;
+  padding-left: 1.5rem;
+`;
+
+export { CardWrapper, CardDesc, InfoList, Highlight, };

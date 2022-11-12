@@ -38,7 +38,7 @@ const PasswordModal = ({ modal, partyId, partyOttPassword, nickName }) => {
 
   const accessToken = localStorage.getItem('access-token');
   const changePartyPassword = (newPassword) => {
-    const body = { nickName : nickName, partyId : partyId, password: partyOttPassword, newPassword: newPassword };
+    const body = { nickname : nickName, partyId : partyId, password: partyOttPassword, newPassword: newPassword };
     console.log(body)
     changePassword(body, accessToken)
       .then((res) => {

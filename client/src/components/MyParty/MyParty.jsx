@@ -3,7 +3,7 @@ import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 import { findMyParties } from './../../api/Parties';
 import { getInfo } from './../../api/Users';
-import { Wrapper, Board } from './MyParty.styles';
+import { Wrapper, Board, Highlight, HighlightRed, HighlightTwo } from './MyParty.styles';
 import { Card } from './Card';
 
 function MyParty() {
@@ -35,7 +35,7 @@ function MyParty() {
       <Wrapper>
         {waiting && (
           <Board>
-            <h2>대기 중 파티</h2>
+            <Highlight>대기 중 파티</Highlight>
             {waiting.map((party) => (
               <Card key={party.id} data={party} nickName={nickName} />
             ))}
@@ -43,7 +43,7 @@ function MyParty() {
         )}
         {myParty && (
           <Board>
-            <h2>내 파티</h2>
+            <Highlight>내 파티</Highlight>
             {myParty.map((party) => (
               <Card key={party.id} data={party} nickName={nickName} />
             ))}

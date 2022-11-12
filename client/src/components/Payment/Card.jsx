@@ -26,7 +26,7 @@ export function Card({ trader, dt, result, type }) {
               <span>{type}</span>
             </li>
             <li>
-              <Visible>거래자 닉네임: </Visible>
+              <Visible trader = {trader}>거래자 닉네임: </Visible>
               <Visible trader = {trader}>{trader}</Visible>
             </li>
           </InfoList>
