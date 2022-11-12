@@ -48,7 +48,7 @@ public class CheckPartyApplication {
 
 
     @Transactional
-    @Scheduled(cron = "0 0 0 * * *")
+    @Scheduled(cron = "10 * * * * *")
     public void autoCheckParty() {
 
         checkSendMessage();
@@ -185,7 +185,7 @@ public class CheckPartyApplication {
                         }
                     }
                 }
-                if (!checked){
+                if (!checked) {
                     break;
                 }
                 if (isLeader) {
@@ -223,11 +223,11 @@ public class CheckPartyApplication {
                     alertService.createAlert(nickname, party.getId(), null, message, type);
                     break;
                 case LEAVE_LEADER:
-                    message = "리더가 떠났다는 메세지 및 파티 삭제 메세지";
+                    message = party.getTitle() + "";
                     alertService.createAlert(nickname, party.getId(), null, message, type);
                     break;
                 case LEAVE_MEMBER:
-                    if (!partyMember.isAlertCheck()){
+                    if (!partyMember.isAlertCheck()) {
                         continue;
                     }
                     message = "파티원이 떠났다는 메세지";
@@ -275,7 +275,7 @@ public class CheckPartyApplication {
     }
 
     public ResponseEntity<Object> joinPartyAndCheckFull(JoinPartyForm form) {
-
+        transactionService.checkTransaction(form.getPartyId(), form.getNickName());
         partyService.joinParty(form);
 
         TransactionForm transactionForm = partyService.checkPartyFull(form.getPartyId());
