@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = '/api/v1/users';
+const BASE_URL = 'api/v1/users';
 const PROXY = window.location.hostname === 'localhost' ? '' : '/proxy';
 /**
  * 로그인 - POST
