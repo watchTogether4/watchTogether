@@ -16,8 +16,9 @@ import org.hibernate.envers.AuditOverride;
 @AuditOverride(forClass = BaseEntity.class)
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name="ott")
-public class Ott extends BaseEntity{
+@Entity(name = "ott")
+public class Ott extends BaseEntity {
+
     @Id
     @Column(name = "ott_id")
     private Long id;
@@ -35,6 +36,5 @@ public class Ott extends BaseEntity{
     // 500원으로 통일
     private Long fee;
     // 전체금액 / 4
-    private  String imagePath;
-    // 이미지 경로
+
 }

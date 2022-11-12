@@ -17,7 +17,7 @@ public interface InvitePartyRepository  extends JpaRepository<InviteParty, Long>
 
     List<InviteParty> findByParty(Party party);
 
-    List<InviteParty> findByAcceptIsFalseAndLimitDtAfter(LocalDateTime now);
+    List<InviteParty> findByAcceptIsFalseAndLimitDtBefore(LocalDateTime now);
 
     List<InviteParty> findByPartyAndLeaderIsFalse(Party party);
 
@@ -26,6 +26,10 @@ public interface InvitePartyRepository  extends JpaRepository<InviteParty, Long>
     Optional<InviteParty> findByReceiverNickNameAndParty(String nick, Party party);
 
     Optional<InviteParty> findByReceiverNickNameAndPartyAndAcceptIsFalse(String nick, Party party);
+
+    void deleteAllByReceiverNickName(String nickname);
+
+    void deleteAllByParty(Party party);
 
 
 }

@@ -1,6 +1,7 @@
 package com.watchtogether.server.users.service.impl;
 
 
+import static com.watchtogether.server.exception.type.TransactionErrorCode.NOT_FOUND_PREPAYMENT_HISTORY;
 import static com.watchtogether.server.exception.type.UserErrorCode.NOT_FOUND_LEADER;
 import static com.watchtogether.server.exception.type.UserErrorCode.NOT_FOUND_NICKNAME;
 import static com.watchtogether.server.exception.type.UserErrorCode.NOT_FOUND_USER;
@@ -12,6 +13,7 @@ import static com.watchtogether.server.users.domain.type.TransactionType.CHARGE;
 import static com.watchtogether.server.users.domain.type.TransactionType.DEPOSIT;
 import static com.watchtogether.server.users.domain.type.TransactionType.WITHDRAW;
 
+import com.watchtogether.server.exception.TransactionException;
 import com.watchtogether.server.exception.UserException;
 import com.watchtogether.server.party.domain.entitiy.PartyMember;
 import com.watchtogether.server.users.domain.dto.TransactionDto;
@@ -183,6 +185,7 @@ public class TransactionServiceImpl implements TransactionService {
         }
     }
 
+
     @Override
     @Transactional
     public void deleteTransaction(String email) {
@@ -192,5 +195,25 @@ public class TransactionServiceImpl implements TransactionService {
 
         transactionRepository.deleteAllByUser(user);
 
+    }
+
+    @Override
+    public List<Transaction> checkTransaction(Long partId, String nickname) {
+
+        User user = userRepository.findByNickname(nickname)
+            .orElseThrow(() -> new UserException(NOT_FOUND_NICKNAME));
+
+        List<Transaction> transaction =
+            transactionRepository.findByUserOrderByTransactionDtDesc(user).stream()
+                .filter(
+                    (ts) -> ts.getPartyId().equals(partId) && ts.getTransactionResultType()
+                        .equals(WAIT.getDescription()))
+                .collect(Collectors.toList());
+
+        if (transaction.isEmpty()) {
+            log.error("해당 닉네임 : " + user.getNickname());
+            throw new TransactionException(NOT_FOUND_PREPAYMENT_HISTORY);
+        }
+        return transaction;
     }
 }

@@ -91,8 +91,6 @@ public interface PartyService extends UserDetailsService {
 
     List<SendAlertForm> sendInviteAlert(Party party, String leader);
 
-    ResponseEntity<Object> checkInviteMessage(CheckInviteMessageForm form);
-
     List<SendAlertForm> changePassword(ChangePasswordForm form);
 
     /**
@@ -127,4 +125,29 @@ public interface PartyService extends UserDetailsService {
     // 결제일까지 파티가 다 차지 않는다면 파티는 해체된다.
     // 만약 새로운 파티원이 들어온다면 그 결제일까지는 무료로 볼수 있다.
 
+
+    /**
+     * 파티 탈퇴전 파티장인지 파티원인지 체크
+     * @param Nickname  닉네임
+     * @return
+     */
+    List<Party> checkLeaderOrMemberBeforeUserLeave(String Nickname);
+
+    /**
+     * 회원 탈퇴 전 파티원 invite_party 내역 삭제
+     * @param Nickname  닉네임
+     */
+    void deleteInvitePartyMemberBeforeUserLeave(String Nickname);
+
+    /**
+     * 회원 탈퇴 전 파티장 invite_party 내역 삭제
+     * @param party 파티 객체
+     */
+    void deleteInvitePartyLeaderBeforeUserLeave(Party party);
+
+    /**
+     * 회원 탈퇴 전 party 내역 삭제
+     * @param party
+     */
+    void deletePartyBeforeUserLeave(Party party);
 }

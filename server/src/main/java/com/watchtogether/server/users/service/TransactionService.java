@@ -2,6 +2,7 @@ package com.watchtogether.server.users.service;
 
 import com.watchtogether.server.party.domain.entitiy.PartyMember;
 import com.watchtogether.server.users.domain.dto.TransactionDto;
+import com.watchtogether.server.users.domain.entitiy.Transaction;
 import java.util.List;
 
 public interface TransactionService {
@@ -81,4 +82,14 @@ public interface TransactionService {
      * @param email 사용자 이메일
      */
     void deleteTransaction(String email);
+
+    /**
+     * 사용자 거래내역 확인
+     *
+     * @param partId   파티아이디
+     * @param nickname 사용자 닉네임
+     * @return
+     */
+    List<Transaction> checkTransaction(Long partId, String nickname);
+
 }

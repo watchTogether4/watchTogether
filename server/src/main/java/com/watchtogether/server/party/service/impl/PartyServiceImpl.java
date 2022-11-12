@@ -20,7 +20,6 @@ import com.watchtogether.server.users.domain.entitiy.User;
 import com.watchtogether.server.users.domain.repository.UserRepository;
 import com.watchtogether.server.users.service.TransactionService;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,13 +29,13 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 
+import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -99,22 +98,6 @@ public class PartyServiceImpl implements PartyService {
         return inviteAlertList;
     }
 
-    @Override
-    public ResponseEntity<Object> checkInviteMessage(CheckInviteMessageForm form) {
-        Optional<Party> party = partyRepository.findById(form.getPartyId());
-        if (party.isEmpty()) {
-            throw new PartyException(PartyErrorCode.NOT_FOUND_PARTY);
-        } else {
-            Optional<PartyMember> partyMember = partyMemberRepository.findByNickNameAndParty(form.getNickname(), party.get());
-            if (partyMember.isPresent()) {
-                partyMember.get().setAlertCheck(true);
-                partyMemberRepository.save(partyMember.get());
-            } else {
-                throw new PartyException(PartyErrorCode.NOT_FOUND_USER);
-            }
-        }
-        return ResponseEntity.ok().build();
-    }
 
     @Override
     public List<SendAlertForm> changePassword(ChangePasswordForm form) {
@@ -243,7 +226,7 @@ public class PartyServiceImpl implements PartyService {
 
         party.setPartyFull(false);
         party.setPeople(party.getPeople() - 1);
-        partyRepository.save(party);
+
 
         if (!partyMember.isLeader()) {
             partyMemberRepository.delete(partyMember);
@@ -286,13 +269,16 @@ public class PartyServiceImpl implements PartyService {
 
     public TransactionForm checkPartyFull(Long partyId) {
         // 리더 아이디, 다른멤버 아이디
-        Optional<Party> optionalParty = partyRepository.findById(partyId);
+        Party party = partyRepository.findById(partyId)
+                .orElseThrow(()-> new PartyException(PartyErrorCode.NOT_FOUND_PARTY));
 
-        if (optionalParty.isPresent()) {
-            Party party = optionalParty.get();
             if (party.getPeople() == 4) {
                 party.setPartyFull(true);
-                party.setPayDt(LocalDateTime.now().plusMonths(1));
+                if (party.getPayDt() != null){
+                    party.setPayDt(party.getPayDt().plusMonths(1));
+                }else {
+                    party.setPayDt(LocalDateTime.now().plusMonths(1));
+                }
                 partyRepository.save(party);
                 List<InviteParty> list = invitePartyRepository.findByParty(party);
                 savePartyMember(list);
@@ -304,8 +290,8 @@ public class PartyServiceImpl implements PartyService {
             } else {
                 return null;
             }
-        }
-        throw new PartyException(PartyErrorCode.NOT_FOUND_PARTY);
+
+
 
     }
 
@@ -451,12 +437,13 @@ public class PartyServiceImpl implements PartyService {
         partyRepository.delete(party);
         return ResponseEntity.ok().build();
     }
+
+
+
     public ResponseEntity<Object> deleteInviteParty(Party party){
         List<InviteParty> list = invitePartyRepository.findByParty(party);
         if (!list.isEmpty()){
             invitePartyRepository.deleteAll(list);
-        }else {
-            throw new PartyException(PartyErrorCode.NOT_FOUND_PARTY_IN_INVITE_PARTY);
         }
         return ResponseEntity.ok().build();
     }
@@ -470,7 +457,7 @@ public class PartyServiceImpl implements PartyService {
         return ResponseEntity.ok().build();
     }
     public ResponseEntity<Object> deleteInviteParty(LocalDateTime now){
-        List<InviteParty> list = invitePartyRepository.findByAcceptIsFalseAndLimitDtAfter(now);
+        List<InviteParty> list = invitePartyRepository.findByAcceptIsFalseAndLimitDtBefore(now);
         if (!list.isEmpty()){
             invitePartyRepository.deleteAll(list);
         }else {
@@ -478,6 +465,28 @@ public class PartyServiceImpl implements PartyService {
 
         }
         return ResponseEntity.ok().build();
+    }
+
+    @Override
+    public List<Party> checkLeaderOrMemberBeforeUserLeave(String Nickname) {
+
+        return partyRepository.findByLeaderNickname(Nickname);
+    }
+
+    @Transactional
+    @Override
+    public void deleteInvitePartyMemberBeforeUserLeave(String Nickname) {
+        invitePartyRepository.deleteAllByReceiverNickName(Nickname);
+    }
+
+    @Override
+    public void deleteInvitePartyLeaderBeforeUserLeave(Party party) {
+        invitePartyRepository.deleteAllByParty(party);
+    }
+
+    @Override
+    public void deletePartyBeforeUserLeave(Party party) {
+        partyRepository.delete(party);
     }
 
 
