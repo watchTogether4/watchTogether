@@ -29,6 +29,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 
+import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -436,6 +437,9 @@ public class PartyServiceImpl implements PartyService {
         partyRepository.delete(party);
         return ResponseEntity.ok().build();
     }
+
+
+
     public ResponseEntity<Object> deleteInviteParty(Party party){
         List<InviteParty> list = invitePartyRepository.findByParty(party);
         if (!list.isEmpty()){
@@ -461,6 +465,28 @@ public class PartyServiceImpl implements PartyService {
 
         }
         return ResponseEntity.ok().build();
+    }
+
+    @Override
+    public List<Party> checkLeaderOrMemberBeforeUserLeave(String Nickname) {
+
+        return partyRepository.findByLeaderNickname(Nickname);
+    }
+
+    @Transactional
+    @Override
+    public void deleteInvitePartyMemberBeforeUserLeave(String Nickname) {
+        invitePartyRepository.deleteAllByReceiverNickName(Nickname);
+    }
+
+    @Override
+    public void deleteInvitePartyLeaderBeforeUserLeave(Party party) {
+        invitePartyRepository.deleteAllByParty(party);
+    }
+
+    @Override
+    public void deletePartyBeforeUserLeave(Party party) {
+        partyRepository.delete(party);
     }
 
 

@@ -83,4 +83,16 @@ public class AlertService {
     public void deleteAlert(long notificationId) {
         alertRepository.deleteById(notificationId);
     }
+
+    @Transactional
+    public void deleteAlertMemberBeforeUserLeave(String email){
+        alertRepository.deleteAllByEmail(email);
+    }
+
+    @Transactional
+    public void deleteAlertLeaderBeforeUserLeave(Party party){
+        alertRepository.deleteAllByParty(party);
+    }
+
+
 }
