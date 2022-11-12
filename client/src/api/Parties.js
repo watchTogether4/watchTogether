@@ -104,7 +104,7 @@ export const joinParty = (body, token) =>
 
 /**
  * 계정 비밀번호 변경하기
- * @param {{nickName : string, partyId : 0, password: string, newPassword: string}} body
+ * @param {{nickname : string, partyId : 0, password: string, newPassword: string}} body
  */
  export const changePassword = (body, token) => {
   return axios({
