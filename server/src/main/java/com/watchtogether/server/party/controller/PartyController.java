@@ -57,5 +57,9 @@ public class PartyController {
     public ResponseEntity<?> changePassword(@RequestBody ChangePasswordForm form){
         return ResponseEntity.ok(partyServiceimpl.changePassword(form));
     }
+    @PutMapping("/createChat")
+    public ResponseEntity<?> createChat(@RequestBody CreateChatForm form){
+        return ResponseEntity.ok(partyServiceimpl.createChat(form.getPartyId()));
+    }
 
 }
