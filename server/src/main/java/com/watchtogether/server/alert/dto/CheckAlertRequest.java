@@ -8,6 +8,5 @@ public class CheckAlertRequest {
 
         private String notificationId;
 
-
 }
 
