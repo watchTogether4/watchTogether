@@ -2,6 +2,7 @@ package com.watchtogether.server.alert.service;
 
 
 import com.watchtogether.server.alert.dto.AlertDto;
+import com.watchtogether.server.alert.dto.CheckAlertResponse;
 import com.watchtogether.server.alert.persist.AlertRepository;
 import com.watchtogether.server.alert.persist.entity.Notification;
 import com.watchtogether.server.exception.PartyException;
@@ -48,11 +49,13 @@ public class AlertService {
     }
 
     @Transactional
-    public void checkAlert(String notificationId) {
+    public CheckAlertResponse checkAlert(String notificationId) {
         Notification notification = alertRepository.findById(Long.parseLong(notificationId))
                 .orElseThrow(()->new RuntimeException("알림을 찾을 수 없습니다."));
 
         notification.setCheckAlert(true);
+
+        return new CheckAlertResponse(notification.getParty().getId());
     }
 
     public List<AlertDto> getAlertList(String email) {

@@ -25,8 +25,8 @@ public class AlertController {
     }
 
     @PutMapping("/check")
-    void checkAlert(@RequestBody CheckAlertRequest request) {
-        alertService.checkAlert(request.getNotificationId());
+     CheckAlertResponse checkAlert(@RequestBody CheckAlertRequest request) {
+        return alertService.checkAlert(request.getNotificationId());
     }
 
     @GetMapping("/list")
