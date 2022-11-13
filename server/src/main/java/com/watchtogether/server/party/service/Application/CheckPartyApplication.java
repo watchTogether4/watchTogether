@@ -48,9 +48,8 @@ public class CheckPartyApplication {
 
 
     @Transactional
-    @Scheduled(cron = "10 * * * * *")
+    @Scheduled(cron = "0 0 0 * * *")
     public void autoCheckParty() {
-
         checkSendMessage();
         checkLeave();
         checkParty();
