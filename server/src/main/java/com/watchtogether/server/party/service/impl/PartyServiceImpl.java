@@ -266,7 +266,7 @@ public class PartyServiceImpl implements PartyService {
 
     }
 
-
+    @Transactional
     public TransactionForm checkPartyFull(Long partyId) {
         // 리더 아이디, 다른멤버 아이디
         Party party = partyRepository.findById(partyId)
