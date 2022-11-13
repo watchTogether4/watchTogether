@@ -1,15 +1,17 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import icons from '../../mocks/platform';
 import { Wrapper, Inner, Title, Desc, Carousel, Icon, StartBtn } from './Main.styles';
-import { getCookieToken, setRefreshToken } from '../../utils/Cookie';
-import axios from 'axios';
-import { getInfo } from './../../api/Users';
+import { myPageAPI } from '../../api/User';
+import { info } from '../../store/User';
 
 function Main() {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  // slick
   const initialSettings = {
     dots: false,
     infinite: true,
@@ -33,41 +35,15 @@ function Main() {
 
   const isValidateToken = async (e) => {
     e.preventDefault();
-    const accessToken = localStorage.getItem('access-token');
-    const refreshToken = getCookieToken();
 
-    const body = {
-      accessToken,
-      refreshToken,
-    };
-
-    getInfo(accessToken)
+    myPageAPI()
       .then((res) => {
-        console.log(res.data);
         navigate('/mypage');
       })
       .catch((error) => {
+        console.log(error);
         console.log(error.response.data.message);
-        axios({
-          url: '/api/v1/refresh-token',
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json;charset=UTF-8',
-            Authorization: `Bearer ${accessToken}`,
-          },
-          data: JSON.stringify(body),
-        })
-          .then((response) => {
-            console.log(response.data);
-            setRefreshToken(response.data.refreshToken);
-            localStorage.setItem('access-token', response.data.accessToken);
-            navigate('/partyList');
-          })
-          .catch((error) => {
-            console.log(error);
-            console.log(error.response.data.message);
-            navigate('/signIn');
-          });
+        navigate('/signIn');
       });
   };
 

@@ -6,23 +6,24 @@ import { ButtonContainer, SubmitButton, CancleButton } from '../../styles/Common
 import { AlertTitle, AlertText } from '../Modal/Modal.styles';
 
 import Modal from '../Modal/Modal';
-import { leave } from '../../api/Parties';
-import { cancel } from '../../api/Transaction';
+import { leavePartyAPI } from '../../api/Parties';
+import { withdrawCancelAPI } from '../../api/Transaction';
 
 const AlertModal = ({ modal, data, leaderNickname, id }) => {
-  const accessToken = localStorage.getItem('access-token');
   const navigate = useNavigate();
   const handleClick = (e) => {
     const name = e.target.dataset.name;
     if (name === 'cancle') modal(false);
     if (name === 'leave') {
       if (data.nickName === leaderNickname) {
-        toast.error(<h1>파티장은 파티를 나갈 수 없습니다! 😠</h1>, {position: 'top-center', autoClose: 2000,});
+        toast.error(<h1>파티장은 파티를 나갈 수 없습니다! 😠</h1>, {
+          position: 'top-center',
+          autoClose: 2000,
+        });
         setTimeout(() => {
           modal(false);
         }, 2000);
-      }
-      else {
+      } else {
         cancelTransaction();
         leaveParty();
       }
@@ -34,18 +35,18 @@ const AlertModal = ({ modal, data, leaderNickname, id }) => {
   const data2 = id;
 
   const cancelTransaction = () => {
-    cancel(data2, accessToken)
+    withdrawCancelAPI(data2)
       .then((res) => {
-        console.log(res.data)
+        console.log(res.data);
       })
       .catch((error) => {
         console.log(error);
         console.log(error.response.data.message);
       });
-    };
+  };
 
   const leaveParty = () => {
-    leave(data, accessToken)
+    leavePartyAPI(data)
       .then((res) => {
         console.log(res.data);
         toast.success(

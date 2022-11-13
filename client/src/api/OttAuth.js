@@ -1,14 +1,9 @@
-import axios from 'axios'
+import { API } from './Token';
 
-export const postAuth = (body,token) => {
-    return axios({
-        url: '/api/v1/ottAuth',
-        method: 'POST',
-        headers: {
-            'Content-Type' : 'application/json',
-            Authorization: `Bearer ${token}`,
-        }, 
-        data: JSON.stringify(body)
-        
-    })
-}
+/**
+ *
+ * @param { {id: string, password: string, ottType: string} } ottForm
+ */
+export const ottAuthAPI = async (ottForm) => {
+  return await API.post('http://localhost:8081/api/v1/ottAuth', ottForm);
+};

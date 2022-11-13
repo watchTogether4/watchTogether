@@ -1,21 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery } from 'react-query';
-import { useNavigate } from 'react-router-dom';
-import { findMyParties } from './../../api/Parties';
-import { getInfo } from './../../api/Users';
 import { Wrapper, Board, Highlight, HighlightRed, HighlightTwo } from './MyParty.styles';
+import { findMyPartyAPI } from './../../api/Parties';
+import { myPageAPI } from '../../api/User';
 import { Card } from './Card';
 
 function MyParty() {
   let nickName = '';
-  const accessToken = localStorage.getItem('access-token');
   const [myParty, setMyParty] = useState();
   const [waiting, setWaiting] = useState();
-  const getUserInfo = () => {
-    return getInfo(accessToken).then((res) => res.data);
+
+  const getInfo = () => {
+    return myPageAPI().then((res) => res.data);
   };
 
-  const { data } = useQuery('getInfo', getUserInfo);
+  const { data } = useQuery('getBoardList', getInfo, {
+    retry: false, // 데이터 불러오기 실패하면 다시 시도 안함
+  });
 
   if (data) {
     nickName = data.nickname;
@@ -24,11 +25,11 @@ function MyParty() {
   const body = { nickName: nickName };
 
   useEffect(() => {
-    findMyParties(body, accessToken).then((res) => {
+    findMyPartyAPI(body).then((res) => {
       setMyParty(res.data[0]); // 완성된 파티
       setWaiting(res.data[1]); // 대기중인 파티
     });
-  }, [data]);
+  }, []);
 
   return (
     <>

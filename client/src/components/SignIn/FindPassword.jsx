@@ -4,7 +4,7 @@ import * as Yup from 'yup';
 import Modal from './../Modal/Modal';
 import { ModalInput, ButtonContainer, SubmitButton, CancleButton } from '../../styles/Common';
 import { Title, ErrorMessage } from './../Modal/Modal.styles';
-import { findPassword } from './../../api/Users';
+import { findPasswordAPI } from './../../api/User';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -20,7 +20,7 @@ const FindPassword = ({ modal }) => {
       nickname: Yup.string().required('닉네임을 입력해주세요'),
     }),
     onSubmit: (values) => {
-      findPassword(values)
+      findPasswordAPI(values)
         .then((res) => {
           console.log(res.data);
           toast.success(

@@ -1,41 +1,34 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useQuery } from 'react-query';
+import { useSelector } from 'react-redux';
 import { IoIosArrowForward } from 'react-icons/io';
 import { InfoList, List } from './User.styles';
 import Profile from './Profile';
-import { getInfo } from './../../api/Users';
 import PasswordConfirm from './PasswordConfirm';
 
 function Chat() {
-  const accessToken = localStorage.getItem('access-token');
-  const getUserInfo = () => {
-    return getInfo(accessToken).then((res) => res.data);
-  };
-  const { data, isLoading } = useQuery('getInfo', getUserInfo);
-
+  const { value } = useSelector((state) => state.user);
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleClick = (path) => {
-    path && navigate(`./${path}`, { state: data });
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
-    navigate('./user', { state: data });
+    navigate('./user');
   };
 
   return (
     <>
-      <Profile data={data} />
-      {data && (
+      <Profile data={value} />
+      {value && (
         <InfoList direction="column" alignItems="flex-start">
           <List justifyContent="space-between" onClick={() => setIsOpen(true)}>
             내 정보
             <IoIosArrowForward />
           </List>
-          <List justifyContent="space-between" onClick={() => navigate('./myparty', {state: { nickname: data.nickname }})}>
+          <List
+            justifyContent="space-between"
+            onClick={() => navigate('./myparty', { state: { nickname: value.nickname } })}
+          >
             내 파티
             <IoIosArrowForward />
           </List>
@@ -46,7 +39,7 @@ function Chat() {
         </InfoList>
       )}
 
-      {isOpen && <PasswordConfirm modal={setIsOpen} handleSubmit={handleSubmit} data={data} />}
+      {isOpen && <PasswordConfirm modal={setIsOpen} handleSubmit={handleSubmit} data={value} />}
     </>
   );
 }

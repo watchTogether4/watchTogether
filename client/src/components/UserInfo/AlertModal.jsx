@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
@@ -7,8 +6,8 @@ import { ButtonContainer, SubmitButton, CancleButton } from '../../styles/Common
 import { AlertTitle, AlertText } from './../Modal/Modal.styles';
 
 import Modal from './../Modal/Modal';
-import { withdrawalUser } from '../../api/Users';
-import { removeCookieToken } from './../../utils/Cookie';
+import { secessionUserAPI } from '../../api/User';
+import { removeRefreshToken } from './../../utils/cookieRefreshToken';
 
 const AlertModal = ({ modal, data }) => {
   const navigate = useNavigate();
@@ -22,13 +21,11 @@ const AlertModal = ({ modal, data }) => {
   };
 
   const withdrawal = () => {
-    const accessToken = localStorage.getItem('access-token');
-
-    withdrawalUser(data, accessToken)
+    secessionUserAPI(data)
       .then((res) => {
         console.log(res.data);
         localStorage.removeItem('access-token');
-        removeCookieToken();
+        removeRefreshToken();
 
         toast.success(
           <>

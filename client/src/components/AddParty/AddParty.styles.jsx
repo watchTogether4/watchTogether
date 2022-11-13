@@ -21,6 +21,7 @@ const GatherForm = styled.form`
   padding: 0 1rem;
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
 `;
 
 const Label = styled.label`
@@ -33,8 +34,22 @@ const CustomInput = styled(Input)`
   /* border-radius: 40px; */
 `;
 
+const ButtonContainer = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const CustomButton = styled.button`
+  height: 3rem;
+  margin-left: 0.5rem;
+  background-color: transparent;
+  font-size: 1rem;
+  font-weight: 600;
+`;
+
 const Text = styled.textarea`
   resize: none;
+  width: 100%;
   height: 8rem;
   line-height: 1.2rem;
   margin-bottom: 0.5rem;
@@ -58,6 +73,8 @@ export {
   GatherForm,
   Label,
   CustomInput,
+  ButtonContainer,
+  CustomButton,
   Text,
   SubmitButton,
   ErrorMessage,

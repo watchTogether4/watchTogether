@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { FaRegEnvelope, FaUserAlt, FaSearch, FaPen } from 'react-icons/fa';
 import { MenuWrapper, Bedge } from './Menu.styles';
-import { getAlert } from './../../api/Alert';
+import { listAlertAPI } from './../../api/Alert';
 
 const Menu = ({ page }) => {
-  const accessToken = localStorage.getItem('access-token');
   const { value } = useSelector((state) => state.user);
   const navigate = useNavigate();
   const [bedge, setBedge] = useState(0);
@@ -18,7 +17,7 @@ const Menu = ({ page }) => {
 
   useEffect(() => {
     // 메뉴바가 렌더링 될 때 마다 읽지 않은 메시지가 있는지 확인 -> bedge 갯수 수정
-    getAlert(value.email, accessToken)
+    listAlertAPI(value.email)
       .then((res) => {
         setBedge(res.data.filter((a) => a.notificationOpen === false).length);
         setData(() => [...res.data]);

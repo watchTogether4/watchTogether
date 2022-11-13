@@ -1,24 +1,31 @@
-import React, {useState} from 'react';
-import { useNavigate, useLocation } from 'react-router-dom'; 
+import React from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import otts from '../../mocks/platform';
-import { joinParty } from './../../api/Parties';
-import { getInfo } from './../../api/Users';
-import { withdraw } from './../../api/Transaction';
-import { Wrapper, Border, MainTitle, Highlight, HighlightTwo, HighlightRed, InfoList, ButtonSection } from './Payment.styles';
+import { joinPartyAPI } from './../../api/Parties';
+import { myPageAPI } from './../../api/User';
+import { withdrawAPI } from './../../api/Transaction';
+import {
+  Wrapper,
+  Border,
+  MainTitle,
+  Highlight,
+  HighlightTwo,
+  HighlightRed,
+  InfoList,
+  ButtonSection,
+} from './Payment.styles';
 import { Button } from '../../styles/Common';
 import { toast, ToastContainer } from 'react-toastify';
-import axios from 'axios';
 
 function Payment() {
-  const accessToken = localStorage.getItem('access-token');
   const navigate = useNavigate();
   const getUserInfo = () => {
-    return getInfo(accessToken).then((res) => res.data);
+    return myPageAPI().then((res) => res.data);
   };
 
   const joinUserParty = () => {
-      joinParty(body, accessToken)
+    joinPartyAPI(body)
       .then((res) => {
         console.log(res.data);
         toast.success(<h1>성공적으로 신청되었습니다.</h1>, {
@@ -30,22 +37,7 @@ function Payment() {
         }, 1500);
       })
       .catch((error) => {
-        console.log(error)
-        toast.error(error.response.data.message, {
-          position: 'top-center',
-          autoClose: 1000,
-        });
-      });
-    };
-
-  const Payment = () => {
-    withdraw(body2, accessToken)
-      .then((res) => {
-        console.log(res.data);
-        joinUserParty();
-      })
-      .catch((error) => {
-        console.log(error)
+        console.log(error);
         toast.error(error.response.data.message, {
           position: 'top-center',
           autoClose: 1000,
@@ -53,6 +45,20 @@ function Payment() {
       });
   };
 
+  const Payment = () => {
+    withdrawAPI(body2)
+      .then((res) => {
+        console.log(res.data);
+        joinUserParty();
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error(error.response.data.message, {
+          position: 'top-center',
+          autoClose: 1000,
+        });
+      });
+  };
 
   const { state } = useLocation();
   const title = state.title;
@@ -65,73 +71,86 @@ function Payment() {
   if (data) {
     cash = data.cash;
     nickName = data.nickname;
-  };
+  }
 
   const platform = state.ottId;
-  const platformPrice = otts[platform-1].price / 4;
+  const platformPrice = otts[platform - 1].price / 4;
   const platformPriceFormat = platformPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-  const totalPrice = (otts[platform-1].price / 4 + 900);
+  const totalPrice = otts[platform - 1].price / 4 + 900;
   const totalPriceFormat = totalPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   const afterCash = cash - totalPrice;
   const afterCashFormat = afterCash.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
-  const body = {nickName: nickName, partyId: partyId}
-  const body2 = {partyId: partyId}
+  const body = { nickName: nickName, partyId: partyId };
+  const body2 = { partyId: partyId };
 
   return (
     <>
-    <ToastContainer />
-    <Wrapper>
-      {data && (
-        <div>
-          <Border>
-            <MainTitle>고객 정보</MainTitle>
-            <InfoList>
+      <ToastContainer />
+      <Wrapper>
+        {data && (
+          <div>
+            <Border>
+              <MainTitle>고객 정보</MainTitle>
+              <InfoList>
                 <li>
-                <span>이름</span>
-                <span>{data.nickname}</span>
+                  <span>이름</span>
+                  <span>{data.nickname}</span>
                 </li>
                 <li>
-                <span>이메일</span>
-                <span>{data.email}</span>
+                  <span>이메일</span>
+                  <span>{data.email}</span>
                 </li>
-            </InfoList>
-          </Border>
-          <Border>
-            <MainTitle>결제 정보</MainTitle>
-            <InfoList>
+              </InfoList>
+            </Border>
+            <Border>
+              <MainTitle>결제 정보</MainTitle>
+              <InfoList>
                 <li>
-                <span>파티 모집 명</span>
-                <span>{title}</span>
-                </li>
-                <li>
-                <span>플랫폼 금액</span>
-                <span>{platformPriceFormat} 원</span>
+                  <span>파티 모집 명</span>
+                  <span>{title}</span>
                 </li>
                 <li>
-                <span>월 파티원 이용료</span>
-                <span>900 원</span>
+                  <span>플랫폼 금액</span>
+                  <span>{platformPriceFormat} 원</span>
                 </li>
                 <li>
-                <span>결제 금액</span>
-                <span><HighlightRed>{totalPriceFormat} 원</HighlightRed></span>
+                  <span>월 파티원 이용료</span>
+                  <span>900 원</span>
                 </li>
                 <li>
-                <span>보유 캐쉬</span>
-                <span><Highlight>{data.cash} 원</Highlight></span>
+                  <span>결제 금액</span>
+                  <span>
+                    <HighlightRed>{totalPriceFormat} 원</HighlightRed>
+                  </span>
                 </li>
                 <li>
-                <span>결제 후 캐쉬 잔액</span>
-                <span><HighlightTwo>{afterCashFormat} 원</HighlightTwo></span>
+                  <span>보유 캐쉬</span>
+                  <span>
+                    <Highlight>{data.cash} 원</Highlight>
+                  </span>
                 </li>
-            </InfoList>
-          </Border>
-          <ButtonSection>
-            <Button type='button' onClick={() => {Payment()}}>신청하기</Button>
-          </ButtonSection>
-        </div>
-      )}
-    </Wrapper>
+                <li>
+                  <span>결제 후 캐쉬 잔액</span>
+                  <span>
+                    <HighlightTwo>{afterCashFormat} 원</HighlightTwo>
+                  </span>
+                </li>
+              </InfoList>
+            </Border>
+            <ButtonSection>
+              <Button
+                type="button"
+                onClick={() => {
+                  Payment();
+                }}
+              >
+                신청하기
+              </Button>
+            </ButtonSection>
+          </div>
+        )}
+      </Wrapper>
     </>
   );
 }
