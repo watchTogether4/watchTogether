@@ -24,7 +24,6 @@ const Alarm = () => {
     setData({ ...data });
   };
 
-  console.log(state.data);
   return (
     <MessageContainer handleSubmit={handleSubmit}>
       <MessageList>

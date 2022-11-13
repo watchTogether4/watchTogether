@@ -4,16 +4,14 @@ import * as Yup from 'yup';
 import { toast, ToastContainer } from 'react-toastify';
 
 import { ButtonContainer, SubmitButton, CancleButton, ModalInput } from '../../styles/Common';
-import { Title, ErrorMessage, } from '../Modal/Modal.styles';
+import { Title, ErrorMessage } from '../Modal/Modal.styles';
 import 'react-toastify/dist/ReactToastify.css';
 
 import Modal from '../Modal/Modal';
-import { isCurrentPassword } from '../../api/Users';
+import { checkPasswordAPI } from '../../api/User';
 import { useNavigate } from 'react-router-dom';
 
 const PasswordConfirm = ({ modal, data, setPassword, setIsChecked }) => {
-  const navigate = useNavigate();
-  const accessToken = localStorage.getItem('access-token');
   const [message, setMessage] = useState('');
 
   const { values, errors, handleChange, handleSubmit } = useFormik({
@@ -30,9 +28,12 @@ const PasswordConfirm = ({ modal, data, setPassword, setIsChecked }) => {
 
     onSubmit: async (values) => {
       const body = { password: values.password };
-      isCurrentPassword(body, accessToken)
+      checkPasswordAPI(body)
         .then((response) => {
-          toast.success(<h1>비밀번호를 성공적으로 확인했습니다.</h1>, { position: 'top-center', autoClose: 1000 });
+          toast.success(<h1>비밀번호를 성공적으로 확인했습니다.</h1>, {
+            position: 'top-center',
+            autoClose: 1000,
+          });
 
           setTimeout(() => {
             modal(false);
