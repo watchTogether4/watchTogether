@@ -1,9 +1,9 @@
 [[redirects]]
-from = "https://fastidious-souffle-2fd946.netlify.app/api/*"
+from = "https://watchtogether1.netlify.app/api/*"
 to = "https://naver.com/"
 status = 200
 
 [[redirects]]
-from = "https://fastidious-souffle-2fd946.netlify.app/chat/*"
+from = "https://watchtogether1.netlify.app/chat/*"
 to = "https://naver.com/"
 status = 200
