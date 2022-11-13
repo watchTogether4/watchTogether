@@ -1,73 +1,38 @@
-import axios from 'axios';
+import { API } from './Token';
 
-const BASE_URL = `/api/v1/transactions`;
-/**
- *
- * @param {{
- * ottId: number,
- * title:string,
- * body:string,
- * partyOttId: string,
- * partyOttPassword: string,
- * leaderNickName: string,
- * receiversNickName: string
- * }} body
- */
+const BASE_API = `http://localhost:8081/api/v1/transactions`;
 
 /**
- * 파티 참가 결제하기
+ * 사용자 거래 내역 리스트
+ * @returns list, message
  */
-export const withdraw = (body, token) =>
-  axios({
-    url: `${BASE_URL}/withdraw`,
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json;charset=UTF-8',
-      Authorization: `Bearer ${token}`,
-    },
-    data: JSON.stringify(body),
-  });
+export const getListAPI = async () => {
+  return await API.get(`${BASE_API}`);
+};
 
 /**
- * 충전하기
+ * 사용자 캐쉬 충전
+ * @param {{email: string, password: string, amount: number}} userForm
+ * @returns email, message
  */
-export const charge = (body, token) =>
-  axios({
-    url: `${BASE_URL}/charge`,
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json;charset=UTF-8',
-      Authorization: `Bearer ${token}`,
-    },
-    data: JSON.stringify(body),
-  });
+export const chargeAPI = async (userForm) => {
+  return await API.post(`${BASE_API}/charge`, userForm);
+};
 
 /**
- * 충전하기
+ * 사용자 캐쉬 출금
+ * @param {number} partyId
+ * @returns nickname, transactionType, transactionResultType, amount, balanceSnapshot, traderNickname, transactionDt, message
  */
-export const cancel = (body, token) =>
-  axios({
-    url: `${BASE_URL}/withdraw/cancel`,
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json;charset=UTF-8',
-      Authorization: `Bearer ${token}`,
-    },
-    data: JSON.stringify(body),
-  });
-
+export const withdrawAPI = async (partyId) => {
+  return await API.post(`${BASE_API}/withdraw`, partyId);
+};
 
 /**
- * 결제 내역 목록 출력하기
+ * 사용자 캐쉬 출금 취소
+ * @param {number} partyId
+ * @returns nickname, transactionType, transactionResultType, amount, balanceSnapshot, traderNickname, transactionDt, message
  */
- export const transactions = (token) =>
- axios({
-   url: `${BASE_URL}`,
-   method: 'GET',
-   headers: {
-     'Content-Type': 'application/json',
-     Authorization: `Bearer ${token}`,
-   },
- });
-
-
+export const withdrawCancelAPI = async (partyId) => {
+  return await API.post(`${BASE_API}/withdraw/cancel`, partyId);
+};

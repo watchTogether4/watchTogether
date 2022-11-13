@@ -1,42 +1,27 @@
-import axios from 'axios';
+import { API } from './Token';
 
-const BASE_URL = '/api/v1/alert';
+const BASE_API = 'http://localhost:8081/api/v1/alert';
 
-export const postAlert = (body, token) => {
-  return axios({
-    url: BASE_URL,
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-    data: JSON.stringify(body),
-  });
+/**
+ *
+ * @param {{nickName: string[], partyId: string, inviteId: string, message: string, type: string}} partyForm
+ */
+export const alertAPI = async (partyForm) => {
+  return await API.post(`${BASE_API}`, partyForm);
 };
 
-export const putAlert = (body, token) => {
-  return axios({
-    url: `${BASE_URL}/check`,
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-    data: JSON.stringify(body),
-  });
+/**
+ *
+ * @param {number} notificationId
+ */
+export const checkAlertAPI = async (notificationId) => {
+  return await API.put(`${BASE_API}/check`, notificationId);
 };
 
-export const getAlert = (body, token) => {
-  return axios({
-    url: `${BASE_URL}/list`,
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json;charset=UTF-8',
-      Authorization: `Bearer ${token}`,
-    },
-    params: {
-      email: body,
-    },
-  });
+/**
+ *
+ * @param {string} email
+ */
+export const listAlertAPI = async (email) => {
+  return await API.get(`${BASE_API}/list?email=${email}`);
 };
-
