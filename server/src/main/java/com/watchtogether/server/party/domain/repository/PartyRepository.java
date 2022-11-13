@@ -19,4 +19,6 @@ public interface PartyRepository extends JpaRepository<Party, Long> {
     List<Party> findByCreatedDtBefore(LocalDateTime nowMinus7Days);
 
     List<Party> findByLeaderNickname(String nickname);
+
+    List<Party> findByCreatedChatIsTrue();
 }
