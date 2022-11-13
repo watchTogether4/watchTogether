@@ -8,7 +8,6 @@ module.exports = (app) => {
       target: 'http://3.38.9.104:8080',
       changeOrigin: true,
     }),
-    ㅞㅡ,
   );
   app.use(
     '/api',

@@ -1,16 +1,14 @@
 import axios from 'axios';
 
-const BASE_URL = '/api/v1/users';
-const BASE_API = 'http://http://3.38.9.104:8081';
-
+const BASE_URL = 'api/v1/users';
+const PROXY = window.location.hostname === 'localhost' ? '' : '/proxy';
 /**
  * 로그인 - POST
  * @param { {email: string, password: string} } data
  */
 export const loginUser = async (data) => {
   return axios({
-    baseUrl: BASE_API,
-    url: `${BASE_URL}/sign-in`,
+    url: `${PROXY}/${BASE_URL}/sign-in`,
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     data: JSON.stringify(data),
@@ -22,7 +20,6 @@ export const loginUser = async (data) => {
  */
 export const logoutUser = (token) => {
   return axios({
-    baseUrl: BASE_API,
     url: `/api/v1/sign-out`,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
@@ -34,7 +31,6 @@ export const logoutUser = (token) => {
  */
 export const isValidateToken = () => {
   return axios({
-    baseUrl: BASE_API,
     url: `${BASE_URL}/my-page`,
     method: 'GET',
     headers: { 'Content-Type': 'application/json' },
@@ -47,7 +43,6 @@ export const isValidateToken = () => {
  */
 export const searchUser = (name, token) => {
   return axios({
-    baseUrl: BASE_API,
     url: `${BASE_URL}/search-user`,
     method: 'GET',
     headers: { 'Content-Type': 'application/json;charset=UTF-8', Authorization: `Bearer ${token}` },
@@ -62,11 +57,13 @@ export const searchUser = (name, token) => {
  */
 export const getInfo = (token) => {
   return axios({
-    baseUrl: BASE_API,
-    url: `${BASE_URL}/my-page`,
+    url: `${PROXY}/${BASE_URL}/my-page`,
     method: 'GET',
     headers: {
       'Content-Type': 'application/json;charset=UTF-8',
+      'Cache-control': 'no-store',
+      Pragma: 'no-store',
+      Expires: '0',
       Authorization: `Bearer ${token}`,
     },
   });
@@ -78,7 +75,6 @@ export const getInfo = (token) => {
  */
 export const findPassword = (body) => {
   return axios({
-    baseUrl: BASE_API,
     url: `${BASE_URL}/reset-password`,
     method: 'POST',
     headers: {
@@ -95,7 +91,6 @@ export const findPassword = (body) => {
  */
 export const checkCode = (code) => {
   return axios({
-    baseUrl: BASE_API,
     url: `${BASE_URL}/reset-password`,
     methode: 'GET',
     headers: {
