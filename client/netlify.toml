@@ -1,4 +1,9 @@
 [[redirects]]
-from = "https://watchtogether1.netlify.app/*"
-to = "https://www.naver.com"
+from = "https://fastidious-souffle-2fd946.netlify.app/api/*"
+to = "http://13.125.167.122:8081/:splat"
+status = 200
+
+[[redirects]]
+from = "https://fastidious-souffle-2fd946.netlify.app/chat/*"
+to = "http://3.38.9.104:8080/:splat"
 status = 200
