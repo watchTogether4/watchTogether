@@ -62,4 +62,9 @@ public class PartyController {
         return ResponseEntity.ok(partyServiceimpl.createChat(form.getPartyId()));
     }
 
+    @PutMapping("/changeCreatedChat")
+    public ResponseEntity<?> changeCreatedChat(){
+        return ResponseEntity.ok(partyServiceimpl.changeCreatedChat());
+    }
+
 }
