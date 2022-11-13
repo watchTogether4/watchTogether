@@ -43,7 +43,7 @@ function App() {
             <Route path="/mypage/myparty" element={<MyParty />} />
             <Route path="/mypage/user" element={<UserInfo />} />
             <Route path="/mypage/myparty/:id" element={<MyPartyDetail />} />
-            <Route path="/myparty/:id/chat" element={<Chat />} />
+            <Route path="/mypage/myparty/:id/chat" element={<Chat />} />
             <Route path="/mypage/paymentlist" element={<PaymentList />} />
 
             <Route path="/message" element={<Alarm />} />
@@ -51,7 +51,6 @@ function App() {
             <Route path="/charge" element={<Charge />} />
           </Route>
           <Route path="/code=:code" element={<Reset />} />
-          
         </Routes>
       </AnimatePresence>
     </BrowserRouter>

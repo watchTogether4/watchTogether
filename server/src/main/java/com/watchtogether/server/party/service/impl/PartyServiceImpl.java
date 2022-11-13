@@ -467,6 +467,14 @@ public class PartyServiceImpl implements PartyService {
         return ResponseEntity.ok().build();
     }
 
+    public ResponseEntity<Object> createChat(Long partyId){
+        Party party = partyRepository.findById(partyId)
+                .orElseThrow(()-> new PartyException(PartyErrorCode.NOT_FOUND_PARTY));
+        party.setCreatedChat(true);
+        partyRepository.save(party);
+        return ResponseEntity.ok().build();
+    }
+
     @Override
     public List<Party> checkLeaderOrMemberBeforeUserLeave(String Nickname) {
 

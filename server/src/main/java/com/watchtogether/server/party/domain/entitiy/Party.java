@@ -45,7 +45,7 @@ public class Party extends BaseEntity{
 
     private LocalDateTime payDt;
 
-
+    private boolean createdChat;
 
     @OneToMany(mappedBy = "party")
     private List<PartyMember> members = new ArrayList<>();
@@ -62,6 +62,7 @@ public class Party extends BaseEntity{
                 .leaderVerify(false)
                 .leaderNickname(form.getLeaderNickName())
                 .invisibleDt(LocalDateTime.now().plusDays(1).plusMinutes(1))
+                .createdChat(false)
                 .build();
     }
     public static Party fromNicknameIsNull(CreatePartyForm form){
@@ -76,6 +77,7 @@ public class Party extends BaseEntity{
                 .leaderVerify(false)
                 .leaderNickname(form.getLeaderNickName())
                 .invisibleDt(LocalDateTime.now())
+                .createdChat(false)
                 .build();
     }
 }
