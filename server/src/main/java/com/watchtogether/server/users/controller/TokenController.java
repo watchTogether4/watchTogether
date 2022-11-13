@@ -40,7 +40,7 @@ public class TokenController {
                 SUCCESS_REFRESH_TOKEN.getMessage()));
     }
 
-    @PostMapping("/sign-out")
+    @PostMapping("/users/sign-out")
     @Operation(summary = "사용자 로그아웃", description = "사용자 로그아웃 처리 및 redis에 access token 블랙리스트 처리")
     public ResponseEntity<SignOutUser.Response> signOut(HttpServletRequest request) {
 
