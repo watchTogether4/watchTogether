@@ -23,7 +23,6 @@ function PartyList() {
   const { data } = useQuery('getBoardList', getBoardList, {
     retry: false, // 데이터 불러오기 실패하면 다시 시도 안함
   });
-  console.log(data);
 
   return (
     <>

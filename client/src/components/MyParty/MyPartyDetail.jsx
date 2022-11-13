@@ -20,7 +20,6 @@ import { enterRoomAPI } from '../../api/Chat';
 function MyPartyDetail() {
   const navigate = useNavigate();
   const { state } = useLocation();
-
   const [isLeave, setIsLeave] = useState(false);
   const [isChange, setIsChange] = useState(false);
   const {
