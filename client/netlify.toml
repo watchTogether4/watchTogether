@@ -1,0 +1,4 @@
+[[redirects]]
+from = "https://watchtogether1.netlify.app/*"
+to = "https://www.naver.com"
+status = 200
