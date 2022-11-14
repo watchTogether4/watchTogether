@@ -3,9 +3,13 @@ package com.watchtogether.server.alert.dto;
 
 import com.watchtogether.server.alert.persist.entity.Notification;
 import com.watchtogether.server.party.domain.type.AlertType;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder
+@AllArgsConstructor
 public class AlertDto {
 
         private Long notificationId;

@@ -1,15 +1,7 @@
 package com.watchtogether.server.exception.handler;
 
-import com.watchtogether.server.exception.OttException;
-import com.watchtogether.server.exception.PartyException;
-import com.watchtogether.server.exception.TokenException;
-import com.watchtogether.server.exception.TransactionException;
-import com.watchtogether.server.exception.UserException;
-import com.watchtogether.server.exception.response.OttExceptionResponse;
-import com.watchtogether.server.exception.response.PartyExceptionResponse;
-import com.watchtogether.server.exception.response.TokenExceptionResponse;
-import com.watchtogether.server.exception.response.TransactionExceptionResponse;
-import com.watchtogether.server.exception.response.UserExceptionResponse;
+import com.watchtogether.server.exception.*;
+import com.watchtogether.server.exception.response.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -65,5 +57,15 @@ public class CustomExceptionHandler {
         return ResponseEntity.badRequest()
             .body(new OttExceptionResponse(e.getErrorStatus(), e.getOttErrorCode(),
                 e.getMessage()));
+    }
+
+    @ExceptionHandler({AlertException.class})
+    public ResponseEntity<AlertExceptionResponse> OttException(
+            final AlertException e) {
+        log.error("AlertException is occurred. ", e);
+
+        return ResponseEntity.badRequest()
+                .body(new AlertExceptionResponse(e.getErrorStatus(), e.getAlertErrorCode(),
+                        e.getMessage()));
     }
 }
