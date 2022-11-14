@@ -54,6 +54,7 @@ public class AlertService {
                 .orElseThrow(()->new RuntimeException("알림을 찾을 수 없습니다."));
 
         notification.setCheckAlert(true);
+        alertRepository.save(notification);
 
         return new CheckAlertResponse(notification.getParty().getId());
     }
