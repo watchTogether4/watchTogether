@@ -20,7 +20,7 @@ function PartyList() {
   };
 
   // 파티 리스트가 [{}, {}] 형태로 data에 쌓임
-  const { data } = useQuery('getBoardList', getBoardList, {
+  const { data, isLoading } = useQuery('getBoardList', getBoardList, {
     retry: false, // 데이터 불러오기 실패하면 다시 시도 안함
   });
 
@@ -28,7 +28,10 @@ function PartyList() {
     <>
       <Wrapper>
         {/* data가 있을 경우에만 렌더링  */}
-        {data && (
+
+        {isLoading ? (
+          <div>Loading...</div>
+        ) : (
           <Board>
             {data
               .filter((party) => party.ottId === selectedOtt)
