@@ -1,7 +1,5 @@
 package com.example.sockettest.domain;
 
-import com.example.sockettest.persist.DialogRespository;
-import com.example.sockettest.persist.entity.Dialog;
 import com.example.sockettest.service.ChatService;
 import lombok.Builder;
 import lombok.Getter;
