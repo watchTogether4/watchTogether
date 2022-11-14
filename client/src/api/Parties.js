@@ -1,119 +1,84 @@
-import axios from 'axios';
+import { API } from './Token';
 
-const BASE_URL = `/api/v1/parties`;
+const BASE_API = `http://localhost:8081/api/v1/parties`;
+
+/**
+ *
+ * @param {{nick: string, uuid: string}} userInfo
+ */
+export const acceptPartyAPI = async (userInfo) => {
+  return await API.post(`${BASE_API}/accept`, userInfo);
+};
+
+/**
+ *
+ * @param {{ninkname: string, partyId:number, password: string, newPassword: string}} userForm
+ */
+export const changePasswordAPI = async (userForm) => {
+  return await API.post(`${BASE_API}/changePassword`, userForm);
+};
+
+/**
+ *
+ * @param {{nickname: string, partyId: number}} userForm
+ */
+export const checkContinueAPI = async (userForm) => {
+  return await API.post(`${BASE_API}/checkContinueMessage`, userForm);
+};
+
 /**
  *
  * @param {{
  * ottId: number,
- * title:string,
- * body:string,
+ * title: string,
+ * body: string,
  * partyOttId: string,
  * partyOttPassword: string,
  * leaderNickName: string,
  * receiversNickName: string
- * }} body
+ * }} partyForm
  */
-
-/**
- * 파티 모집 글 등록하기
- */
-export const createParty = (body, token) =>
-  axios({
-    url: `${BASE_URL}/create`,
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-    data: JSON.stringify(body),
-  });
-
-/**
- * 파티 신청 수락하기
- */
-export const acceptParty = (body, token) =>
-  axios({
-    url: `${BASE_URL}/accept`,
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-    data: JSON.stringify(body),
-  });
-
-/**
- * 파티 목록 출력하기
- */
-export const showPartyList = (token) =>
-  axios({
-    url: `${BASE_URL}/showPartyList`,
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-/**
- * 파티 참여하기
- */
-export const joinParty = (body, token) => 
-  axios({
-    url: `${BASE_URL}/join`,
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json;charset=UTF-8',
-      Authorization: `Bearer ${token}`,
-    },
-    data: JSON.stringify(body),
-  });
-
-
-/**
- * 내 파티 목록 출력하기
- */  
- export const findMyParties = (body, token) => {
-  console.log(body);
-  return axios({
-    url: `${BASE_URL}/find-myParties`,
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json;charset=UTF-8',
-      Authorization: `Bearer ${token}`,
-    },
-    data: JSON.stringify(body),
-  });
+export const createPartyAPI = async (partyForm) => {
+  return await API.post(`${BASE_API}/create`, partyForm);
 };
 
 /**
- * 파티 나가기
- * @param {{nickName : string, partyId: 0}} body
+ *
+ * @param {string} nickname
+ * @returns partyId, partyTitle, partyBody, payAmount, createTime, ottName, partyEndDate, members
  */
- export const leave = (body, token) => {
-  return axios({
-    url: `${BASE_URL}/leave`,
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json;charset=UTF-8',
-      Authorization: `Bearer ${token}`,
-    },
-    data: JSON.stringify(body),
-  });
+export const findMyPartyAPI = async (nickname) => {
+  return await API.post(`${BASE_API}/find-myParties`, nickname);
 };
 
 /**
- * 계정 비밀번호 변경하기
- * @param {{nickname : string, partyId : 0, password: string, newPassword: string}} body
+ *
+ * @param {{nickName: string, partyId: number}} partyForm
  */
- export const changePassword = (body, token) => {
-  return axios({
-    url: `${BASE_URL}/changePassword`,
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json;charset=UTF-8',
-      Authorization: `Bearer ${token}`,
-    },
-    data: JSON.stringify(body),
-  });
+export const joinPartyAPI = async (partyForm) => {
+  return await API.post(`${BASE_API}/join`, partyForm);
+};
+
+/**
+ *
+ * @param {{nickName: string, partyId: number}} userForm
+ */
+export const leavePartyAPI = async (userForm) => {
+  return await API.post(`${BASE_API}/leave`, userForm);
+};
+
+/**
+ *
+ * @returns partyId, partyTitle, partyBody, payAmount, createTime, ottName, partyEndDate, members
+ */
+export const getAllPartyAPI = async () => {
+  return await API.get(`${BASE_API}/showPartyList`);
+};
+
+/**
+ * @param {number} partyId
+ * @returns partyId, partyTitle, partyBody, payAmount, createTime, ottName, partyEndDate, members
+ */
+export const createChatAPI = async (partyId) => {
+  return await API.put(`${BASE_API}/createChat`, partyId);
 };

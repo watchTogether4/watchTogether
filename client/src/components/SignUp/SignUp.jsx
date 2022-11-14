@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { SignUpForm, Wrapper, ErrorMsg, Input, LoginLink, Button } from './SignUp.styles';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import axios from 'axios';
+import { signUpAPI } from '../../api/User';
 
 function SignUp() {
   const navigate = useNavigate();
@@ -30,23 +30,17 @@ function SignUp() {
   });
 
   const onSubmit = async (values) => {
-    console.log('제출되었습니다.');
-    let { email, nickname, password, birth } = values;
-    birth = new Date(birth);
+    const body = { ...values };
     try {
-      await axios.post('/api/v1/users/sign-up', {
-        email,
-        nickname,
-        password,
-        birth,
-      });
-      toast.success(<h1>회원가입이 완료되었습니다.</h1>, {
-        position: 'top-center',
-        autoClose: 3000,
+      signUpAPI(body).then(() => {
+        toast.success(<h1>회원가입이 완료되었습니다.</h1>, {
+          position: 'top-center',
+          autoClose: 1000,
+        });
       });
       setTimeout(() => {
         navigate('/signIn');
-      }, 3000);
+      }, 1500);
     } catch (e) {
       toast.error(e.response.data.message, {
         position: 'top-center',
@@ -65,8 +59,6 @@ function SignUp() {
     validationSchema,
     onSubmit,
   });
-
-  console.log(errors);
 
   return (
     <Wrapper>

@@ -266,7 +266,7 @@ public class PartyServiceImpl implements PartyService {
 
     }
 
-
+    @Transactional
     public TransactionForm checkPartyFull(Long partyId) {
         // 리더 아이디, 다른멤버 아이디
         Party party = partyRepository.findById(partyId)
@@ -472,6 +472,14 @@ public class PartyServiceImpl implements PartyService {
                 .orElseThrow(()-> new PartyException(PartyErrorCode.NOT_FOUND_PARTY));
         party.setCreatedChat(true);
         partyRepository.save(party);
+        return ResponseEntity.ok().build();
+    }
+    public ResponseEntity<Object> changeCreatedChat(){
+        List<Party>  list = partyRepository.findByCreatedChatIsTrue();
+        for (int i = 0; i < list.size(); i++) {
+            list.get(i).setCreatedChat(false);
+        }
+        partyRepository.saveAll(list);
         return ResponseEntity.ok().build();
     }
 

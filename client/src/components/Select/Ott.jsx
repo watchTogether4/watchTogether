@@ -30,6 +30,7 @@ function Ott() {
         <OttSection direction="column" justifyContent="flex-start">
           {otts.map((platform) => (
             <OttButton
+              key={ott.id}
               direction="column"
               ott={ott}
               clicked={ott === platform.id ? true : false}
@@ -57,9 +58,7 @@ function Ott() {
           ))}
         </OttSection>
         <ButtonSection direction="column" justifyContent="flex-start">
-          <Button onClick={(role == true) ? leader : follower}>
-            다음
-          </Button>
+          <Button onClick={role == true ? leader : follower}>다음</Button>
         </ButtonSection>
       </Wrapper>
     </motion.div>

@@ -4,21 +4,23 @@ import { useQuery } from 'react-query';
 import { useSelector } from 'react-redux';
 import { toast, ToastContainer } from 'react-toastify';
 import { animate, motion } from 'framer-motion';
+import { AiOutlineSearch } from 'react-icons/ai';
 import {
   Wrapper,
-  Description,
   GatherForm,
   Label,
   CustomInput,
+  ButtonContainer,
+  CustomButton,
   Text,
   SubmitButton,
   ErrorMessage,
 } from './AddParty.styles';
 import SearchModal from './SearchModal';
-import { createParty } from '../../api/Parties';
-import { postAlert } from '../../api/Alert';
-import { getInfo } from '../../api/Users';
-import { postAuth } from '../../api/OttAuth';
+import { createPartyAPI } from '../../api/Parties';
+import { alertAPI } from '../../api/Alert';
+import { myPageAPI } from '../../api/User';
+import { ottAuthAPI } from '../../api/OttAuth';
 import otts from '../../mocks/platform';
 
 const AddParty = () => {
@@ -39,11 +41,10 @@ const AddParty = () => {
   const [isVaildate, setIsValidate] = useState(false);
   const [inviteMember, setinviteMember] = useState([]);
 
-  const createForm = (body, accessToken) => {
-    createParty(body, accessToken)
+  const createForm = (body) => {
+    createPartyAPI(body)
       .then((res) => {
-        console.log(res.data);
-        res.data && sendAlert(res.data, accessToken);
+        res.data && sendAlert(res.data);
         toast.success(<h1>모집 글이 등록되었습니다</h1>, {
           position: 'top-center',
           autoClose: 1500,
@@ -60,7 +61,7 @@ const AddParty = () => {
       });
   };
 
-  const sendAlert = (body, token) => {
+  const sendAlert = (body) => {
     let member = {};
     // eslint-disable-next-line array-callback-return
     body.map((data) => {
@@ -74,19 +75,16 @@ const AddParty = () => {
         message: `${data.sender} 님께서 ${data.nickName} 님을 ${ottType} 파티에 초대하셨습니다.`,
       };
 
-      console.log(member);
-      postAlert(member, token)
+      alertAPI(member)
         .then((res) => console.log(res))
         .catch((error) => console.log(error.response.data.message));
     });
-
-    console.log(member);
   };
 
-  const accessToken = localStorage.getItem('access-token');
   const getUserInfo = () => {
-    return getInfo(accessToken).then((res) => res.data);
+    return myPageAPI().then((res) => res.data);
   };
+
   const { data } = useQuery('getInfo', getUserInfo);
 
   if (data) {
@@ -94,7 +92,6 @@ const AddParty = () => {
   }
 
   const submitForm = () => {
-    const accessToken = localStorage.getItem('access-token');
     const invite = inviteMember.length !== 0 ? inviteMember.join() : null;
     const createData = { ...formValues, receiversNickName: invite };
     const filterType = otts.filter((a) => a.id === state.ott);
@@ -104,10 +101,9 @@ const AddParty = () => {
       ottType: filterType[0].type,
     };
 
-    postAuth(authData, accessToken).then((res) => {
-      console.log(res.data);
+    ottAuthAPI(authData).then((res) => {
       if (res.data.loginResult === '1') {
-        createForm(createData, accessToken);
+        createForm(createData);
       } else {
         toast.error(<h1>일치하는 플랫폼 계정이 없습니다.</h1>, {
           position: 'top-center',
@@ -183,7 +179,6 @@ const AddParty = () => {
       <Wrapper>
         <ToastContainer />
         <GatherForm onSubmit={handleSubmit}>
-          <Description>파티원을 모집하거나, 원하는 지인을 초대할 수 있어요.</Description>
           {formErrors && <ErrorMessage className="error">{formErrors}</ErrorMessage>}
           <Label htmlFor="title">모집 제목</Label>
           <CustomInput
@@ -192,14 +187,15 @@ const AddParty = () => {
             defalutValue={formValues.title}
             onChange={handleChange}
           />
-
-          <Label htmlFor="searchMember">파티원 초대하기</Label>
+          <ButtonContainer>
+            <AiOutlineSearch size={24} />
+            <CustomButton onClick={handleClick}>파티원 초대하기</CustomButton>
+          </ButtonContainer>
           <CustomInput
-            type="text"
             name="searchMember"
-            placeholder="찾으려는 파티원의 닉네임을 입력해주세요."
-            value={inviteMember}
-            onClick={handleClick}
+            placeholder="초대하기를 클릭하면 닉네임을 검색할 수 있어요!"
+            defaultValue={inviteMember}
+            readonly
           />
 
           <Label htmlFor="ottId">OTT 플랫폼 계정</Label>
@@ -218,7 +214,6 @@ const AddParty = () => {
             defalutValue={formValues.partyOttPassword}
             onChange={handleChange}
           />
-
           <Label htmlFor="body">모집 글</Label>
           <Text
             name="body"
@@ -226,7 +221,6 @@ const AddParty = () => {
             defalutValue={formValues.body}
             onChange={handleChange}
           />
-
           <SubmitButton type="submit">등록하기</SubmitButton>
         </GatherForm>
 

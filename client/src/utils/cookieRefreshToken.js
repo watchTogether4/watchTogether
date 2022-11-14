@@ -2,6 +2,8 @@ import { Cookies } from 'react-cookie';
 
 const cookies = new Cookies();
 
+export const getRefreshToken = () => cookies.get('refresh_token');
+
 export const setRefreshToken = (refreshToken) => {
   const today = new Date();
   const expireDate = today.setHours(today.getHours() + 1);
@@ -13,8 +15,6 @@ export const setRefreshToken = (refreshToken) => {
   });
 };
 
-export const getCookieToken = () => cookies.get('refresh_token');
-
-export const removeCookieToken = () =>
+export const removeRefreshToken = () =>
   // eslint-disable-next-line implicit-arrow-linebreak
   cookies.remove('refresh_token', { sameSite: 'strict', path: '/' });

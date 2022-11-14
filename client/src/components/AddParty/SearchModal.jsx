@@ -3,8 +3,7 @@ import Modal from '../Modal/Modal';
 
 import { ButtonContainer, SubmitButton, CancleButton, ModalInput } from '../../styles/Common';
 import { SearchResult } from '../Modal/Modal.styles';
-
-import { searchUser } from '../../api/Users';
+import { searchUserAPI } from '../../api/User';
 
 const AddPartyModal = ({ setIsOpen, inviteMember, setinviteMember }) => {
   const [searchMember, setSearchMember] = useState('');
@@ -34,7 +33,7 @@ const AddPartyModal = ({ setIsOpen, inviteMember, setinviteMember }) => {
     const nickname = searchMember;
     const accessToken = localStorage.getItem('access-token');
 
-    searchUser(nickname, accessToken)
+    searchUserAPI(nickname, accessToken)
       .then((res) => {
         console.log(res.data);
         setinviteMember([...inviteMember, searchMember]);
