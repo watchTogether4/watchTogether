@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useOutletContext } from 'react-router-dom';
 import { IoIosArrowForward } from 'react-icons/io';
 import { InfoList, List } from './User.styles';
 import Profile from './Profile';
 import PasswordConfirm from './PasswordConfirm';
 
 function Chat() {
-  const { value } = useSelector((state) => state.user);
+  const { userInfo } = useOutletContext();
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -18,8 +18,8 @@ function Chat() {
 
   return (
     <>
-      <Profile data={value} />
-      {value && (
+      <Profile data={userInfo} />
+      {userInfo && (
         <InfoList direction="column" alignItems="flex-start">
           <List justifyContent="space-between" onClick={() => setIsOpen(true)}>
             내 정보
@@ -27,7 +27,7 @@ function Chat() {
           </List>
           <List
             justifyContent="space-between"
-            onClick={() => navigate('./myparty', { state: { nickname: value.nickname } })}
+            onClick={() => navigate('./myparty', { state: { nickname: userInfo.nickname } })}
           >
             내 파티
             <IoIosArrowForward />
@@ -39,7 +39,7 @@ function Chat() {
         </InfoList>
       )}
 
-      {isOpen && <PasswordConfirm modal={setIsOpen} handleSubmit={handleSubmit} data={value} />}
+      {isOpen && <PasswordConfirm modal={setIsOpen} handleSubmit={handleSubmit} data={userInfo} />}
     </>
   );
 }

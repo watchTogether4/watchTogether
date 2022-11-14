@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useSelector } from 'react-redux';
 import { useQuery } from 'react-query';
-import { useParams } from 'react-router-dom';
+import { useOutletContext, useParams } from 'react-router-dom';
 import { myPageAPI } from '../../api/User';
 import {
   Wrapper,
@@ -13,16 +12,9 @@ import {
 } from './Chat.styles';
 
 const Chat = () => {
+  const { userInfo } = useOutletContext();
   const scrollRef = useRef();
   const params = useParams();
-
-  const getInfo = () => {
-    return myPageAPI().then((res) => res.data);
-  };
-
-  const { data } = useQuery('getBoardList', getInfo, {
-    retry: false, // 데이터 불러오기 실패하면 다시 시도 안함
-  });
 
   const [messageText, setMessageText] = useState('');
   const [serverMessages, setServerMessages] = useState([]);
@@ -39,7 +31,7 @@ const Chat = () => {
     const message = {
       type: 'TALK',
       roomId: params.id,
-      sender: data.nickname,
+      sender: userInfo.nickname,
       message: messageText,
     };
 
@@ -66,7 +58,7 @@ const Chat = () => {
     const message = {
       type: 'ENTER',
       roomId: params.id,
-      sender: data.nickname,
+      sender: userInfo.nickname,
       message: messageText,
     };
     // 서버 연결
@@ -101,7 +93,7 @@ const Chat = () => {
     <Wrapper>
       <ChatContainer>
         {serverMessages?.map((a) => (
-          <ChatBubble user={a.sender === data.nickname ? true : false}>
+          <ChatBubble user={a.sender === userInfo.nickname ? true : false}>
             <div>
               <span>{a.sender}</span>
               <p>{a.message}</p>
