@@ -10,8 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { checkPasswordAPI } from '../../api/User';
 import Modal from '../Modal/Modal';
 
-const PasswordConfirm = ({ modal }) => {
-  const { value } = useSelector((state) => state.user);
+const PasswordConfirm = ({ data, modal }) => {
   const navigate = useNavigate();
   const [message, setMessage] = useState('');
 
@@ -37,7 +36,7 @@ const PasswordConfirm = ({ modal }) => {
             modal(false);
             navigate('./user', {
               state: {
-                data: value,
+                data: data,
                 password: values.password,
               },
             });

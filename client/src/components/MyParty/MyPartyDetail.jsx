@@ -143,9 +143,11 @@ function MyPartyDetail() {
           </InfoList>
         </Board>
         <ButtonSection>
-          <Withdrawal type="button" onClick={handleClick} data-name="chat">
-            채팅방 입장하기
-          </Withdrawal>
+          {people === 4 && (
+            <Withdrawal type="button" onClick={handleClick} data-name="chat">
+              채팅방 입장하기
+            </Withdrawal>
+          )}
           <Withdrawal type="button" onClick={handleClick} data-name="change">
             OTT 비밀번호 변경하기
           </Withdrawal>
