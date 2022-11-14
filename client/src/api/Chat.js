@@ -1,6 +1,6 @@
 import { API } from './Token';
 
-const BASE_API = 'http://localhost:8080/api/v1/chat';
+const BASE_API = 'http://3.38.9.104:8080/api/v1/chat';
 
 /**
  *

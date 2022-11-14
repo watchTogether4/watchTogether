@@ -5,7 +5,7 @@ module.exports = (app) => {
   app.use(
     '/chat',
     createProxyMiddleware({
-      target: 'http://localhost:8080',
+      target: 'http://3.38.9.104:8080',
       changeOrigin: true,
     }),
   );

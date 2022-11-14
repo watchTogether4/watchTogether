@@ -50,7 +50,7 @@ const Chat = () => {
 
   const connect = (ws) => {
     if (ws === undefined || (ws && ws.readyState === 3)) {
-      ws = new WebSocket(`ws://localhost:8080/ws/chat`);
+      ws = new WebSocket(`ws://3.38.9.104:8080/ws/chat`);
     }
   };
 
@@ -62,7 +62,7 @@ const Chat = () => {
       message: messageText,
     };
     // 서버 연결
-    socket.current = new WebSocket('ws://localhost:8080/ws/chat');
+    socket.current = new WebSocket('ws://3.38.9.104:8080/ws/chat');
     socket.current.onopen = () => {
       console.log('Connected to the server');
       socket.current.send(JSON.stringify(message));
