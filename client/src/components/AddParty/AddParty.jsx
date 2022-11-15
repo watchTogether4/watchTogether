@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useOutletContext } from 'react-router-dom';
 import { useQuery } from 'react-query';
-import { useSelector } from 'react-redux';
 import { toast, ToastContainer } from 'react-toastify';
-import { animate, motion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { AiOutlineSearch } from 'react-icons/ai';
 import {
   Wrapper,
@@ -24,7 +23,7 @@ import { ottAuthAPI } from '../../api/OttAuth';
 import otts from '../../mocks/platform';
 
 const AddParty = () => {
-  const { value } = useSelector((state) => state.user);
+  const { userInfo } = useOutletContext();
   const navigate = useNavigate();
   const { state } = useLocation();
   const initialValues = {
@@ -33,7 +32,7 @@ const AddParty = () => {
     body: '',
     partyOttId: '',
     partyOttPassword: '',
-    leaderNickName: value.nickname,
+    leaderNickName: userInfo.nickname,
   };
   const [formValues, setFormValues] = useState(initialValues);
   const [formErrors, setFormErrors] = useState('');
@@ -226,6 +225,7 @@ const AddParty = () => {
 
         {isOpen && (
           <SearchModal
+            nickname={userInfo.nickname}
             setinviteMember={setinviteMember}
             inviteMember={inviteMember}
             setIsOpen={setIsOpen}
