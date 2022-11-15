@@ -117,3 +117,4 @@ export const joinParty = (body, token) =>
     data: JSON.stringify(body),
   });
 };
+
