@@ -1,14 +1,11 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
 import icons from '../../mocks/platform';
 import { Wrapper, Inner, Title, Desc, Carousel, Icon, StartBtn } from './Main.styles';
 import { myPageAPI } from '../../api/User';
-import { info } from '../../store/User';
 
 function Main() {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   // slick

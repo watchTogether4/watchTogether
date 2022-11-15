@@ -23,7 +23,7 @@ const Menu = ({ page }) => {
         setData(() => [...res.data]);
       })
       .catch((error) => console.log(error));
-  }, []);
+  }, [value.email]);
 
   return (
     <MenuWrapper>
