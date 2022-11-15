@@ -32,7 +32,6 @@ function App() {
           <Route path="/" element={<MainPage />} />
           <Route path="/signIn" element={<SignIn />} />
           <Route path="/signUp" element={<SignUp />} />
-
           <Route element={<PrivateRoutes />}>
             <Route path="/select" element={<Select />} />
             <Route path="/ott" element={<OttPage />} />
@@ -50,6 +49,7 @@ function App() {
             <Route path="/payment" element={<Payment />} />
             <Route path="/charge" element={<Charge />} />
           </Route>
+
           <Route path="/code=:code" element={<Reset />} />
         </Routes>
       </AnimatePresence>

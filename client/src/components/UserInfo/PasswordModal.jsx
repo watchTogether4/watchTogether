@@ -8,8 +8,7 @@ import { Title, ErrorMessage } from './../Modal/Modal.styles';
 import 'react-toastify/dist/ReactToastify.css';
 
 import Modal from './../Modal/Modal';
-import { isCurrentPassword } from './../../api/Users';
-import { putNewPassword } from './../../api/Users';
+import { changePasswordAPI, checkPasswordAPI } from './../../api/User';
 
 const PasswordModal = ({ modal }) => {
   const [message, setMessage] = useState('');
@@ -57,7 +56,7 @@ const PasswordModal = ({ modal }) => {
   const validateCurrent = (currentPassword) => {
     const body = { password: currentPassword };
 
-    isCurrentPassword(body, accessToken)
+    checkPasswordAPI(body)
       .then((res) => {
         if (message !== '') setMessage('');
         setIsValidate(true);
@@ -69,10 +68,8 @@ const PasswordModal = ({ modal }) => {
 
   const validateNew = (newPassword) => {
     const body = { password: newPassword };
-    putNewPassword(body, accessToken)
+    changePasswordAPI(body)
       .then((res) => {
-        console.log('success');
-
         toast.success(<h1>비밀번호가 변경 되었습니다</h1>, {
           position: 'top-center',
           autoClose: 1000,

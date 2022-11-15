@@ -4,19 +4,19 @@ import { toast, ToastContainer } from 'react-toastify';
 import Modal from './../Modal/Modal';
 import { Title, AlertText } from './../Modal/Modal.styles';
 import { ButtonContainer, SubmitButton, CancleButton } from '../../styles/Common';
-import { putAlert } from '../../api/Alert';
-import { acceptParty } from '../../api/Parties';
+import { checkAlertAPI } from '../../api/Alert';
+import { acceptPartyAPI } from '../../api/Parties';
 
 const MessageModal = ({ data, modal }) => {
   const { value } = useSelector((state) => state.user);
-  const accessToken = localStorage.getItem('access-token');
+
   const body = { notificationId: data.notificationId };
   const body2 = { nick: value.nickname, uuid: data.uuid };
 
   const [isLoading, setIsLoading] = useState(false);
 
   const postAlert = () => {
-    putAlert(body, accessToken)
+    checkAlertAPI(body)
       .then((res) => {
         console.log(res.data);
         acceptMember();
@@ -25,7 +25,7 @@ const MessageModal = ({ data, modal }) => {
   };
 
   const acceptMember = () => {
-    acceptParty(body2, accessToken)
+    acceptPartyAPI(body2)
       .then((res) => {
         toast.success(<h1>파티에 가입되었습니다.</h1>, {
           position: 'top-center',

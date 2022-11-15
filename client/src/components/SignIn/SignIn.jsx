@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-import { loginUser } from '../../api/Users';
-
-import { SET_TOKEN } from '../../store/Auth';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import FindPassword from './FindPassword';
-import { setRefreshToken } from './../../utils/Cookie';
-
+import { setRefreshToken, setAccessToken, setAuthentication } from '../../utils/index';
+import { signInAPI, myPageAPI } from '../../api/User';
+import { info } from '../../store/User';
 import {
   Wrapper,
   LoginInput,
@@ -20,8 +18,8 @@ import {
 } from './SignIn.styles';
 
 function Login() {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const intialValues = { email: '', password: '' };
   const [formValues, setFormValues] = useState(intialValues);
@@ -29,14 +27,24 @@ function Login() {
   const [isVaildate, setIsValidate] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
+  const setToken = (data) => {
+    setRefreshToken(data.refreshToken);
+    setAccessToken(data.accessToken);
+    setAuthentication(true);
+  };
+
+  const saveUserInfo = (data) => {
+    myPageAPI().then((res) => {
+      dispatch(info(res.data));
+    });
+  };
+
   const submitForm = async () => {
-    await loginUser(formValues)
-      .then((response) => {
-        console.log(response.data);
-        if (response.status === 200) {
-          setRefreshToken(response.data.refreshToken); // 쿠키
-          localStorage.setItem('access-token', response.data.accessToken); //
-        }
+    await signInAPI(formValues)
+      .then((res) => {
+        setToken(res.data);
+        saveUserInfo(res.data);
+
         toast.success(<h1>성공적으로 로그인했습니다.</h1>, {
           position: 'top-center',
           autoClose: 1000,
@@ -45,10 +53,12 @@ function Login() {
           navigate('/partyList');
         }, 1000);
       })
+
       .catch((error) => {
         console.log(error);
         toast.error(error.response.data.message, {
           position: 'top-center',
+          autoClose: 1000,
         });
       });
   };

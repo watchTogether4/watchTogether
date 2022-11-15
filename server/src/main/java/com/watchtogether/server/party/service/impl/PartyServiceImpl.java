@@ -474,6 +474,14 @@ public class PartyServiceImpl implements PartyService {
         partyRepository.save(party);
         return ResponseEntity.ok().build();
     }
+    public ResponseEntity<Object> changeCreatedChat(){
+        List<Party>  list = partyRepository.findByCreatedChatIsTrue();
+        for (int i = 0; i < list.size(); i++) {
+            list.get(i).setCreatedChat(false);
+        }
+        partyRepository.saveAll(list);
+        return ResponseEntity.ok().build();
+    }
 
     @Override
     public List<Party> checkLeaderOrMemberBeforeUserLeave(String Nickname) {

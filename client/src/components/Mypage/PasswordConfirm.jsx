@@ -1,19 +1,17 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { toast, ToastContainer } from 'react-toastify';
-
 import { ButtonContainer, SubmitButton, CancleButton, ModalInput } from '../../styles/Common';
-import { Title, Description, ErrorMessage } from '../Modal/Modal.styles';
+import { Title, ErrorMessage } from '../Modal/Modal.styles';
 import 'react-toastify/dist/ReactToastify.css';
-
+import { checkPasswordAPI } from '../../api/User';
 import Modal from '../Modal/Modal';
-import { isCurrentPassword } from '../../api/Users';
-import { useNavigate } from 'react-router-dom';
 
-const PasswordConfirm = ({ modal, data }) => {
+const PasswordConfirm = ({ data, modal }) => {
   const navigate = useNavigate();
-  const accessToken = localStorage.getItem('access-token');
   const [message, setMessage] = useState('');
 
   const { values, errors, handleChange, handleSubmit } = useFormik({
@@ -30,8 +28,8 @@ const PasswordConfirm = ({ modal, data }) => {
 
     onSubmit: async (values) => {
       const body = { password: values.password };
-      isCurrentPassword(body, accessToken)
-        .then((response) => {
+      checkPasswordAPI(body)
+        .then(() => {
           toast.success(<h1>비밀번호 검사 성공</h1>, { position: 'top-center', autoClose: 1000 });
 
           setTimeout(() => {

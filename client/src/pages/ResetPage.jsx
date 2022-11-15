@@ -5,7 +5,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { ModalInput, ButtonContainer, SubmitButton, CancleButton } from './../styles/Common';
 import { Title, ErrorMessage } from '../components/Modal/Modal.styles';
 import Modal from './../components/Modal/Modal';
-import { checkCode, resetPassword } from './../api/Users';
+import { checkResetPasswordAPI, NewPasswordAPI } from './../api/User';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -42,7 +42,7 @@ const ResetPage = () => {
         password: values.password,
       };
 
-      resetPassword(body)
+      NewPasswordAPI(body)
         .then((res) => {
           console.log(res.data);
           toast.success(
@@ -71,7 +71,7 @@ const ResetPage = () => {
     navigate('/signIn');
   };
   useEffect(() => {
-    checkCode(code)
+    checkResetPasswordAPI(code)
       .then((res) => {
         setIsOpen(true);
       })

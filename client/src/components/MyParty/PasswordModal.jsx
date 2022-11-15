@@ -8,10 +8,9 @@ import { Title } from '../Modal/Modal.styles';
 import 'react-toastify/dist/ReactToastify.css';
 
 import Modal from '../Modal/Modal';
-import { changePassword } from '../../api/Parties';
+import { changePasswordAPI } from '../../api/Parties';
 
 const PasswordModal = ({ modal, partyId, partyOttPassword, nickName }) => {
-
   const { values, handleChange, handleSubmit } = useFormik({
     initialValues: {
       currentPassword: '',
@@ -21,11 +20,10 @@ const PasswordModal = ({ modal, partyId, partyOttPassword, nickName }) => {
 
     validationSchema: Yup.object().shape({
       currentPassword: Yup.string(),
-      newPassword: Yup.string()
-        .notOneOf(
-          [Yup.ref('currentPassword')],
-          '현재 비밀번호와 같은 비밀번호로 변경할 수 없습니다!',
-        ),
+      newPassword: Yup.string().notOneOf(
+        [Yup.ref('currentPassword')],
+        '현재 비밀번호와 같은 비밀번호로 변경할 수 없습니다!',
+      ),
       confirmPassword: Yup.string()
         .oneOf([Yup.ref('newPassword'), null], '비밀번호가 일치하지 않습니다!')
         .required('비밀번호 확인을 입력하세요!'),
@@ -36,14 +34,16 @@ const PasswordModal = ({ modal, partyId, partyOttPassword, nickName }) => {
     },
   });
 
-  const accessToken = localStorage.getItem('access-token');
   const changePartyPassword = (newPassword) => {
-    const body = { nickname : nickName, partyId : partyId, password: partyOttPassword, newPassword: newPassword };
-    console.log(body)
-    changePassword(body, accessToken)
-      .then((res) => {
-        console.log('success');
+    const body = {
+      nickname: nickName,
+      partyId: partyId,
+      password: partyOttPassword,
+      newPassword: newPassword,
+    };
 
+    changePasswordAPI(body)
+      .then((res) => {
         toast.success(<h1>OTT 계정 비밀번호가 변경 되었습니다</h1>, {
           position: 'top-center',
           autoClose: 1000,

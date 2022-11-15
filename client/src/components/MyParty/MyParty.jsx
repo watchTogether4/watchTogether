@@ -1,34 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery } from 'react-query';
-import { useNavigate } from 'react-router-dom';
-import { findMyParties } from './../../api/Parties';
-import { getInfo } from './../../api/Users';
 import { Wrapper, Board, Highlight, HighlightRed, HighlightTwo } from './MyParty.styles';
+import { findMyPartyAPI } from './../../api/Parties';
 import { Card } from './Card';
+import { useOutletContext } from 'react-router-dom';
 
 function MyParty() {
   let nickName = '';
-  const accessToken = localStorage.getItem('access-token');
+  const { userInfo } = useOutletContext();
   const [myParty, setMyParty] = useState();
   const [waiting, setWaiting] = useState();
-  const getUserInfo = () => {
-    return getInfo(accessToken).then((res) => res.data);
-  };
 
-  const { data } = useQuery('getInfo', getUserInfo);
-
-  if (data) {
-    nickName = data.nickname;
+  if (userInfo) {
+    nickName = userInfo.nickname;
   }
 
   const body = { nickName: nickName };
-
   useEffect(() => {
-    findMyParties(body, accessToken).then((res) => {
+    findMyPartyAPI(body).then((res) => {
+      console.log(body, res.data);
       setMyParty(res.data[0]); // 완성된 파티
       setWaiting(res.data[1]); // 대기중인 파티
     });
-  }, [data]);
+  }, []);
 
   return (
     <>

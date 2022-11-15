@@ -3,9 +3,7 @@ package com.watchtogether.server.alert.persist.entity;
 
 import com.watchtogether.server.party.domain.entitiy.Party;
 import com.watchtogether.server.party.domain.type.AlertType;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -13,6 +11,8 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 public class Notification {
 

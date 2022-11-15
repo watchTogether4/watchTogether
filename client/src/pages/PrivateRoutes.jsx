@@ -1,61 +1,52 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React from 'react';
+import { useEffect } from 'react';
+import { useState } from 'react';
+import { useQuery } from 'react-query';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, Outlet } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { setRefreshToken, getCookieToken } from './../utils/Cookie';
-import { getInfo } from './../api/Users';
-import { info } from './../store/User';
+import { toast, ToastContainer } from 'react-toastify';
+import { myPageAPI } from '../api/User';
+import { getAuthentication } from '../utils/index';
+import { info } from '../store/User';
 
 const PrivateRoutes = () => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const isAuthenticated = getAuthentication();
+  const { value } = useSelector((state) => state.user);
 
-  const accessToken = localStorage.getItem('access-token');
-  const refreshToken = getCookieToken();
+  const [userInfo, setUserInfo] = useState();
 
-  const body = {
-    accessToken,
-    refreshToken,
-  };
-
+  // 인증이 필요한 페이지가 렌더링 될 때, 리덕스에 저장된 값이 있으면 해당 값을 불러오고 없으면 유저 정보 api를 호출하고 리덕스에 저장
   useEffect(() => {
-    try {
-      getInfo(accessToken)
+    if (value.email === '') {
+      myPageAPI()
         .then((res) => {
           dispatch(info(res.data));
+          setUserInfo(res.data);
         })
-        .catch((error) => {
-          console.log(error.response.data.message);
-          navigate('/signIn');
-        });
-    } catch (error) {
-      axios({
-        url: '/api/v1/refresh-token',
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json;charset=UTF-8',
-          Authorization: `Bearer ${accessToken}`,
-        },
-        data: JSON.stringify(body),
-      })
-        .then((response) => {
-          setRefreshToken(response.data.refreshToken);
-          localStorage.setItem('access-token', response.data.accessToken);
-          navigate('/partyList');
-        })
-        .catch((error) => {
-          console.log(error);
-          console.log(error.response.data.message);
-          navigate('/signIn');
-        });
+        .catch((error) => error.response.data.message);
+    } else {
+      setUserInfo(value);
     }
   }, []);
 
-  return (
-    <>
-      <Outlet />
-    </>
-  );
+  if (isAuthenticated === null || isAuthenticated === 'false') {
+    toast.error(<h1>세션이 만료되었거나, 로그인이 되지 않았습니다.</h1>, {
+      position: 'top-center',
+      autoClose: 1500,
+    });
+    setTimeout(() => {
+      navigate('./signIn');
+    }, 1500);
+  } else {
+    return (
+      <>
+        <ToastContainer />
+        <Outlet context={{ userInfo }} />
+      </>
+    );
+  }
 };
 
 export default PrivateRoutes;

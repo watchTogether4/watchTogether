@@ -3,7 +3,7 @@ package com.example.sockettest.service;
 import com.example.sockettest.domain.ChatMessage;
 import com.example.sockettest.domain.ChatRoom;
 import com.example.sockettest.domain.DialogDto;
-import com.example.sockettest.persist.DialogRespository;
+import com.example.sockettest.persist.DialogRepository;
 import com.example.sockettest.persist.entity.Dialog;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,7 @@ public class ChatService {
     private final ObjectMapper objectMapper;
     private Map<String, ChatRoom> chatRooms;
 
-    private final DialogRespository dialogRespository;
+    private final DialogRepository dialogRepository;
 
     @PostConstruct
     private void init() {
@@ -57,7 +57,7 @@ public class ChatService {
     }
 
     public List<DialogDto> getDialog(String roomId) {
-        return dialogRespository.findAllByPartyIdOrderByDtAsc(roomId).stream()
+        return dialogRepository.findAllByPartyIdOrderByDtAsc(roomId).stream()
                 .map(m -> new DialogDto(m))
                 .collect(Collectors.toList());
     }
@@ -69,6 +69,6 @@ public class ChatService {
     }
 
     public void saveMsessage(ChatMessage chatMessage) {
-        dialogRespository.save(new Dialog(chatMessage));
+        dialogRepository.save(new Dialog(chatMessage));
     }
 }

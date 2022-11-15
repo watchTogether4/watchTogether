@@ -1,12 +1,10 @@
-import axios from 'axios';
-import { string } from 'prop-types';
 import React, { useState, useEffect, useRef } from 'react';
-import { useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useQuery } from 'react-query';
+import { useOutletContext, useParams } from 'react-router-dom';
+import { myPageAPI } from '../../api/User';
 import {
   Wrapper,
   ChatContainer,
-  ChatAlert,
   ChatBubble,
   Chatform,
   ChatInput,
@@ -14,14 +12,10 @@ import {
 } from './Chat.styles';
 
 const Chat = () => {
+  const { userInfo } = useOutletContext();
   const scrollRef = useRef();
   const params = useParams();
-  const { value } = useSelector((state) => state.user);
-  const accessToken = localStorage.getItem('access-token');
 
-  const [serverState, setServerState] = useState('Loading...');
-  const [editDone, setEditDone] = useState(false);
-  const serverMessagesList = [];
   const [messageText, setMessageText] = useState('');
   const [serverMessages, setServerMessages] = useState([]);
 
@@ -36,8 +30,8 @@ const Chat = () => {
 
     const message = {
       type: 'TALK',
-      roomId: String(params.id),
-      sender: value.nickname,
+      roomId: params.id,
+      sender: userInfo.nickname,
       message: messageText,
     };
 
@@ -56,19 +50,19 @@ const Chat = () => {
 
   const connect = (ws) => {
     if (ws === undefined || (ws && ws.readyState === 3)) {
-      ws = new WebSocket(`ws://localhost:8080/ws/chat`);
+      ws = new WebSocket(`ws://3.38.9.104:8080/ws/chat`);
     }
   };
 
   useEffect(() => {
     const message = {
       type: 'ENTER',
-      roomId: String(params.id),
-      sender: value.nickname,
+      roomId: params.id,
+      sender: userInfo.nickname,
       message: messageText,
     };
     // 서버 연결
-    socket.current = new WebSocket('ws://localhost:8080/ws/chat');
+    socket.current = new WebSocket('ws://3.38.9.104:8080/ws/chat');
     socket.current.onopen = () => {
       console.log('Connected to the server');
       socket.current.send(JSON.stringify(message));
@@ -79,8 +73,8 @@ const Chat = () => {
       setTimeout(connect(socket.current), 300);
     };
 
-    socket.current.onerror = (event) => {
-      setServerState(event.message);
+    socket.current.onerror = (error) => {
+      console.log(error);
     };
   }, []);
 
@@ -94,12 +88,12 @@ const Chat = () => {
   useEffect(() => {
     scrollRef.current.scrollIntoView({ behavior: 'smooth', block: 'end', inline: 'nearest' });
   }, [serverMessages]);
+
   return (
     <Wrapper>
       <ChatContainer>
-        <ChatAlert>누가 들어옴 </ChatAlert>
         {serverMessages?.map((a) => (
-          <ChatBubble user={a.sender === value.nickname ? true : false}>
+          <ChatBubble user={a.sender === userInfo.nickname ? true : false}>
             <div>
               <span>{a.sender}</span>
               <p>{a.message}</p>

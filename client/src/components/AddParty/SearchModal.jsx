@@ -3,10 +3,9 @@ import Modal from '../Modal/Modal';
 
 import { ButtonContainer, SubmitButton, CancleButton, ModalInput } from '../../styles/Common';
 import { SearchResult } from '../Modal/Modal.styles';
+import { searchUserAPI } from '../../api/User';
 
-import { searchUser } from '../../api/Users';
-
-const AddPartyModal = ({ setIsOpen, inviteMember, setinviteMember }) => {
+const AddPartyModal = ({ nickname, setIsOpen, inviteMember, setinviteMember }) => {
   const [searchMember, setSearchMember] = useState('');
   const [searchData, setSearchData] = useState('');
   const [searchErrors, setSearchErrors] = useState('');
@@ -17,6 +16,8 @@ const AddPartyModal = ({ setIsOpen, inviteMember, setinviteMember }) => {
 
     if (value === '') {
       error = '파티원의 닉네임을 입력 해주세요.';
+    } else if (value === nickname) {
+      error = '자기 자신은 초대할 수 없어요!';
     } else if (inviteMember.length !== 0) {
       // eslint-disable-next-line array-callback-return
       inviteMember.map((member) => {
@@ -34,7 +35,7 @@ const AddPartyModal = ({ setIsOpen, inviteMember, setinviteMember }) => {
     const nickname = searchMember;
     const accessToken = localStorage.getItem('access-token');
 
-    searchUser(nickname, accessToken)
+    searchUserAPI(nickname, accessToken)
       .then((res) => {
         console.log(res.data);
         setinviteMember([...inviteMember, searchMember]);

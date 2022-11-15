@@ -5,7 +5,9 @@ import com.watchtogether.server.alert.dto.AlertDto;
 import com.watchtogether.server.alert.dto.CheckAlertResponse;
 import com.watchtogether.server.alert.persist.AlertRepository;
 import com.watchtogether.server.alert.persist.entity.Notification;
+import com.watchtogether.server.exception.AlertException;
 import com.watchtogether.server.exception.PartyException;
+import com.watchtogether.server.exception.type.AlertErrorCode;
 import com.watchtogether.server.exception.type.PartyErrorCode;
 import com.watchtogether.server.party.domain.entitiy.Party;
 import com.watchtogether.server.party.domain.entitiy.PartyMember;
@@ -24,6 +26,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.watchtogether.server.exception.type.AlertErrorCode.NOT_FOUND_NOTIFICATION;
+import static com.watchtogether.server.exception.type.PartyErrorCode.NOT_FOUND_PARTY;
+
 
 @Service
 @RequiredArgsConstructor
@@ -38,7 +43,7 @@ public class AlertService {
                             String message, AlertType type) {
 
         List<User> users = userRepository.findAllByNicknameIn(nickNames);
-        Party party = partyRepository.findById(partyId).orElseThrow(() -> new RuntimeException("파티를 찾을 수 없습니다."));
+        Party party = partyRepository.findById(partyId).orElseThrow(() -> new PartyException(NOT_FOUND_PARTY));
 
         List<Notification> notifications = new ArrayList<>();
         for (User user : users) {
@@ -51,9 +56,10 @@ public class AlertService {
     @Transactional
     public CheckAlertResponse checkAlert(String notificationId) {
         Notification notification = alertRepository.findById(Long.parseLong(notificationId))
-                .orElseThrow(()->new RuntimeException("알림을 찾을 수 없습니다."));
+                .orElseThrow(()->new AlertException(NOT_FOUND_NOTIFICATION));
 
         notification.setCheckAlert(true);
+        alertRepository.save(notification);
 
         return new CheckAlertResponse(notification.getParty().getId());
     }
