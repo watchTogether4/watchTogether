@@ -5,9 +5,10 @@ import Modal from './../Modal/Modal';
 import { Title, AlertText } from './../Modal/Modal.styles';
 import { ButtonContainer, SubmitButton, CancleButton } from '../../styles/Common';
 import { checkAlertAPI } from '../../api/Alert';
-import { acceptPartyAPI } from '../../api/Parties';
+import { acceptPartyAPI, checkContinueAPI } from '../../api/Parties';
 
 const MessageModal = ({ data, modal }) => {
+  console.log(data);
   const { value } = useSelector((state) => state.user);
 
   const body = { notificationId: data.notificationId };
@@ -19,9 +20,24 @@ const MessageModal = ({ data, modal }) => {
     checkAlertAPI(body)
       .then((res) => {
         console.log(res.data);
-        acceptMember();
+        if (data.type === 'INVITE') {
+          acceptMember();
+        };
+        if (data.type === 'CONTINUE') {
+          const body3 = { nickname: value.nickname, partyId: res.partyId };
+          check(body3);
+        };
       })
       .catch((error) => console.log(error));
+  };
+
+
+
+  const check = (body3) => {
+    checkContinueAPI(body3)
+      .then((res) => {
+        console.log(res.data);
+      })
   };
 
   const acceptMember = () => {
