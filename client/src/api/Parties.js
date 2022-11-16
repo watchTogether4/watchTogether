@@ -1,6 +1,6 @@
 import { API } from './Token';
 
-const BASE_API = `http://localhost:8081/api/v1/parties`;
+const BASE_API = `http://3.38.9.104:8081/api/v1/parties`;
 
 /**
  *

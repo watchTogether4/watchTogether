@@ -1,9 +1,0 @@
-[[redirects]]
-from = "https://watchtogether1.netlify.app/api/*"
-to = "https://naver.com/"
-status = 200
-
-[[redirects]]
-from = "https://watchtogether1.netlify.app/chat/*"
-to = "https://naver.com/"
-status = 200
