@@ -1,7 +1,6 @@
 import React from 'react';
 import { useEffect } from 'react';
 import { useState } from 'react';
-import { useQuery } from 'react-query';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, Outlet } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
@@ -29,7 +28,7 @@ const PrivateRoutes = () => {
     } else {
       setUserInfo(value);
     }
-  }, []);
+  }, [dispatch, value]);
 
   if (isAuthenticated === null || isAuthenticated === 'false') {
     toast.error(<h1>세션이 만료되었거나, 로그인이 되지 않았습니다.</h1>, {

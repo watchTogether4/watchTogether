@@ -1,4 +1,3 @@
-import styled from 'styled-components';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 import { Nav, Button } from './Pagination.styles';
 

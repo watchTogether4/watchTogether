@@ -3,11 +3,8 @@ import { Button, Input } from '../../styles/Common';
 
 const Wrapper = styled.div`
   position: relative;
+  height: calc(100vh - 4rem);
   /* padding: 0 1rem; */
-`;
-
-const Header = styled.header`
-  width: 100%;
 `;
 
 const Description = styled.p`
@@ -19,6 +16,7 @@ const Description = styled.p`
 const GatherForm = styled.form`
   width: 100%;
   padding: 0 1rem;
+  margin-top: 1rem;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -68,7 +66,6 @@ const ErrorMessage = styled.p`
 
 export {
   Wrapper,
-  Header,
   Description,
   GatherForm,
   Label,

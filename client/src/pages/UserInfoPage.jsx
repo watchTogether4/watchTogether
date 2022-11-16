@@ -2,6 +2,7 @@ import React from 'react';
 import Header from '../components/Header/Header';
 import UserInfo from './../components/UserInfo/UserInfo';
 import styled from 'styled-components';
+import { toast, ToastContainer } from 'react-toastify';
 import { RiLogoutBoxRLine } from 'react-icons/ri';
 import { removeAccessToken, removeRefreshToken, removeAuthentication } from './../utils/index';
 import { useNavigate } from 'react-router-dom';
@@ -20,15 +21,17 @@ const UserInfoPage = () => {
 
   const handleClick = () => {
     signOutAPI()
-      .then((res) => {
-        console.log(res.data);
+      .then(() => {
         removeAccessToken();
         removeRefreshToken();
         removeAuthentication();
+        toast.success(<h1>로그아웃 되었습니다!.</h1>, {
+          position: 'top-center',
+          autoClose: 1000,
+        });
       })
       .catch((error) => {
         console.log(error);
-        console.log(error.response.data.message);
       });
     navigate('/');
   };
@@ -40,6 +43,7 @@ const UserInfoPage = () => {
           <RiLogoutBoxRLine size={28} />
         </LogoutBtn>
       </Header>
+      <ToastContainer />
       <UserInfo />
     </>
   );

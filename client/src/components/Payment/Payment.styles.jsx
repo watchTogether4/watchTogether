@@ -66,4 +66,13 @@ const ButtonSection = styled.div`
   margin: 1rem 0rem;
 `;
 
-export { Wrapper, Border, MainTitle, Highlight, HighlightTwo, HighlightRed, InfoList, ButtonSection };
+export {
+  Wrapper,
+  Border,
+  MainTitle,
+  Highlight,
+  HighlightTwo,
+  HighlightRed,
+  InfoList,
+  ButtonSection,
+};

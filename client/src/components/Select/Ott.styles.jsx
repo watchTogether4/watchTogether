@@ -5,7 +5,7 @@ const Wrapper = styled.div`
   ${Flex}
   padding: 1rem 2rem;
   width: 100%;
-  height: calc(100vh-80px);
+  min-height: calc(100vh - 4rem);
 `;
 
 const OttSection = styled.div`

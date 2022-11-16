@@ -1,7 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useQuery } from 'react-query';
 import { useOutletContext, useParams } from 'react-router-dom';
-import { myPageAPI } from '../../api/User';
 import {
   Wrapper,
   ChatContainer,
@@ -76,14 +74,12 @@ const Chat = () => {
     socket.current.onerror = (error) => {
       console.log(error);
     };
-  }, []);
 
-  useEffect(() => {
     socket.current.onmessage = (event) => {
       const data = JSON.parse(event.data);
       setServerMessages((cur) => [...cur, { sender: data.sender, message: data.message }]);
     };
-  }, [onmessage]);
+  }, [messageText, params.id, userInfo.nickname]);
 
   useEffect(() => {
     scrollRef.current.scrollIntoView({ behavior: 'smooth', block: 'end', inline: 'nearest' });

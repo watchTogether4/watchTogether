@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 const Wrapper = styled.div`
   display: flex;
+  height: calc(100vh - 4rem);
   flex-direction: column;
   padding: 1rem 2rem;
 `;
@@ -34,7 +35,7 @@ const InfoList = styled.ul`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    display: ${props=>(props.trader === null) ? 'none' : '' };
+    display: ${(props) => (props.trader === null ? 'none' : '')};
   }
 `;
 
@@ -61,4 +62,4 @@ const Withdrawal = styled.button`
   background-color: transparent;
 `;
 
-export { Wrapper, Profile, InfoList, Button, Withdrawal, ChargeButton, };
+export { Wrapper, Profile, InfoList, Button, Withdrawal, ChargeButton };

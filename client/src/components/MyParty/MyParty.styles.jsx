@@ -2,7 +2,8 @@ import styled from 'styled-components';
 
 const Wrapper = styled.div`
   width: 100%;
-  padding: 1rem 1.5rem 60px 1.5rem;
+  height: calc(100vh - 4rem);
+  padding: 1rem 1.5rem;
 `;
 
 const Board = styled.div`
@@ -26,4 +27,4 @@ const HighlightRed = styled.p`
   font-weight: 600;
 `;
 
-export { Wrapper, Board, Highlight, HighlightRed, HighlightTwo, };
+export { Wrapper, Board, Highlight, HighlightRed, HighlightTwo };

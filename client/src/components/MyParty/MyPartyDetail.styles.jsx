@@ -2,7 +2,8 @@ import styled from 'styled-components';
 
 const Wrapper = styled.div`
   width: 100%;
-  padding: 1rem 1.5rem 60px 1.5rem;
+  height: calc(100vh - 4rem);
+  padding: 1rem 1.5rem;
 `;
 
 const Board = styled.div`
@@ -17,6 +18,7 @@ const ButtonSection = styled.div`
 `;
 
 const Withdrawal = styled.button`
+  height: 3rem;
   font-size: 0.9rem;
   font-weight: 600;
   margin-top: 1rem;
@@ -49,19 +51,28 @@ const InfoList = styled.ul`
   }
 `;
 
-const Highlight = styled.p`
+const Highlight = styled.span`
   color: ${(props) => props.theme.color.highlight_500};
   font-weight: 600;
 `;
 
-const HighlightTwo = styled.p`
+const HighlightTwo = styled.span`
   color: ${(props) => props.theme.color.success_300};
   font-weight: 600;
 `;
 
-const HighlightRed = styled.p`
+const HighlightRed = styled.span`
   color: ${(props) => props.theme.color.warning_300};
   font-weight: 600;
 `;
 
-export { Wrapper, Board, Withdrawal, InfoList, Highlight, HighlightRed, HighlightTwo, ButtonSection, };
+export {
+  Wrapper,
+  Board,
+  Withdrawal,
+  InfoList,
+  Highlight,
+  HighlightRed,
+  HighlightTwo,
+  ButtonSection,
+};

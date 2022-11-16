@@ -18,13 +18,17 @@ const Button = styled.button`
 
 const SubmitButton = styled(Button)`
   width: 48%;
-  height: 2.5rem;
+  height: 3rem;
   margin-bottom: 0;
   border-radius: 1rem;
+`;
+
+const CheckButton = styled(SubmitButton)`
+  width: 100%;
 `;
 
 const CancleButton = styled(SubmitButton)`
   background-color: ${(props) => props.theme.color.warning_300};
 `;
 
-export { ButtonContainer, Button, SubmitButton, CancleButton };
+export { ButtonContainer, Button, SubmitButton, CheckButton, CancleButton };

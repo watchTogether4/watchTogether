@@ -1,6 +1,11 @@
 import styled from 'styled-components';
 import { Flex } from '../../styles/Common';
 
+const Wrapper = styled.div`
+  width: 100%;
+  height: calc(100vh - 4rem - 70px);
+`;
+
 const InfoList = styled.ul`
   ${Flex}
   padding: 2rem;
@@ -24,4 +29,4 @@ const List = styled.li`
   } */
 `;
 
-export { InfoList, List };
+export { Wrapper, InfoList, List };
