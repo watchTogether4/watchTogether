@@ -222,30 +222,35 @@ public class CheckPartyApplication {
                     alertService.createAlert(nickname, party.getId(), null, message, type);
                     break;
                 case LEAVE_LEADER:
-                    message = party.getTitle() + "";
+                    message = party.getTitle() + "의 파티장이 나가서 파티가 자동으로 해체됩니다";
                     alertService.createAlert(nickname, party.getId(), null, message, type);
                     break;
                 case LEAVE_MEMBER:
                     if (!partyMember.isAlertCheck()) {
                         continue;
                     }
-                    message = "파티원이 떠났다는 메세지";
-                    alertService.createAlert(nickname, party.getId(), null, message, type);
+                    if(partyMember.isLeader()){
+                        message = party.getTitle()+"의 파티원이 나갔습니다. 비밀번호를 변경해주세요";
+                        alertService.createAlert(nickname, party.getId(), null, message, type);
+                    }else {
+                        message = party.getTitle()+"의 파티원이 나갔습니다.";
+                        alertService.createAlert(nickname, party.getId(), null, message, type);
+                    }
                     break;
                 case CHANGE_PASSWORD:
-                    message = " 비밀번호 변경 메세지";
+                    message = party.getTitle()+"의 비밀번호 가 변경되었습니다 확인해주세요!";
                     alertService.createAlert(nickname, party.getId(), null, message, type);
                     break;
                 case CONTINUE:
-                    message = "파티 갱신 메세지";
+                    message = party.getTitle()+" 파티 결제일 7일전입니다. 계속 이용하시겠습니까?";
                     alertService.createAlert(nickname, party.getId(), null, message, type);
                     break;
                 case TRANSACTION:
-                    message = "거래 발생 메세지";
+                    message =  party.getTitle()+" 파티의 거래가 발생했습니다. 확인해주세요";
                     alertService.createAlert(nickname, party.getId(), null, message, type);
                     break;
                 case IS_NOT_FULL:
-                    message = "파티 인원 부족 메세지";
+                    message = party.getTitle()+" 파티의 인원이 부족하여 파티가 자동으로 해체됩니다";
                     alertService.createAlert(nickname, party.getId(), null, message, type);
                     break;
 
