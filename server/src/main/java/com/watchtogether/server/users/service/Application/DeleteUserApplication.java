@@ -21,10 +21,10 @@ public class DeleteUserApplication {
     private final AlertService alertService;
 
     @Transactional
-    public void deleteUser(String email, String password) {
+    public void deleteUser(String email) {
 
         // 회원 아이디, 비밀번호
-        UserDto user = userService.checkUser(email, password);
+        UserDto user = userService.checkUser(email);
 
         // 자신이 속한 파티 그룹 검사
         partyService.findMyPartiesBeforeDeleteUser(user.getNickname());

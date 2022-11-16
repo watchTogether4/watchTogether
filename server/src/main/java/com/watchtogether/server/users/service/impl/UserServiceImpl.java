@@ -226,13 +226,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto checkUser(String email, String password) {
+    public UserDto checkUser(String email) {
         User user = userRepository.findById(email)
             .orElseThrow(() -> new UserException(NOT_FOUND_USER));
-
-        if (!passwordEncoder.matches(password, user.getPassword())) {
-            throw new UserException(WRONG_PASSWORD_USER);
-        }
 
         return UserDto.fromEntity(user);
     }
