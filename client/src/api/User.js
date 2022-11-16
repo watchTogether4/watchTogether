@@ -30,11 +30,11 @@ export const signOutAPI = async () => {
 
 /**
  *
- * @param {{email: string, password: string}} userForm
+ * @param {{email: string}} userForm
  * @return {} message
  */
 export const secessionUserAPI = async (userForm) => {
-  return await API.delete(`${BASE_API}`, userForm);
+  return await API.delete(`${BASE_API}?email=${userForm}`);
 };
 
 /**
@@ -67,7 +67,7 @@ export const changePasswordAPI = async (password) => {
  * @return {} message
  */
 export const findPasswordAPI = async (userForm) => {
-  return await API.post(`${BASE_API}/rest-password`, userForm);
+  return await API.post(`${BASE_API}/reset-password`, userForm);
 };
 
 /**
@@ -75,7 +75,7 @@ export const findPasswordAPI = async (userForm) => {
  * @return {} message
  */
 export const checkResetPasswordAPI = async (code) => {
-  return await API.get(`${BASE_API}/rest-password?code=${code}`);
+  return await API.get(`${BASE_API}/reset-password?code=${code}`);
 };
 
 /**
@@ -83,7 +83,7 @@ export const checkResetPasswordAPI = async (code) => {
  * @return {} message
  */
 export const NewPasswordAPI = async (passwordForm) => {
-  return await API.put(`${BASE_API}/rest-password`, passwordForm);
+  return await API.put(`${BASE_API}/reset-password`, passwordForm);
 };
 
 /**

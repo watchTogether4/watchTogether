@@ -1,13 +1,11 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
-
 import { ButtonContainer, SubmitButton, CancleButton } from '../../styles/Common';
 import { AlertTitle, AlertText } from './../Modal/Modal.styles';
-
 import Modal from './../Modal/Modal';
 import { secessionUserAPI } from '../../api/User';
-import { removeRefreshToken } from './../../utils/cookieRefreshToken';
+import { removeRefreshToken } from './../../utils/index';
 
 const AlertModal = ({ modal, data }) => {
   const navigate = useNavigate();
@@ -21,10 +19,8 @@ const AlertModal = ({ modal, data }) => {
   };
 
   const withdrawal = () => {
-    secessionUserAPI(data)
+    secessionUserAPI(data.email)
       .then((res) => {
-        console.log(res.data);
-        localStorage.removeItem('access-token');
         removeRefreshToken();
 
         toast.success(

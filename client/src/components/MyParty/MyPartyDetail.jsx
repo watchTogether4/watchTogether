@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useOutletContext } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
 import AlertModal from './AlertModal';
 import PasswordModal from './PasswordModal';
 import {
@@ -18,10 +19,12 @@ import { createChatAPI } from '../../api/Parties';
 import { enterRoomAPI } from '../../api/Chat';
 
 function MyPartyDetail() {
+  const { userInfo } = useOutletContext();
   const navigate = useNavigate();
   const { state } = useLocation();
   const [isLeave, setIsLeave] = useState(false);
   const [isChange, setIsChange] = useState(false);
+  console.log(state.data);
   const {
     id,
     title,
@@ -38,7 +41,7 @@ function MyPartyDetail() {
   const nickName = state.nickName;
 
   const date = payDt !== null ? payDt[3] : '';
-
+  const leader = members.filter((a) => a.leader === true);
   const ottUrl = otts.filter((a) => a.id === ottId);
   const ottName = ottUrl[0].name;
 
@@ -57,12 +60,19 @@ function MyPartyDetail() {
       // 채팅방이 이미 생성되어 있으면 바로 이동
       navigate('./chat');
     } else {
-      // 채팅방이 없으면 생성하고, 값 바꿔준 후 들어감
-      enterRoomAPI({ roomId: id })
-        .then((res) => {
-          changeValue();
-        })
-        .catch((error) => console.log(error));
+      // 채팅방이 생성된 적 없으면 파티장만 생성할 수 있도록 함
+      if (userInfo.nickname === leader[0].nickName) {
+        enterRoomAPI({ roomId: id })
+          .then((res) => {
+            changeValue();
+          })
+          .catch((error) => console.log(error));
+      } else {
+        toast.error('파티장만 채팅방을 생성할 수 있습니다.', {
+          position: 'top-center',
+          autoClose: 1000,
+        });
+      }
     }
   };
 
@@ -76,6 +86,7 @@ function MyPartyDetail() {
 
   return (
     <>
+      <ToastContainer />
       <Wrapper>
         <Board>
           <InfoList>
@@ -144,7 +155,7 @@ function MyPartyDetail() {
         <ButtonSection>
           {people === 4 && (
             <Withdrawal type="button" onClick={handleClick} data-name="chat">
-              채팅방 입장하기
+              {createdChat ? ' 채팅방 입장하기' : '채팅방 생성하기'}
             </Withdrawal>
           )}
           <Withdrawal type="button" onClick={handleClick} data-name="change">
