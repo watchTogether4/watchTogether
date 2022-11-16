@@ -3,8 +3,8 @@ import { Flex, Input, Button } from '../../styles/Common';
 
 const Wrapper = styled.div`
   width: 100%;
-  height: calc(100vh - 80px);
-  padding: 2rem;
+  height: calc(100vh - 4rem);
+  padding: 0 2rem 4rem 2rem;
   ${Flex}
 `;
 

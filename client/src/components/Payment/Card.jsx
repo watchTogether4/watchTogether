@@ -1,10 +1,16 @@
 import React from 'react';
 import { CardWrapper, CardDesc, InfoList, Visible } from './Card.styles';
-import 'moment/locale/ko';
 
 export function Card({ trader, dt, result, type }) {
-  const moment = require('moment');
-  const date = moment(dt.toString()).format('YY년 MM월 DD일, HH시 mm분 ss초');
+  const date = dt.slice(0, 5);
+  console.log(date.join(','));
+  const year = date[0];
+  const month = date[1];
+  const day = date[2];
+  const hour = date[3];
+  const min = date[4];
+
+  const format = `${year}년 ${month}월 ${day}일 ${hour}시 ${min}분 `;
 
   return (
     <>
@@ -13,7 +19,7 @@ export function Card({ trader, dt, result, type }) {
           <InfoList>
             <li>
               <span>결제일: </span>
-              <span>{date}</span>
+              <span>{format}</span>
             </li>
             <li>
               <span>결제 결과: </span>

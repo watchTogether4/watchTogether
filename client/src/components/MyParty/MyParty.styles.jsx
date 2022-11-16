@@ -2,8 +2,8 @@ import styled from 'styled-components';
 
 const Wrapper = styled.div`
   width: 100%;
-  height: calc(100vh - 4rem);
-  padding: 1rem 1.5rem;
+  min-height: calc(100vh - 4rem);
+  padding: 1rem 1.5rem 1.5rem 1.5rem;
 `;
 
 const Board = styled.div`
