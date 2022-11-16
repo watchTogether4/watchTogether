@@ -43,8 +43,7 @@ public class SecurityConfig {
 
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOriginPatterns(
-            Arrays.asList("http://localhost:3000"));    // 허용할 도메인 정보
+        configuration.setAllowedOriginPatterns(Arrays.asList("*"));    // 허용할 도메인 정보
         configuration.setAllowedMethods(Arrays.asList("*"));    // 허용할 http 메소드
         configuration.setAllowedHeaders(Arrays.asList("*"));    // 허용할 헤더 정보
         configuration.setAllowCredentials(true);    // cross origin 으로부터 인증을 위한 쿠키 정보를 받을지 여부
