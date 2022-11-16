@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useOutletContext } from 'react-router-dom';
 import { IoIosArrowForward } from 'react-icons/io';
-import { InfoList, List } from './User.styles';
+import { Wrapper, InfoList, List } from './User.styles';
 import Profile from './Profile';
 import PasswordConfirm from './PasswordConfirm';
 
@@ -17,7 +17,7 @@ function Chat() {
   };
 
   return (
-    <>
+    <Wrapper>
       <Profile data={userInfo} />
       {userInfo && (
         <InfoList direction="column" alignItems="flex-start">
@@ -40,7 +40,7 @@ function Chat() {
       )}
 
       {isOpen && <PasswordConfirm modal={setIsOpen} handleSubmit={handleSubmit} data={userInfo} />}
-    </>
+    </Wrapper>
   );
 }
 

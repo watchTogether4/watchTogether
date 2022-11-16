@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { FaRegEnvelope, FaUserAlt, FaSearch, FaPen } from 'react-icons/fa';
-import { MenuWrapper, Bedge } from './Menu.styles';
+import { MenuWrapper, MenuList, Bedge } from './Menu.styles';
 import { listAlertAPI } from './../../api/Alert';
 
 const Menu = ({ page }) => {
@@ -27,23 +27,25 @@ const Menu = ({ page }) => {
 
   return (
     <MenuWrapper>
-      <li onClick={() => handleClick('/select')}>
-        <FaPen size={22} color={page === 'select' ? '#006FFD' : '#71727A'} />
-        파티 모집
-      </li>
-      <li onClick={() => handleClick('/partyList')}>
-        <FaSearch size={22} color={page === 'partyList' ? '#006FFD' : '#71727A'} />
-        파티 찾기
-      </li>
-      <li onClick={() => navigate('/message', { state: { data: data } })}>
-        {bedge > 0 && <Bedge> {bedge} </Bedge>}
-        <FaRegEnvelope size={22} color={page === 'alarm' ? '#006FFD' : '#71727A'} />
-        쪽지함
-      </li>
-      <li onClick={() => handleClick('/mypage')}>
-        <FaUserAlt size={22} color={page === 'mypage' ? '#006FFD' : '#71727A'} />
-        마이 페이지
-      </li>
+      <MenuList>
+        <li onClick={() => handleClick('/select')}>
+          <FaPen size={22} color={page === 'select' ? '#006FFD' : '#71727A'} />
+          파티 모집
+        </li>
+        <li onClick={() => handleClick('/partyList')}>
+          <FaSearch size={22} color={page === 'partyList' ? '#006FFD' : '#71727A'} />
+          파티 찾기
+        </li>
+        <li onClick={() => navigate('/message', { state: { data: data } })}>
+          {bedge > 0 && <Bedge> {bedge} </Bedge>}
+          <FaRegEnvelope size={22} color={page === 'alarm' ? '#006FFD' : '#71727A'} />
+          쪽지함
+        </li>
+        <li onClick={() => handleClick('/mypage')}>
+          <FaUserAlt size={22} color={page === 'mypage' ? '#006FFD' : '#71727A'} />
+          마이 페이지
+        </li>
+      </MenuList>
     </MenuWrapper>
   );
 };

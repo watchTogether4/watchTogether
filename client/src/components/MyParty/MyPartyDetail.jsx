@@ -28,7 +28,7 @@ function MyPartyDetail() {
     body,
     members,
     ottId,
-    createdDt,
+    payDt,
     people,
     leaderNickname,
     partyOttId,
@@ -37,8 +37,7 @@ function MyPartyDetail() {
   } = state.data;
   const nickName = state.nickName;
 
-  const moment = require('moment');
-  const createdDate = moment(createdDt.toString()).format('YY년 MM월 DD일, HH시 mm분');
+  const date = payDt !== null ? payDt[3] : '';
 
   const ottUrl = otts.filter((a) => a.id === ottId);
   const ottName = ottUrl[0].name;
@@ -94,9 +93,9 @@ function MyPartyDetail() {
             </li>
             <li>
               <span>
-                <Highlight>파티 생성일: </Highlight>
+                <Highlight>파티 결제 예정일: </Highlight>
               </span>
-              <span>{createdDate}</span>
+              <span>{date === '' ? '-' : `매 월 ${date}일`}</span>
             </li>
             <li>
               <span>

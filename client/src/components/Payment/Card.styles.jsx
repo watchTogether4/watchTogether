@@ -8,8 +8,8 @@ const CardWrapper = styled.div`
   background-color: #fff;
   border-radius: 1rem;
   align-items: center;
+  margin-bottom: 1rem;
   border: 1px solid ${(props) => props.theme.color.light_300};
-  margin: 0.5rem;
 `;
 
 const CardDesc = styled.div`
@@ -34,7 +34,6 @@ const InfoList = styled.ul`
   }
 `;
 
-
 const Highlight = styled.p`
   color: ${(props) => props.theme.color.highlight_500};
   font-weight: 600;
@@ -51,7 +50,7 @@ const HighlightRed = styled.p`
 `;
 
 const Visible = styled.span`
-  display: ${ props => (props.trader == null) ? 'none': '' };
+  display: ${(props) => (props.trader == null ? 'none' : '')};
 `;
 
 export { CardWrapper, CardDesc, InfoList, Visible, Highlight, HighlightTwo, HighlightRed };

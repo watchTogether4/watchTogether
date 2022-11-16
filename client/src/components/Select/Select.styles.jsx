@@ -7,13 +7,12 @@ const Wrapper = styled.div`
   ${Flex}
   padding: 1rem 2rem;
   width: 100%;
-  height: calc(100vh-80px);
+  height: calc(100vh - 4rem);
 `;
 
 const SelectSection = styled.div`
   ${Flex}
   width: 100%;
-  height: calc(75vh);
   padding: 0rem;
   margin: 0rem;
 `;
@@ -48,9 +47,9 @@ const RoleText = styled.li`
   line-height: 2rem;
   padding-inline: 1rem;
   margin-inline-end: 1rem;
-  
-  &::marker{
-    color: ${(props) => props.theme.color.highlight_500}
+
+  &::marker {
+    color: ${(props) => props.theme.color.highlight_500};
   }
 `;
 
@@ -65,12 +64,12 @@ const Leader = styled.div`
   background: url(${LeaderImg}) no-repeat;
   background-size: 55%;
   background-position: 100% 100%;
-  background-color: #F8F9FE;
+  background-color: #f8f9fe;
   background-blend-mode: multiply;
-  box-shadow: 0 5px 10px -7px rgba(0,0,0,1);
-  border: 2px solid ${props=>props.role ? props.theme.color.highlight_500: '#ffffff'};
+  box-shadow: 0 5px 10px -7px rgba(0, 0, 0, 1);
+  border: 2px solid ${(props) => (props.role ? props.theme.color.highlight_500 : '#ffffff')};
 
-  &:hover{
+  &:hover {
     border: 2px solid ${(props) => props.theme.color.highlight_500};
   }
 `;
@@ -86,22 +85,14 @@ const Follower = styled.div`
   background: url(${FollowerImg}) no-repeat;
   background-size: 45%;
   background-position: 100% 100%;
-  background-color: #F8F9FE;
+  background-color: #f8f9fe;
   background-blend-mode: multiply;
-  box-shadow: 0 5px 10px -7px rgba(0,0,0,1);
-  border: 2px solid ${props=>props.role ? '#ffffff': props.theme.color.highlight_500 };
+  box-shadow: 0 5px 10px -7px rgba(0, 0, 0, 1);
+  border: 2px solid ${(props) => (props.role ? '#ffffff' : props.theme.color.highlight_500)};
 
-  &:hover{
+  &:hover {
     border: 2px solid ${(props) => props.theme.color.highlight_500};
+  }
 `;
 
-export {
-    Wrapper,
-    SelectSection,
-    ButtonSection,
-    RoleTitle,
-    RoleText,
-    TextBox,
-    Leader,
-    Follower,
-};
+export { Wrapper, SelectSection, ButtonSection, RoleTitle, RoleText, TextBox, Leader, Follower };

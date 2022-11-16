@@ -1,43 +1,46 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { toast, ToastContainer } from 'react-toastify';
 import Modal from './../Modal/Modal';
 import { Title, AlertText } from './../Modal/Modal.styles';
-import { ButtonContainer, SubmitButton, CancleButton } from '../../styles/Common';
+import { ButtonContainer, SubmitButton, CheckButton, CancleButton } from '../../styles/Common';
 import { checkAlertAPI } from '../../api/Alert';
 import { acceptPartyAPI, checkContinueAPI } from '../../api/Parties';
 
 const MessageModal = ({ data, modal }) => {
-  console.log(data);
   const { value } = useSelector((state) => state.user);
 
   const body = { notificationId: data.notificationId };
   const body2 = { nick: value.nickname, uuid: data.uuid };
 
   const [isLoading, setIsLoading] = useState(false);
+  const [type, setType] = useState(false);
+
+  useEffect(() => {
+    if (data.type === 'INVITE' || data.type === 'CONTINUE') {
+      setType(!type);
+    }
+  }, [data.type]);
 
   const postAlert = () => {
     checkAlertAPI(body)
       .then((res) => {
-        console.log(res.data);
         if (data.type === 'INVITE') {
           acceptMember();
-        };
-        if (data.type === 'CONTINUE') {
+        } else if (data.type === 'CONTINUE') {
           const body3 = { nickname: value.nickname, partyId: res.partyId };
           check(body3);
-        };
+        } else {
+          modal(false);
+        }
       })
       .catch((error) => console.log(error));
   };
 
-
-
   const check = (body3) => {
-    checkContinueAPI(body3)
-      .then((res) => {
-        console.log(res.data);
-      })
+    checkContinueAPI(body3).then((res) => {
+      console.log(res.data);
+    });
   };
 
   const acceptMember = () => {
@@ -61,6 +64,7 @@ const MessageModal = ({ data, modal }) => {
         setIsLoading(false);
       });
   };
+
   const handleClick = (e) => {
     e.preventDefault();
     if (isLoading === false) {
@@ -82,12 +86,16 @@ const MessageModal = ({ data, modal }) => {
         <Title onClick={() => modal(false)}>{data.type}</Title>
         <AlertText>{data.message}</AlertText>
         <ButtonContainer>
-          <CancleButton onClick={handleClickCancle}>
-            {data.type === 'INVITE' ? '거절 하기' : '확인'}
-          </CancleButton>
-          <SubmitButton onClick={handleClick}>
-            {data.type === 'INVITE' ? '수락 하기' : '확인'}
-          </SubmitButton>
+          {type ? (
+            <>
+              <CancleButton onClick={handleClickCancle}>
+                {data.type === 'INVITE' ? '거절 하기' : '취소하기'}
+              </CancleButton>
+              <SubmitButton onClick={handleClick}>수락 하기</SubmitButton>
+            </>
+          ) : (
+            <CheckButton onClick={handleClick}>확인</CheckButton>
+          )}
         </ButtonContainer>
       </Modal>
     </>

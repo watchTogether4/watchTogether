@@ -1,15 +1,14 @@
 import styled from 'styled-components';
 
 const MessageContainer = styled.div`
-  height: calc(100vh - 60px - 2rem);
-  padding: 1rem;
-  margin: 1rem;
+  height: calc(100vh - 4rem);
+  padding: 1rem 2rem;
+  overflow: hidden;
 `;
 
 const MessageList = styled.ul`
   width: 100%;
-  min-height: 70vh;
-  max-height: 70vh;
+  height: 65vh;
   display: flex;
   flex-direction: column;
   align-items: center;

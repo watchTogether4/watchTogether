@@ -45,7 +45,15 @@ const AlertModal = ({ modal, data }) => {
       })
       .catch((error) => {
         console.log(error);
-        console.log(error.response.data.message);
+        toast.error(
+          <>
+            <h1>{error.response.data.message}</h1>
+          </>,
+          {
+            position: 'top-center',
+            autoClose: 1500,
+          },
+        );
       });
   };
 

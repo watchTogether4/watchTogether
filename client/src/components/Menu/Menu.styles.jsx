@@ -1,13 +1,19 @@
 import styled from 'styled-components';
 
-const MenuWrapper = styled.ul`
+const MenuWrapper = styled.div`
   position: fixed;
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 60px;
+`;
+
+const MenuList = styled.ul`
+  max-width: 600px;
+  margin: 0 auto;
+  height: 70px;
   display: flex;
   align-items: center;
+  justify-content: center;
   box-shadow: 0 -1px 10px ${(props) => props.theme.color.light_200};
   background-color: ${(props) => props.theme.color.white};
 
@@ -18,10 +24,14 @@ const MenuWrapper = styled.ul`
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     padding: 0.5rem;
     font-size: 0.8rem;
     color: ${(props) => props.theme.color.dark_100};
+
+    svg {
+      margin-bottom: 0.5rem;
+    }
   }
 `;
 
@@ -38,4 +48,4 @@ const Bedge = styled.span`
   border-radius: 50%;
 `;
 
-export { MenuWrapper, Bedge };
+export { MenuWrapper, MenuList, Bedge };
