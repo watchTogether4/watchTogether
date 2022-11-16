@@ -106,7 +106,7 @@ public interface UserService extends UserDetailsService {
      * @param password 패스워드
      * @return
      */
-    UserDto checkUser(String email, String password);
+    UserDto checkUser(String email);
 
     /**
      * 사용자 회원 탈퇴

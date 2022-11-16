@@ -112,9 +112,10 @@ public class UserController {
     @DeleteMapping
     @Operation(summary = "사용자 회원 탈퇴 요청", description = "사용자는 회원 탈퇴 요청을 보낸다.")
     public ResponseEntity<Response> deleteUser(
-        @Validated @RequestBody DeleteUser.Request request) {
+        @RequestParam String email) {
+        System.out.println(email);
 
-        deleteUserApplication.deleteUser(request.getEmail(), request.getPassword());
+        deleteUserApplication.deleteUser(email);
 
         return ResponseEntity.ok(
             new DeleteUser.Response(
