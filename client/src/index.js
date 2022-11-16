@@ -14,6 +14,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import theme from './styles/theme/theme';
 import App from './App';
 import store from './store';
+import './index.css';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
