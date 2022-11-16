@@ -23,11 +23,10 @@ public class AuthenticationEntryPointHandler implements AuthenticationEntryPoint
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response,
-        AuthenticationException authException) throws IOException, ServletException {
+        AuthenticationException authException) throws IOException {
 
         String exception = (String) request.getAttribute("exception");
         AuthErrorCode errorCode;
-
 
         /**
          * 토큰이 없는 경우
