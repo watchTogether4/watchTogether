@@ -37,7 +37,7 @@ const MenuList = styled.ul`
 
 const Bedge = styled.span`
   position: absolute;
-  top: 0;
+  top: 5px;
   width: 1rem;
   height: 1rem;
   display: flex;

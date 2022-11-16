@@ -53,7 +53,10 @@ const PasswordModal = ({ modal, partyId, partyOttPassword, nickName }) => {
         }, 1000);
       })
       .catch((error) => {
-        toast(error.response.data.message);
+        toast.error(error.response.data.message, {
+          position: 'top-center',
+          autoClose: 1000,
+        });
       });
   };
 
