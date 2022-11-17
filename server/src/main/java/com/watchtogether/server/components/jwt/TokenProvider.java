@@ -5,7 +5,6 @@ import static com.watchtogether.server.exception.type.TokenErrorCode.EXPIRED_REF
 import static com.watchtogether.server.exception.type.TokenErrorCode.EXPIRED_TOKEN;
 import static com.watchtogether.server.exception.type.TokenErrorCode.INVALID_ACCESS_TOKEN;
 import static com.watchtogether.server.exception.type.TokenErrorCode.INVALID_REFRESH_TOKEN;
-import static com.watchtogether.server.exception.type.TokenErrorCode.INVALID_TOKEN;
 
 import com.watchtogether.server.users.service.impl.UserServiceImpl;
 import io.jsonwebtoken.Claims;
@@ -39,6 +38,7 @@ public class TokenProvider {
     public static final String TOKEN_PREFIX = "Bearer ";
     private static final String KEY_ROLES = "roles";
     public static final String SUCCESS = "true";
+    public static final String EXCEPTION = "exception";
     private final UserServiceImpl userServiceImpl;
 
     @Value("{spring.jwt.secret}")
@@ -168,21 +168,14 @@ public class TokenProvider {
 
     private Claims parseClaims(String token, HttpServletRequest request) {
 
-        Claims claims = null;
-
         try {
-            claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
+            return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
 
         } catch (ExpiredJwtException e) {
             log.warn("ExpiredJwtException : " + e);
-            request.setAttribute("exception", EXPIRED_TOKEN.getErrorCode());
+            request.setAttribute(EXCEPTION, EXPIRED_TOKEN.getErrorCode());
             return e.getClaims();
-
-        } catch (JwtException e) {
-            log.warn("JwtException : " + e);
-            request.setAttribute("exception", INVALID_TOKEN.getErrorCode());
         }
-        return claims;
     }
 
     // jwt 토큰 복화해서 가져오기
