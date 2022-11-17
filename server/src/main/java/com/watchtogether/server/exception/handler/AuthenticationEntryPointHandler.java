@@ -10,7 +10,6 @@ import com.watchtogether.server.exception.response.AuthExceptionResponse;
 import com.watchtogether.server.exception.type.AuthErrorCode;
 import java.io.IOException;
 import java.io.PrintWriter;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -28,38 +27,26 @@ public class AuthenticationEntryPointHandler implements AuthenticationEntryPoint
         String exception = (String) request.getAttribute("exception");
         AuthErrorCode errorCode;
 
-        /**
-         * 토큰이 없는 경우
-         */
+        // 토큰이 없는 경우
         if (exception == null) {
             errorCode = IS_EMPTY_TOKEN;
             setResponse(response, errorCode);
         }
-
-        /**
-         * 토큰이 만료된 경우
-         */
-        if (exception == "EXPIRED_TOKEN") {
+        // 토큰이 만료된 경우
+        else if (exception.equals(EXPIRED_TOKEN.getErrorCode())) {
             errorCode = EXPIRED_TOKEN;
             setResponse(response, errorCode);
         }
-
-        /**
-         * 토큰 서명 값이 일치하지 않은 경우
-         */
-        if (exception == "INVALID_TOKEN") {
+        // 토큰 서명 값이 일치하지 않은 경우
+        else if (exception.equals(INVALID_TOKEN.getErrorCode())) {
             errorCode = INVALID_TOKEN;
             setResponse(response, errorCode);
         }
-
-        /**
-         * 로그아웃 처리된 토큰 값인 경우
-         */
-        if (exception == "IS_SIGN_OUT_TOKEN") {
+        //로그아웃 처리된 토큰 값인 경우
+        else if (exception.equals(IS_EMPTY_TOKEN.getErrorCode())) {
             errorCode = IS_SIGN_OUT_TOKEN;
             setResponse(response, errorCode);
         }
-
     }
 
     private void setResponse(HttpServletResponse response, AuthErrorCode errorCode)
