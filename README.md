@@ -1,5 +1,13 @@
 # watchTogether
 
+## 가치와치 시연 동영상
+https://www.youtube.com/watch?v=mwI1J1DVEpc
+
+[![Video Label](http://img.youtube.com/vi/mwI1J1DVEpc/0.jpg)](https://youtu.be/mwI1J1DVEpc)
+
+## 가치와치 발표 자료
+[가치와치_최종.pdf](https://github.com/kimnerd625/watchTogether/files/10038577/_.pdf)
+
 ![슬라이드1](https://user-images.githubusercontent.com/104896647/202632451-2cd078b1-e4b9-4dcb-bea3-2d6e3356d7b0.JPG)
 ![슬라이드2](https://user-images.githubusercontent.com/104896647/202632453-8964db5b-8060-47d7-a367-5f75be6677ad.JPG)
 ![슬라이드3](https://user-images.githubusercontent.com/104896647/202632457-ee0c0710-59b2-4e8f-85ec-cb4e3043c427.JPG)
