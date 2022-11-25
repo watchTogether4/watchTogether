@@ -5,6 +5,7 @@ import { SignUpForm, Wrapper, ErrorMsg, Input, LoginLink, Button } from './SignU
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { signUpAPI } from '../../api/User';
+import { motion } from 'framer-motion';
 
 function SignUp() {
   const navigate = useNavigate();
@@ -61,66 +62,73 @@ function SignUp() {
   });
 
   return (
-    <Wrapper>
-      <ToastContainer />
-      <SignUpForm
-        autoComplete="off"
-        direction="column"
-        justifyContent="space-evenly"
-        onSubmit={handleSubmit}
-      >
-        <ErrorMsg>{errors.email}</ErrorMsg>
-        <Input
-          value={values.email}
-          onChange={handleChange}
-          id="email"
-          type="email"
-          placeholder="이메일"
-          onBlur={handleBlur}
-        />
-        <ErrorMsg>{errors.nickname}</ErrorMsg>
-        <Input
-          value={values.nickname}
-          onChange={handleChange}
-          id="nickname"
-          type="text"
-          placeholder="닉네임"
-          onBlur={handleBlur}
-        />
-        <ErrorMsg>{errors.password}</ErrorMsg>
-        <Input
-          value={values.password}
-          onChange={handleChange}
-          id="password"
-          type="password"
-          placeholder="비밀번호"
-          onBlur={handleBlur}
-        />
-        <ErrorMsg>{errors.passwordConfirm}</ErrorMsg>
-        <Input
-          value={values.passwordConfirm}
-          onChange={handleChange}
-          id="passwordConfirm"
-          type="password"
-          placeholder="비밀번호 확인"
-          onBlur={handleBlur}
-        />
-        <ErrorMsg>{errors.birth}</ErrorMsg>
-        <Input
-          value={values.birth}
-          onChange={handleChange}
-          id="birth"
-          type="date"
-          placeholder="생일"
-          onBlur={handleBlur}
-        />
-        <Button type="submit">회원가입하기</Button>
-        <LoginLink>
-          <p>가치와치 회원이십니까?</p>
-          <Link to="/signIn">로그인하기</Link>
-        </LoginLink>
-      </SignUpForm>
-    </Wrapper>
+    <motion.div
+    className="SignInPage"
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    exit={{ opacity: 0 }}
+    >
+      <Wrapper>
+        <ToastContainer />
+        <SignUpForm
+          autoComplete="off"
+          direction="column"
+          justifyContent="space-evenly"
+          onSubmit={handleSubmit}
+        >
+          <ErrorMsg>{errors.email}</ErrorMsg>
+          <Input
+            value={values.email}
+            onChange={handleChange}
+            id="email"
+            type="email"
+            placeholder="이메일"
+            onBlur={handleBlur}
+          />
+          <ErrorMsg>{errors.nickname}</ErrorMsg>
+          <Input
+            value={values.nickname}
+            onChange={handleChange}
+            id="nickname"
+            type="text"
+            placeholder="닉네임"
+            onBlur={handleBlur}
+          />
+          <ErrorMsg>{errors.password}</ErrorMsg>
+          <Input
+            value={values.password}
+            onChange={handleChange}
+            id="password"
+            type="password"
+            placeholder="비밀번호"
+            onBlur={handleBlur}
+          />
+          <ErrorMsg>{errors.passwordConfirm}</ErrorMsg>
+          <Input
+            value={values.passwordConfirm}
+            onChange={handleChange}
+            id="passwordConfirm"
+            type="password"
+            placeholder="비밀번호 확인"
+            onBlur={handleBlur}
+          />
+          <ErrorMsg>{errors.birth}</ErrorMsg>
+          <Input
+            value={values.birth}
+            onChange={handleChange}
+            id="birth"
+            type="date"
+            placeholder="생일"
+            onBlur={handleBlur}
+          />
+          <Button type="submit">회원가입하기</Button>
+          <LoginLink>
+            <p>가치와치 회원이십니까?</p>
+            <Link to="/signIn">로그인하기</Link>
+          </LoginLink>
+        </SignUpForm>
+      </Wrapper>
+    </motion.div>
   );
 }
 
