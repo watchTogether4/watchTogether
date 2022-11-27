@@ -5,12 +5,13 @@ const Wrapper = styled.div`
   ${Flex}
   padding: 2rem;
   width: 100%;
-  height: calc(100vh - 80px);
+  height: calc(100vh);
 `;
 
 const SignUpForm = styled.form`
   ${Flex}
   width: 100%;
+  align-items: center;
 `;
 
 const LoginLink = styled.div`

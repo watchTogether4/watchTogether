@@ -16,6 +16,7 @@ import {
   ErrorMessage,
   LinkContainer,
 } from './SignIn.styles';
+import { motion } from 'framer-motion';
 
 function Login() {
   const dispatch = useDispatch();
@@ -121,50 +122,59 @@ function Login() {
   }, [formErrors]);
 
   return (
-    <Wrapper direction="column" justifyContent="space-evenly">
-      <ToastContainer />
-      <Desc justifyContent="flex-start">
-        쉬운 파티원 초대와 매칭,
-        <br />
-        결제까지 한번에.
-        <br />
-        가치와치
-        <br />
-      </Desc>
+    <motion.div
+    className="SignInPage"
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    exit={{ opacity: 0 }}
+    >
+      <Wrapper direction="column" justifyContent="space-evenly">
+        <ToastContainer />
+        <Desc justifyContent="flex-start">
+          쉬운 파티원 초대와 매칭,
+          <br />
+          결제까지 한번에.
+          <br />
+          가치와치
+          <br />
+        </Desc>
 
-      <LoginForm
-        onSubmit={handleSubmit}
-        noValidate
-        direction="column"
-        justifyContent="space-evenly"
-      >
-        <LoginInput
-          type="text"
-          name="email"
-          value={formValues.email}
-          onChange={handleChange}
-          required
-        />
-        <LoginInput
-          type="password"
-          name="password"
-          value={formValues.password}
-          onChange={handleChange}
-          required
-        />
+        <LoginForm
+          onSubmit={handleSubmit}
+          noValidate
+          direction="column"
+          justifyContent="space-evenly"
+        >
+          <LoginInput
+            type="text"
+            name="email"
+            value={formValues.email}
+            onChange={handleChange}
+            placeholder="이메일"
+            required
+          />
+          <LoginInput
+            type="password"
+            name="password"
+            value={formValues.password}
+            onChange={handleChange}
+            placeholder="비밀번호"
+            required
+          />
 
-        {formErrors && <ErrorMessage className="error">{formErrors}</ErrorMessage>}
-        <LoginButton type="submit">로그인</LoginButton>
-        <LinkContainer justifyContent="space-between">
-          <button type="button" onClick={handleClick}>
-            비밀번호 찾기
-          </button>
-          <Link to="/signUp">회원가입</Link>
-        </LinkContainer>
-      </LoginForm>
+          {formErrors && <ErrorMessage className="error">{formErrors}</ErrorMessage>}
+          <LoginButton type="submit">로그인</LoginButton>
+          <LinkContainer justifyContent="space-between">
+            <button type="button" onClick={handleClick}>
+              비밀번호 찾기
+            </button>
+            <Link to="/signUp">회원가입</Link>
+          </LinkContainer>
+        </LoginForm>
 
-      {isOpen && <FindPassword modal={setIsOpen} />}
-    </Wrapper>
+        {isOpen && <FindPassword modal={setIsOpen} />}
+      </Wrapper>
+    </motion.div>
   );
 }
 
