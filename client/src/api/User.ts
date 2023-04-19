@@ -7,7 +7,12 @@ const BASE_API = 'http://localhost:8081/api/v1/users';
  * @param {{email: string, password: string, nickname: string, birth: string}} userForm
  * @returns {} email, message
  */
-export const signUpAPI = async (userForm) => {
+export const signUpAPI = async (userForm: {
+  email: string;
+  password: string;
+  nickname: string;
+  birth: string;
+}) => {
   return await API.post(`${BASE_API}/sign-up`, userForm);
 };
 
@@ -16,7 +21,7 @@ export const signUpAPI = async (userForm) => {
  * @param {{email: string, password: string}} userForm
  * @returns {} email, accessToken, refreshToken, message
  */
-export const signInAPI = async (userForm) => {
+export const signInAPI = async (userForm: { email: string; password: string }) => {
   return await API.post(`${BASE_API}/sign-in`, userForm);
 };
 
@@ -33,14 +38,10 @@ export const signOutAPI = async () => {
  * @param {{email: string}} userForm
  * @return {} message
  */
-export const secessionUserAPI = async (userForm) => {
+export const secessionUserAPI = async (userForm: { email: string }) => {
   return await API.delete(`${BASE_API}?email=${userForm}`);
 };
 
-/**
- * @param { string } accessToken
- * @return {} email, nickname, cash, birth, message
- */
 export const myPageAPI = async () => {
   return await API.get(`${BASE_API}/my-page`);
 };
@@ -49,7 +50,7 @@ export const myPageAPI = async () => {
  * @param { string } password
  * @return {} message
  */
-export const checkPasswordAPI = async (password) => {
+export const checkPasswordAPI = async (password: string) => {
   console.log(password);
   return await API.post(`${BASE_API}/password`, password);
 };
@@ -58,7 +59,7 @@ export const checkPasswordAPI = async (password) => {
  * @param { string } password
  * @return {} message
  */
-export const changePasswordAPI = async (password) => {
+export const changePasswordAPI = async (password: string) => {
   return await API.put(`${BASE_API}/password`, password);
 };
 
@@ -66,7 +67,7 @@ export const changePasswordAPI = async (password) => {
  * @param {{email: string, password: string}} userForm
  * @return {} message
  */
-export const findPasswordAPI = async (userForm) => {
+export const findPasswordAPI = async (userForm: { email: string; password: string }) => {
   return await API.post(`${BASE_API}/reset-password`, userForm);
 };
 
@@ -74,7 +75,7 @@ export const findPasswordAPI = async (userForm) => {
  * @param {string} code
  * @return {} message
  */
-export const checkResetPasswordAPI = async (code) => {
+export const checkResetPasswordAPI = async (code: string) => {
   return await API.get(`${BASE_API}/reset-password?code=${code}`);
 };
 
@@ -82,7 +83,7 @@ export const checkResetPasswordAPI = async (code) => {
  * @param {{code: string, password: string}} passwordForm
  * @return {} message
  */
-export const NewPasswordAPI = async (passwordForm) => {
+export const NewPasswordAPI = async (passwordForm: { code: string; password: string }) => {
   return await API.put(`${BASE_API}/reset-password`, passwordForm);
 };
 
@@ -91,6 +92,6 @@ export const NewPasswordAPI = async (passwordForm) => {
  * @param { string } name
  * @return {} nickname, message
  */
-export const searchUserAPI = async (name) => {
+export const searchUserAPI = async (name: string) => {
   return await API.get(`${BASE_API}/search-user?nickname=${name}`);
 };

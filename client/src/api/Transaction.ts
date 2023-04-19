@@ -15,7 +15,7 @@ export const getListAPI = async () => {
  * @param {{email: string, password: string, amount: number}} userForm
  * @returns email, message
  */
-export const chargeAPI = async (userForm) => {
+export const chargeAPI = async (userForm: { email: string; password: string; amount: number }) => {
   return await API.post(`${BASE_API}/charge`, userForm);
 };
 
@@ -24,7 +24,7 @@ export const chargeAPI = async (userForm) => {
  * @param {number} partyId
  * @returns nickname, transactionType, transactionResultType, amount, balanceSnapshot, traderNickname, transactionDt, message
  */
-export const withdrawAPI = async (partyId) => {
+export const withdrawAPI = async (partyId: number) => {
   return await API.post(`${BASE_API}/withdraw`, partyId);
 };
 
@@ -33,6 +33,6 @@ export const withdrawAPI = async (partyId) => {
  * @param {number} partyId
  * @returns nickname, transactionType, transactionResultType, amount, balanceSnapshot, traderNickname, transactionDt, message
  */
-export const withdrawCancelAPI = async (partyId) => {
+export const withdrawCancelAPI = async (partyId: number) => {
   return await API.post(`${BASE_API}/withdraw/cancel`, partyId);
 };
