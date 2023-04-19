@@ -8,13 +8,25 @@ import { myPageAPI } from '../api/User';
 import { getAuthentication } from '../utils/index';
 import { info } from '../store/User';
 
+interface StateType {
+  user: {
+    value: { name: string; email: string; cash: number; birth: string };
+  };
+}
+
+interface UseStateType {
+  name: string;
+  email: string;
+  cash: number;
+  birth: string;
+}
 const PrivateRoutes = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const isAuthenticated = getAuthentication();
-  const { value } = useSelector((state) => state.user);
+  const { value } = useSelector((state: StateType) => state.user);
 
-  const [userInfo, setUserInfo] = useState();
+  const [userInfo, setUserInfo] = useState<UseStateType>();
 
   // 인증이 필요한 페이지가 렌더링 될 때, 리덕스에 저장된 값이 있으면 해당 값을 불러오고 없으면 유저 정보 api를 호출하고 리덕스에 저장
   useEffect(() => {
@@ -38,6 +50,7 @@ const PrivateRoutes = () => {
     setTimeout(() => {
       navigate('./signIn');
     }, 1500);
+    return null;
   } else {
     return (
       <>

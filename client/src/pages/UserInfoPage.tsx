@@ -1,12 +1,12 @@
 import React from 'react';
 import Header from '../components/Header/Header';
-import UserInfo from './../components/UserInfo/UserInfo';
+import UserInfo from '../components/UserInfo/UserInfo';
 import styled from 'styled-components';
 import { toast, ToastContainer } from 'react-toastify';
 import { RiLogoutBoxRLine } from 'react-icons/ri';
-import { removeAccessToken, removeRefreshToken, removeAuthentication } from './../utils/index';
+import { removeAccessToken, removeRefreshToken, removeAuthentication } from '../utils/index';
 import { useNavigate } from 'react-router-dom';
-import { signOutAPI } from './../api/User';
+import { signOutAPI } from '../api/User';
 
 const LogoutBtn = styled.button`
   width: 3rem;

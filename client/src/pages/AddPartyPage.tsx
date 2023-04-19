@@ -1,6 +1,6 @@
 import React from 'react';
 import Header from '../components/Header/Header';
-import AddParty from './../components/AddParty/AddParty';
+import AddParty from '../components/AddParty/AddParty';
 
 function AddPartyPage() {
   return (

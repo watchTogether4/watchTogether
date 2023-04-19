@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ModalInput, ButtonContainer, SubmitButton, CancleButton } from './../styles/Common';
+import { ModalInput, ButtonContainer, SubmitButton, CancleButton } from '../styles/Common';
 import { Title, ErrorMessage } from '../components/Modal/Modal.styles';
-import Modal from './../components/Modal/Modal';
-import { checkResetPasswordAPI, NewPasswordAPI } from './../api/User';
+import Modal from '../components/Modal/Modal';
+import { checkResetPasswordAPI, NewPasswordAPI } from '../api/User';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -19,7 +19,7 @@ const ResetPage = () => {
   const { values, errors, handleChange, handleSubmit } = useFormik({
     initialValues: {
       password: '',
-      confirmPassword: '',
+      passwordConfirm: '',
     },
 
     validationSchema: Yup.object().shape({
@@ -28,6 +28,7 @@ const ResetPage = () => {
         .max(16, '비밀번호는 최대 16자리입니다!')
         .required('비밀번호를 입력해주세요!')
         .matches(
+          // eslint-disable-next-line no-useless-escape
           /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?])[^\s]*$/,
           '비밀번호는 영어,숫자,특수문자를 모두 포함해야 합니다.',
         ),
@@ -66,7 +67,7 @@ const ResetPage = () => {
     },
   });
 
-  const handleClick = (e) => {
+  const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
     navigate('/signIn');
   };

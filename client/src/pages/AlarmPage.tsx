@@ -1,6 +1,6 @@
 import React from 'react';
-import Alarm from './../components/Alarm/Alarm';
-import Header from './../components/Header/Header';
+import Alarm from '../components/Alarm/Alarm';
+import Header from '../components/Header/Header';
 
 const AlarmPage = () => {
   return (
