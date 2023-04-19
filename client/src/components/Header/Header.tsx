@@ -4,9 +4,13 @@ import { useNavigate } from 'react-router-dom';
 import { Wrapper, Title, BackBtn } from './Header.styles';
 import { IoIosArrowBack } from 'react-icons/io';
 
-function Header(props) {
+interface HeaderProps {
+  children?: React.ReactNode;
+  path: string;
+  title: string;
+}
+function Header({ children, path, title }: HeaderProps) {
   const navigate = useNavigate();
-  const { children, path, title } = props;
 
   return (
     <Wrapper>

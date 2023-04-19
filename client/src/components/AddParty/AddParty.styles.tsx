@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { ThemeProps } from '../../../types/theme';
 import { Button, Input } from '../../styles/Common';
 
 const Wrapper = styled.div`
@@ -52,7 +53,7 @@ const Text = styled.textarea`
   line-height: 1.2rem;
   margin-bottom: 0.5rem;
   padding: 1rem;
-  border: 1px solid ${(props) => props.theme.color.dark_100};
+  border: 1px solid ${(props: ThemeProps) => props.theme.color.dark_100};
   border-radius: 12px;
 `;
 const SubmitButton = styled(Button)``;

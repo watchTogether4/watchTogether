@@ -22,8 +22,32 @@ import { myPageAPI } from '../../api/User';
 import { ottAuthAPI } from '../../api/OttAuth';
 import otts from '../../mocks/platform';
 
+export interface ContextProps {
+  userInfo: {
+    nickname: string;
+    email: string;
+    cash: number;
+    birth: string;
+  };
+}
+
+interface formData {
+  title: string;
+  partyOttId: string;
+  partyOttPassword: string;
+}
+
+interface CreateFormData {
+  receiversNickName: string;
+  ottId: any;
+  title: string;
+  body: string;
+  partyOttId: string;
+  partyOttPassword: string;
+  leaderNickName: string;
+}
 const AddParty = () => {
-  const { userInfo } = useOutletContext();
+  const { userInfo } = useOutletContext<ContextProps>();
   const navigate = useNavigate();
   const { state } = useLocation();
   const initialValues = {
@@ -38,9 +62,9 @@ const AddParty = () => {
   const [formErrors, setFormErrors] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const [isVaildate, setIsValidate] = useState(false);
-  const [inviteMember, setinviteMember] = useState([]);
+  const [inviteMember, setinviteMember] = useState<string[]>([]);
 
-  const createForm = (body) => {
+  const createForm = (body: CreateFormData) => {
     createPartyAPI(body)
       .then((res) => {
         res.data && sendAlert(res.data);
@@ -60,10 +84,17 @@ const AddParty = () => {
       });
   };
 
-  const sendAlert = (body) => {
-    let member = {};
+  //Todo 서버에서 받아오는 데이터 확인 후 타입 수정 필요
+  const sendAlert = (body: any) => {
+    let member = {
+      nickName: [''],
+      inviteId: '',
+      type: '',
+      partyId: '',
+      message: '',
+    };
     // eslint-disable-next-line array-callback-return
-    body.map((data) => {
+    body.map((data: any) => {
       const ottFilter = otts.filter((a) => a.id === state.ott);
       const ottType = ottFilter[0].name;
       member = {
@@ -80,8 +111,8 @@ const AddParty = () => {
     });
   };
 
-  const getUserInfo = () => {
-    return myPageAPI().then((res) => res.data);
+  const getUserInfo = async () => {
+    return await myPageAPI().then((res) => res.data);
   };
 
   const { data } = useQuery('getInfo', getUserInfo);
@@ -91,7 +122,7 @@ const AddParty = () => {
   }
 
   const submitForm = () => {
-    const invite = inviteMember.length !== 0 ? inviteMember.join() : null;
+    const invite = inviteMember.length !== 0 ? inviteMember.join() : '';
     const createData = { ...formValues, receiversNickName: invite };
     const filterType = otts.filter((a) => a.id === state.ott);
     const authData = {
@@ -112,7 +143,7 @@ const AddParty = () => {
     });
   };
 
-  const validate = (values) => {
+  const validate = (values: formData) => {
     let error = '';
 
     if (!values.partyOttPassword) {
@@ -127,7 +158,7 @@ const AddParty = () => {
     return error;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setFormErrors(validate(formValues));
 
@@ -145,12 +176,17 @@ const AddParty = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formErrors]);
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormValues({ ...formValues, [name]: value });
   };
 
-  const handleClick = (e) => {
+  const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormValues({ ...formValues, [name]: value });
+  };
+
+  const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
     if (inviteMember.length === 3) {
       toast.error(
@@ -180,12 +216,7 @@ const AddParty = () => {
         <GatherForm onSubmit={handleSubmit}>
           {formErrors && <ErrorMessage className="error">{formErrors}</ErrorMessage>}
           <Label htmlFor="title">모집 제목</Label>
-          <CustomInput
-            type="text"
-            name="title"
-            defalutValue={formValues.title}
-            onChange={handleChange}
-          />
+          <CustomInput type="text" name="title" value={formValues.title} onChange={handleChange} />
           <ButtonContainer>
             <AiOutlineSearch size={24} />
             <CustomButton onClick={handleClick}>파티원 초대하기</CustomButton>
@@ -194,31 +225,30 @@ const AddParty = () => {
             name="searchMember"
             placeholder="초대하기를 클릭하면 닉네임을 검색할 수 있어요!"
             defaultValue={inviteMember}
-            readonly
+            readOnly
           />
 
           <Label htmlFor="ottId">OTT 플랫폼 계정</Label>
           <CustomInput
-            mb="0"
             type="text"
             name="partyOttId"
             placeholder="ID"
-            defalutValue={formValues.partyOttId}
+            value={formValues.partyOttId}
             onChange={handleChange}
           />
           <CustomInput
             type="password"
             name="partyOttPassword"
             placeholder="Password"
-            defalutValue={formValues.partyOttPassword}
+            value={formValues.partyOttPassword}
             onChange={handleChange}
           />
           <Label htmlFor="body">모집 글</Label>
           <Text
             name="body"
             placeholder="여기에 입력하세요"
-            defalutValue={formValues.body}
-            onChange={handleChange}
+            value={formValues.body}
+            onChange={handleTextChange}
           />
           <SubmitButton type="submit">등록하기</SubmitButton>
         </GatherForm>

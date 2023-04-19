@@ -8,7 +8,7 @@ import 'slick-carousel/slick/slick-theme.css';
 
 import { Provider } from 'react-redux';
 import { QueryClient, QueryClientProvider } from 'react-query';
-import theme from './styles/theme/theme';
+import theme from './styles/theme/types';
 import App from './App';
 import store from './store';
 import './index.css';

@@ -6,7 +6,6 @@ import MessageModal from './MessageModal';
 
 const Alarm = () => {
   const { state } = useLocation();
-
   const [data, setData] = useState({});
   const [isOpen, setIsOpen] = useState(false);
   const [page, setPage] = useState(1);
@@ -15,20 +14,16 @@ const Alarm = () => {
 
   const total = state.data.length;
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-  };
-
-  const handleClick = (data) => {
+  const handleClick = (data: any) => {
     setIsOpen(true);
     setData({ ...data });
   };
 
   return (
-    <MessageContainer handleSubmit={handleSubmit}>
+    <MessageContainer>
       <MessageList>
         {state.data &&
-          state.data.slice(offset, offset + limit).map((data) => (
+          state.data.slice(offset, offset + limit).map((data: any) => (
             <Message read={data.notificationOpen} onClick={() => handleClick(data)}>
               <MessageType>{data.type}</MessageType>
               <p>{data.message}</p>
