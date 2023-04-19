@@ -5,13 +5,25 @@ import { ButtonContainer, SubmitButton, CancleButton, ModalInput } from '../../s
 import { SearchResult } from '../Modal/Modal.styles';
 import { searchUserAPI } from '../../api/User';
 
-const AddPartyModal = ({ nickname, setIsOpen, inviteMember, setinviteMember }) => {
+interface AddPartyModalProps {
+  nickname: string;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  inviteMember: string[];
+  setinviteMember: React.Dispatch<React.SetStateAction<string[]>>;
+}
+
+const AddPartyModal = ({
+  nickname,
+  setIsOpen,
+  inviteMember,
+  setinviteMember,
+}: AddPartyModalProps) => {
   const [searchMember, setSearchMember] = useState('');
   const [searchData, setSearchData] = useState('');
   const [searchErrors, setSearchErrors] = useState('');
   const [isValidate, setIsValidate] = useState(false);
 
-  const validateNickName = (value) => {
+  const validateNickName = (value: string) => {
     let error = '';
 
     if (value === '') {
@@ -33,11 +45,9 @@ const AddPartyModal = ({ nickname, setIsOpen, inviteMember, setinviteMember }) =
 
   const addMember = () => {
     const nickname = searchMember;
-    const accessToken = localStorage.getItem('access-token');
 
-    searchUserAPI(nickname, accessToken)
+    searchUserAPI(nickname)
       .then((res) => {
-        console.log(res.data);
         setinviteMember([...inviteMember, searchMember]);
         setIsOpen(false);
       })
@@ -47,17 +57,17 @@ const AddPartyModal = ({ nickname, setIsOpen, inviteMember, setinviteMember }) =
       });
   };
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     setSearchMember(value);
   };
 
-  const handleClick = (e) => {
+  const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
     setIsOpen(false);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.MouseEvent) => {
     e.preventDefault();
     setSearchErrors(validateNickName(searchMember));
 
@@ -83,7 +93,7 @@ const AddPartyModal = ({ nickname, setIsOpen, inviteMember, setinviteMember }) =
         <ModalInput
           type="search"
           placeholder="닉네임을 입력하세요"
-          default={searchMember}
+          value={searchMember}
           onChange={handleChange}
         />
         <SearchResult>

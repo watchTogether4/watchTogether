@@ -1,14 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { toast, ToastContainer } from 'react-toastify';
-import Modal from './../Modal/Modal';
-import { Title, AlertText } from './../Modal/Modal.styles';
+import Modal from '../Modal/Modal';
+import { Title, AlertText } from '../Modal/Modal.styles';
 import { ButtonContainer, SubmitButton, CheckButton, CancleButton } from '../../styles/Common';
 import { checkAlertAPI } from '../../api/Alert';
 import { acceptPartyAPI, checkContinueAPI } from '../../api/Parties';
+import { StateType } from '../../pages/PrivateRoutes';
 
-const MessageModal = ({ data, modal }) => {
-  const { value } = useSelector((state) => state.user);
+interface MessageModalProps {
+  data: any;
+  modal: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const MessageModal = ({ data, modal }: MessageModalProps) => {
+  const { value } = useSelector((state: StateType) => state.user);
 
   const body = { notificationId: data.notificationId };
   const body2 = { nick: value.nickname, uuid: data.uuid };
@@ -20,11 +26,11 @@ const MessageModal = ({ data, modal }) => {
     if (data.type === 'INVITE' || data.type === 'CONTINUE') {
       setType(!type);
     }
-  }, [data.type]);
+  }, [data.type, type]);
 
   const postAlert = () => {
-    checkAlertAPI(body)
-      .then((res) => {
+    checkAlertAPI(body.notificationId)
+      .then((res: any) => {
         if (data.type === 'INVITE') {
           acceptMember();
         } else if (data.type === 'CONTINUE') {
@@ -37,8 +43,8 @@ const MessageModal = ({ data, modal }) => {
       .catch((error) => console.log(error));
   };
 
-  const check = (body3) => {
-    checkContinueAPI(body3).then((res) => {
+  const check = (body: { nickname: string; partyId: number }) => {
+    checkContinueAPI(body).then((res) => {
       console.log(res.data);
     });
   };
@@ -65,7 +71,7 @@ const MessageModal = ({ data, modal }) => {
       });
   };
 
-  const handleClick = (e) => {
+  const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
     if (isLoading === false) {
       setIsLoading(true);
@@ -74,7 +80,7 @@ const MessageModal = ({ data, modal }) => {
   };
 
   // 취소
-  const handleClickCancle = (e) => {
+  const handleClickCancle = (e: React.MouseEvent) => {
     e.preventDefault();
     modal(false);
   };

@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Flex } from './../../styles/Common';
+import { Flex } from '../../styles/Common';
 
 const Wrapper = styled.header`
   ${Flex}
@@ -21,6 +21,5 @@ const BackBtn = styled.button`
   position: absolute;
   left: 0.5rem;
 `;
-
 
 export { Wrapper, Title, BackBtn };

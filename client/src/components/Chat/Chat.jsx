@@ -79,7 +79,7 @@ const Chat = () => {
       const data = JSON.parse(event.data);
       setServerMessages((cur) => [...cur, { sender: data.sender, message: data.message }]);
     };
-  }, []);
+  }, [messageText, params.id, userInfo.nickname]);
 
   useEffect(() => {
     scrollRef.current.scrollIntoView({ behavior: 'smooth', block: 'end', inline: 'nearest' });

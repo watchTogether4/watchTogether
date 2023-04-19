@@ -24,7 +24,7 @@ const ChatAlert = styled.p`
   border-radius: 1rem;
 `;
 
-const ChatBubble = styled.li`
+const ChatBubble = styled.li<{ user: boolean }>`
   display: flex;
   justify-content: ${(props) => (props.user ? 'flex-end' : 'flex-start')};
   margin-bottom: 0.8rem;

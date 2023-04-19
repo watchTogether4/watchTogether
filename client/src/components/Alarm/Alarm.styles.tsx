@@ -14,7 +14,7 @@ const MessageList = styled.ul`
   align-items: center;
 `;
 
-const Message = styled.div`
+const Message = styled.div<{ read: string }>`
   width: 100%;
   padding: 1rem;
   margin-bottom: 1rem;
