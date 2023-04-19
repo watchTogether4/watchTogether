@@ -6,17 +6,16 @@ import './styles/reset.css';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
-import { ThemeProvider } from 'styled-components';
 import { Provider } from 'react-redux';
-import { CookiesProvider } from 'react-cookie';
 import { QueryClient, QueryClientProvider } from 'react-query';
-
 import theme from './styles/theme/theme';
 import App from './App';
 import store from './store';
 import './index.css';
+import { ThemeProvider } from 'styled-components';
+import { CookiesProvider } from 'react-cookie';
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById('root')!);
 
 const client = new QueryClient();
 axios.defaults.withCredentials = true;
