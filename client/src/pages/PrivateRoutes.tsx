@@ -8,18 +8,19 @@ import { myPageAPI } from '../api/User';
 import { getAuthentication } from '../utils/index';
 import { info } from '../store/User';
 
-interface StateType {
+export interface StateType {
   user: {
-    value: { name: string; email: string; cash: number; birth: string };
+    value: { nickname: string; email: string; cash: number; birth: string };
   };
 }
 
 interface UseStateType {
-  name: string;
+  nickname: string;
   email: string;
   cash: number;
   birth: string;
 }
+
 const PrivateRoutes = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
