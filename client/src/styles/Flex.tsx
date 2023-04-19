@@ -1,6 +1,13 @@
 import { css } from 'styled-components';
 
-const Flex = css`
+const Flex = css<{
+  direction: string;
+  justifyContent: string;
+  alignItems: string;
+  flexWrap: string;
+  rowGap: string;
+  columnGap: string;
+}>`
   display: flex;
   flex-direction: ${(props) => props.direction && props.direction};
   justify-content: ${(props) => (props.justifyContent ? props.justifyContent : 'center')};
