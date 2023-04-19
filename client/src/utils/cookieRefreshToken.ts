@@ -4,7 +4,7 @@ const cookies = new Cookies();
 
 export const getRefreshToken = () => cookies.get('refresh_token');
 
-export const setRefreshToken = (refreshToken) => {
+export const setRefreshToken = (refreshToken: string) => {
   const today = new Date();
   const expireDate = today.setHours(today.getHours() + 1);
 
